@@ -1,6 +1,6 @@
 {
   "name": "mobx-form",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple form helper for mobx",
   "main": "lib/FormModel.js",
   "scripts": {
