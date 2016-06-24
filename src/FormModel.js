@@ -1,4 +1,4 @@
-import { observable, computed, extendObservable } from 'mobx';
+import { observable, computed, extendObservable, transaction } from 'mobx';
 import Field from './Field';
 
 class FormModel {
@@ -9,15 +9,41 @@ class FormModel {
       return false; // consider the form invalid until the validation process finish
     }
     const keys = Object.keys(this.fields);
-    return keys.reduce((seq, key) => {
+    return keys.every((key) => {
       const field = this.fields[key];
-      seq = seq && field.valid; // eslint-disable-line no-param-reassign
-      return seq;
+      return !!field.valid;
     }, true);
+  }
+
+  @computed get interacted() {
+    const keys = this.fieldKeys();
+    return keys.some((key) => {
+      const field = this.fields[key];
+      return !!field.interacted;
+    });
+  }
+
+  clearValues(obj) {
+    transaction(() => {
+      Object.keys(obj).forEach((key) => this.updateField(key, obj[key], true));
+    });
+
   }
 
   fieldKeys() {
     return Object.keys(this.fields);
+  }
+
+  getField(field) {
+    const theField = this.fields[field];
+    if (!theField) {
+      throw new Error(`Field ${field} not found`);
+    }
+    return theField;
+  }
+
+  valueOf(field) {
+    return this.getField(field).value;
   }
 
   @computed get summary() {
@@ -41,6 +67,24 @@ class FormModel {
     p.then(() => (this.validating = false));
 
     return p;
+  }
+
+  updateField(field, value, reset) {
+    transaction(() => {
+      const theField = this.getField(field);
+
+      if (reset) {
+        theField._skipValidation = true;
+      }
+
+      theField.value = value;
+
+      if (reset) {
+        theField.clearValidation();
+        theField.clearInteractive();
+        theField._skipValidation = false;
+      }
+    });
   }
 
   toJSON() {

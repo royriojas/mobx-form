@@ -4,6 +4,7 @@ import clsc from 'coalescy';
 
 export default class Field {
   @observable _value;
+  _skipValidation = false;
   @observable _interacted;
   @observable _valid = true;
   @observable errorMessage;
@@ -13,6 +14,10 @@ export default class Field {
 
   @computed get valid() {
     return this._valid;
+  }
+
+  @computed get interacted() {
+    return this._interacted;
   }
 
   get value() {
@@ -33,6 +38,10 @@ export default class Field {
 
     this._value = val;
 
+    if (this._skipValidation) {
+      return;
+    }
+
     if (this.interactive) {
       this._debouncedValidation();
     } else {
@@ -43,6 +52,10 @@ export default class Field {
   clearValidation() {
     this._valid = true;
     this.errorMessage = '';
+  }
+
+  clearInteractive() {
+    this._interacted = false;
   }
 
   validate(force = false) {
