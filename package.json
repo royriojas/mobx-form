@@ -1,6 +1,6 @@
 {
   "name": "mobx-form",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "description": "A simple form helper for mobx",
   "main": "dist/FormModel.cjs.js",
   "browser": "dist/FormModel.umd.js",
