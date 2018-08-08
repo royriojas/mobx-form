@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v2.1.1
+- **Documentation**
+  - Fix missing peer dependency - [9feae5e]( https://github.com/royriojas/mobx-form/commit/9feae5e ), [Roy Riojas](https://github.com/Roy Riojas), 08/08/2018 12:57:06
+
+    
 ## v2.1.0
 - **Documentation**
   - update documenation - [7718d79]( https://github.com/royriojas/mobx-form/commit/7718d79 ), [Roy Riojas](https://github.com/Roy Riojas), 08/08/2018 12:16:28
