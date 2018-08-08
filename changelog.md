@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v3.0.0
+- **Refactoring**
+  - Use rollup to create umd/esm/cjs bundles - [697d75c]( https://github.com/royriojas/mobx-form/commit/697d75c ), [Roy Riojas](https://github.com/Roy Riojas), 08/08/2018 14:38:47
+
+    
 ## v2.1.1
 - **Documentation**
   - Fix missing peer dependency - [9feae5e]( https://github.com/royriojas/mobx-form/commit/9feae5e ), [Roy Riojas](https://github.com/Roy Riojas), 08/08/2018 12:57:06
