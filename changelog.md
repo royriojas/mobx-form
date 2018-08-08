@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v2.0.0
+- **Refactoring**
+  - Update FormModel to add new features and tests - [4e449d9]( https://github.com/royriojas/mobx-form/commit/4e449d9 ), [Roy Riojas](https://github.com/Roy Riojas), 08/08/2018 10:28:41
+
+    
 ## v1.0.1
 - **Build Scripts Changes**
   - Add build tasks - [2b36cf5]( https://github.com/royriojas/mobx-form/commit/2b36cf5 ), [Roy Riojas](https://github.com/Roy Riojas), 23/06/2016 20:26:51
