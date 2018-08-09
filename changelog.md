@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v3.0.2
+- **Refactoring**
+  - Add prepublish script - [f0dde93]( https://github.com/royriojas/mobx-form/commit/f0dde93 ), [Roy Riojas](https://github.com/Roy Riojas), 08/08/2018 21:32:01
+
+    
 ## v3.0.1
 - **Refactoring**
   - rename the bundle output - [49d010d]( https://github.com/royriojas/mobx-form/commit/49d010d ), [Roy Riojas](https://github.com/Roy Riojas), 08/08/2018 21:24:28
