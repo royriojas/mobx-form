@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v5.0.0
+- **Refactoring**
+  - remove dependency on regenerator - [e8bdbc9]( https://github.com/royriojas/mobx-form/commit/e8bdbc9 ), [Roy Riojas](https://github.com/Roy Riojas), 09/08/2018 22:27:41
+
+    
 ## v4.0.0
 - **Refactoring**
   - Create a smaller umd bundle - [81d81e3]( https://github.com/royriojas/mobx-form/commit/81d81e3 ), [Roy Riojas](https://github.com/Roy Riojas), 09/08/2018 22:07:12
