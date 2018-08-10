@@ -132,7 +132,7 @@ describe('form-model', () => {
       expect(model.summary).toEqual(['Name is required', 'Please do not enter Doe', 'Email already used']);
     });
 
-    it('CPM-9593 - errors thrown inside the validator execution should not break the validation when validation is not async', async () => {
+    it('errors thrown inside the validator execution should not break the validation when validation is not async', async () => {
       const model = createModel(
         { name: '', lastName: '', email: '' },
         {
