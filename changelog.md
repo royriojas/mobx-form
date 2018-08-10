@@ -1,5 +1,14 @@
 
 # mobx-form - Changelog
+## v4.0.0
+- **Refactoring**
+  - Create a smaller umd bundle - [81d81e3]( https://github.com/royriojas/mobx-form/commit/81d81e3 ), [Roy Riojas](https://github.com/Roy Riojas), 09/08/2018 22:07:12
+
+    
+- **Other changes**
+  - Update FormModel.test.js - [bff561e]( https://github.com/royriojas/mobx-form/commit/bff561e ), [Roy Riojas](https://github.com/Roy Riojas), 09/08/2018 21:24:08
+
+    
 ## v3.0.2
 - **Refactoring**
   - Add prepublish script - [f0dde93]( https://github.com/royriojas/mobx-form/commit/f0dde93 ), [Roy Riojas](https://github.com/Roy Riojas), 08/08/2018 21:32:01
