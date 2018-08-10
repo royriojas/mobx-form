@@ -6,7 +6,7 @@ import pkg from './package.json';
 
 export default [
   {
-    input: 'src/FormModel.js',
+    input: 'src/browser.js',
     external: ['mobx'],
     output: {
       file: pkg.browser,
@@ -28,7 +28,7 @@ export default [
             },
           ],
         ],
-        plugins: ['transform-decorators-legacy', 'transform-class-properties'],
+        plugins: ['transform-decorators-legacy', 'transform-class-properties', 'external-helpers'],
         exclude: 'node_modules/**', // only transpile our source code
       }),
       replace({

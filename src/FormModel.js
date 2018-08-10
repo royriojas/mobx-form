@@ -131,17 +131,18 @@ export class FormModel {
    * Manually perform the form validation
    * */
   @action
-  async validate() {
+  validate() {
     this.validating = true;
 
-    await Promise.all(
+    return Promise.all(
       this._fieldKeys().map(key => {
         const field = this.fields[key];
         return Promise.resolve(field.validate(true));
       }),
-    );
-
-    this.validating = false;
+    ).then(() => {
+      this.validating = false;
+      return Promise.resolve();
+    });
   }
 
   /**

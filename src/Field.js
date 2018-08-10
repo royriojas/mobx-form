@@ -233,9 +233,18 @@ export default class Field {
   };
 
   @action
-  async _doValidate() {
+  _doValidate() {
     const { _validateFn, model } = this;
-    return !_validateFn || (await _validateFn(this, model.fields));
+
+    if (!_validateFn) return Promise.resolve(true);
+    let ret;
+    try {
+      ret = _validateFn(this, model.fields);
+    } catch (err) {
+      return Promise.reject(err);
+    }
+
+    return Promise.resolve(ret);
   }
 
   @action
