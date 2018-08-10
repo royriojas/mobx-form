@@ -6,7 +6,7 @@ import pkg from './package.json';
 
 export default [
   {
-    input: 'src/browser.js',
+    input: 'src/FormModel.js',
     external: ['mobx'],
     output: {
       file: pkg.browser,
