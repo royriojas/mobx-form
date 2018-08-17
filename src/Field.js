@@ -302,7 +302,7 @@ export default class Field {
     // eslint-disable-next-line consistent-return
     return new Promise(resolve => {
       res.then(
-        res_ => {
+        action(res_ => {
           // if the function returned a boolean we assume it is
           // the flag for the valid state
           if (typeof res_ === 'boolean') {
@@ -319,12 +319,12 @@ export default class Field {
 
           this.errorMessage = '';
           resolve(); // we use this to chain validators
-        },
-        (errorArg = {}) => {
+        }),
+        action((errorArg = {}) => {
           const { error, message } = errorArg;
           this.errorMessage = (error || message || '').trim() || this._originalErrorMessage;
           resolve(); // we use this to chain validators
-        },
+        }),
       );
     });
   }
