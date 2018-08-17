@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v5.0.2
+- **Refactoring**
+  - Be compatible with enforceActions option of mobx - [d419fba]( https://github.com/royriojas/mobx-form/commit/d419fba ), [Roy Riojas](https://github.com/Roy Riojas), 17/08/2018 06:10:08
+
+    
 ## v5.0.1
 - **Bug Fixes**
   - wrong entry point for UMD target - [de06c9d]( https://github.com/royriojas/mobx-form/commit/de06c9d ), [Roy Riojas](https://github.com/Roy Riojas), 09/08/2018 22:28:53
