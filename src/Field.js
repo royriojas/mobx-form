@@ -239,7 +239,7 @@ export default class Field {
     if (!_validateFn) return Promise.resolve(true);
     let ret;
     try {
-      ret = _validateFn(this, model.fields);
+      ret = _validateFn(this, model.fields, model);
     } catch (err) {
       return Promise.reject(err);
     }

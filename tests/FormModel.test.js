@@ -1,5 +1,6 @@
 import sleep from 'sleep.async';
 import { createModel } from '../src/FormModel';
+import { extendObservable } from 'mobx';
 
 describe('form-model', () => {
   describe('restoreInitialValues', () => {
@@ -177,6 +178,42 @@ describe('form-model', () => {
       expect(model.valid).toEqual(false);
 
       expect(model.summary).toEqual(['Name is required', 'Please do not enter Doe', 'Email already used']);
+    });
+
+    it('should allow validators to access fields in the model', async () => {
+      const model = createModel(
+        { name: 'Snoopy', lastName: 'Brown', email: '' },
+        {
+          // using generic validation
+          name: { required: 'Name is required' },
+          // using a custom validation functiont that returns a Boolean
+          lastName: {
+            required: 'lastName is required',
+            fn: field => field.value !== 'Doe',
+            errorMessage: 'Please do not enter Doe',
+          },
+          // using an async function that throws when it fails, since throws are converted to rejections
+          // this just works. If validation passed no need to return anything.
+          email: {
+            fn: ({ value = '' }, fields, _model) => {
+              if (_model.validateEmails) {
+                if (!(value.indexOf('@') > 1)) {
+                  throw new Error('INVALID_EMAIL')
+                }
+              }
+              return true;
+            },
+          },
+        },
+      );
+
+      await model.validate();
+      expect(model.valid).toEqual(true);
+
+      model.validateEmails = true;
+      await model.validate();
+      expect(model.valid).toEqual(false);
+
     });
   });
 });
