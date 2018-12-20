@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v5.0.3
+- **Features**
+  - pass the model instance to the validators - [f4045c1]( https://github.com/royriojas/mobx-form/commit/f4045c1 ), [Roy Riojas](https://github.com/Roy Riojas), 20/12/2018 04:50:08
+
+    
 ## v5.0.2
 - **Refactoring**
   - Be compatible with enforceActions option of mobx - [d419fba]( https://github.com/royriojas/mobx-form/commit/d419fba ), [Roy Riojas](https://github.com/Roy Riojas), 17/08/2018 06:10:08
