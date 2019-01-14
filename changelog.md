@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v5.2.1
+- **Refactoring**
+  - Add rest spread support - [48ae905]( https://github.com/royriojas/mobx-form/commit/48ae905 ), [Roy Riojas](https://github.com/Roy Riojas), 13/01/2019 21:58:53
+
+    
 ## v5.2.0
 - **Features**
   - Add support to create a form from an array or an object descriptor - [19072dc]( https://github.com/royriojas/mobx-form/commit/19072dc ), [Roy Riojas](https://github.com/Roy Riojas), 13/01/2019 20:51:12
