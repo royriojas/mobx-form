@@ -28,7 +28,7 @@ export default [
             },
           ],
         ],
-        plugins: ['transform-decorators-legacy', 'transform-class-properties', 'external-helpers'],
+        plugins: ['transform-decorators-legacy', 'transform-class-properties', 'external-helpers', 'transform-object-rest-spread'],
         exclude: 'node_modules/**', // only transpile our source code
       }),
       replace({
@@ -55,7 +55,7 @@ export default [
             },
           ],
         ],
-        plugins: ['transform-decorators-legacy', 'transform-class-properties', 'external-helpers'],
+        plugins: ['transform-decorators-legacy', 'transform-class-properties', 'external-helpers', 'transform-object-rest-spread'],
         exclude: ['node_modules/**'],
       }),
     ],

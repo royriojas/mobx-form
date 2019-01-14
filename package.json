@@ -40,6 +40,7 @@
   },
   "homepage": "https://github.com/royriojas/mobx-form#readme",
   "dependencies": {
+    "babel-plugin-transform-object-rest-spread": "6.26.0",
     "coalescy": "1.0.0",
     "debouncy": "1.0.8",
     "jq-trim": "0.1.2"
