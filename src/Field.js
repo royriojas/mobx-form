@@ -330,23 +330,30 @@ export default class Field {
   }
 
   constructor(model, value, validatorDescriptor = {}, fieldName) {
+    this._value = value;
     this.model = model;
     this.name = fieldName;
-    this._waitForFirstBlur = validatorDescriptor.waitForBlur;
-    this._originalErrorMessage = validatorDescriptor.errorMessage;
-    this._validateFn = validatorDescriptor.fn || (() => Promise.resolve());
+
     this._debouncedValidation = debounce(this.validate, 300, this);
     this._initialValue = value;
-    this._notEmpty = validatorDescriptor.notEmpty;
-    this._notEmptyMessage = validatorDescriptor.notEmptyMessage;
+
+    const { waitForBlur, errorMessage, fn, validator, notEmpty, notEmptyMessage, hasValue, required, requiredMessage, interactive, meta } = validatorDescriptor;
+
+    this._waitForFirstBlur = waitForBlur;
+    this._originalErrorMessage = errorMessage;
+    this._validateFn = validator || fn || (() => Promise.resolve());
+
+    this._notEmpty = notEmpty;
+    this._notEmptyMessage = notEmptyMessage;
 
     // useful to determine if the field has a value set
     // only used if provided
-    this._hasValue = validatorDescriptor.hasValue;
+    this._hasValue = hasValue;
 
-    this._value = value;
-    this._required = validatorDescriptor.required;
-    this._requiredMessage = validatorDescriptor.requiredMessage;
-    this.interactive = clsc(validatorDescriptor.interactive, true);
+    this._required = required;
+    this._requiredMessage = requiredMessage;
+    this.interactive = clsc(interactive, true);
+
+    this.meta = meta; // store other props passed on the fields
   }
 }

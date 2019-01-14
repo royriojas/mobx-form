@@ -237,6 +237,29 @@ export class FormModel {
   }
 
   @action
+  addFields = fieldsDescriptor => {
+    fieldsDescriptor = fieldsDescriptor || [];
+
+    if (Array.isArray(fieldsDescriptor)) {
+      fieldsDescriptor.forEach(field => {
+        const { value, name, ...rest } = field;
+        extendObservable(this.fields, {
+          [name]: new Field(this, value, rest, name),
+        });
+      });
+      return;
+    }
+
+    const fieldsToAdd = Object.keys(fieldsDescriptor);
+    fieldsToAdd.forEach(key => {
+      const { value, ...rest } = fieldsDescriptor[key];
+      extendObservable(this.fields, {
+        [key]: new Field(this, value, rest, key),
+      });
+    });
+  };
+
+  @action
   enableFields(fieldKeys = []) {
     fieldKeys.forEach(key => {
       const field = this.fields[key];
