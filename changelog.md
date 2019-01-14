@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v5.2.0
+- **Features**
+  - Add support to create a form from an array or an object descriptor - [19072dc]( https://github.com/royriojas/mobx-form/commit/19072dc ), [Roy Riojas](https://github.com/Roy Riojas), 13/01/2019 20:51:12
+
+    
 ## v5.0.3
 - **Features**
   - pass the model instance to the validators - [f4045c1]( https://github.com/royriojas/mobx-form/commit/f4045c1 ), [Roy Riojas](https://github.com/Roy Riojas), 20/12/2018 04:50:08
