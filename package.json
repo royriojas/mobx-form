@@ -5,6 +5,7 @@
   "main": "dist/mobx-form.cjs.js",
   "browser": "dist/mobx-form.umd.js",
   "module": "dist/mobx-form.esm.js",
+  "_legacy_module": "dist/mobx-form.legacy.js",
   "files": [
     "dist/"
   ],
@@ -19,7 +20,7 @@
     "bump-major": "npm run pre-v && npm version major -m 'BLD: Release v%s' && npm run post-v",
     "bump-minor": "npm run pre-v && npm version minor -m 'BLD: Release v%s' && npm run post-v",
     "bump-patch": "npm run pre-v && npm version patch -m 'BLD: Release v%s' && npm run post-v",
-    "prepublish": "npm run build",
+    "prepublishOnly": "npm run build",
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "test": "jest --config jest.config.js"
@@ -40,7 +41,6 @@
   },
   "homepage": "https://github.com/royriojas/mobx-form#readme",
   "dependencies": {
-    "babel-plugin-transform-object-rest-spread": "6.26.0",
     "coalescy": "1.0.0",
     "debouncy": "1.0.8",
     "jq-trim": "0.1.2"
@@ -58,22 +58,25 @@
     "projectName": "mobx-form"
   },
   "peerDependencies": {
-    "mobx": "5.0.3"
+    "mobx": "5.9.4"
   },
   "devDependencies": {
-    "@redisrupt/eslint-red": "3.0.0",
-    "babel-plugin-external-helpers": "6.22.0",
-    "babel-plugin-transform-class-properties": "6.24.1",
-    "babel-plugin-transform-decorators-legacy": "1.3.5",
-    "babel-preset-env": "1.7.0",
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-external-helpers": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-proposal-decorators": "^7.0.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-transform-runtime": "7.4.4",
+    "@babel/preset-env": "^7.0.0",
+    "@redisrupt/eslint-red": "4.0.0",
     "changelogx": "2.0.1",
-    "jest": "23.4.2",
-    "mobx": "5.0.3",
-    "rollup": "0.64.1",
-    "rollup-plugin-babel": "3.0.7",
-    "rollup-plugin-commonjs": "9.1.4",
-    "rollup-plugin-node-resolve": "3.3.0",
-    "rollup-plugin-replace": "2.0.0",
+    "jest": "24.8.0",
+    "mobx": "5.9.4",
+    "rollup": "1.11.3",
+    "rollup-plugin-babel": "4.3.2",
+    "rollup-plugin-commonjs": "9.3.4",
+    "rollup-plugin-node-resolve": "4.2.3",
+    "rollup-plugin-replace": "2.2.0",
     "sleep.async": "1.0.4"
   }
 }

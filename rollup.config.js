@@ -19,7 +19,7 @@ export default [
         babelrc: false,
         presets: [
           [
-            'env',
+            '@babel/preset-env',
             {
               targets: {
                 browsers: ['last 2 versions', 'safari >= 7'],
@@ -28,8 +28,22 @@ export default [
             },
           ],
         ],
-        plugins: ['transform-decorators-legacy', 'transform-class-properties', 'external-helpers', 'transform-object-rest-spread'],
-        exclude: 'node_modules/**', // only transpile our source code
+        plugins: [
+          [
+            '@babel/plugin-proposal-decorators',
+            {
+              legacy: true,
+            },
+          ],
+          [
+            '@babel/plugin-proposal-class-properties',
+            {
+              loose: true,
+            },
+          ],
+          '@babel/plugin-proposal-object-rest-spread',
+        ],
+        exclude: ['node_modules/**'], // only transpile our source code
       }),
       replace({
         'process.env.NODE_ENV': JSON.stringify('production'),
@@ -46,17 +60,80 @@ export default [
         babelrc: false,
         presets: [
           [
-            'env',
+            '@babel/preset-env',
             {
               targets: {
-                browsers: ['last 2 versions', 'safari >= 7'],
+                browsers: [
+                  'last 2 Chrome versions',
+                  'not Chrome < 60',
+                  'last 2 Safari versions',
+                  'not Safari < 10.1',
+                  'last 2 iOS versions',
+                  'not iOS < 10.3',
+                  'last 2 Firefox versions',
+                  'not Firefox < 54',
+                  'last 2 Edge versions',
+                  'not Edge < 15',
+                ],
               },
               modules: false,
             },
           ],
         ],
-        plugins: ['transform-decorators-legacy', 'transform-class-properties', 'external-helpers', 'transform-object-rest-spread'],
-        exclude: ['node_modules/**'],
+        plugins: [
+          [
+            '@babel/plugin-proposal-decorators',
+            {
+              legacy: true,
+            },
+          ],
+          [
+            '@babel/plugin-proposal-class-properties',
+            {
+              loose: true,
+            },
+          ],
+          '@babel/plugin-proposal-object-rest-spread',
+        ],
+        exclude: ['node_modules/**'], // only transpile our source code
+      }),
+    ],
+  },
+
+  {
+    input: 'src/FormModel.js',
+    external: ['mobx', 'debouncy', 'coalescy', 'jq-trim'],
+    output: [{ file: pkg._legacy_module, format: 'es' }],
+    plugins: [
+      babel({
+        babelrc: false,
+        presets: [
+          [
+            '@babel/preset-env',
+            {
+              targets: {
+                browsers: ['last 2 versions'],
+              },
+              modules: false,
+            },
+          ],
+        ],
+        plugins: [
+          [
+            '@babel/plugin-proposal-decorators',
+            {
+              legacy: true,
+            },
+          ],
+          [
+            '@babel/plugin-proposal-class-properties',
+            {
+              loose: true,
+            },
+          ],
+          '@babel/plugin-proposal-object-rest-spread',
+        ],
+        exclude: ['node_modules/**'], // only transpile our source code
       }),
     ],
   },
