@@ -1,5 +1,11 @@
 
 # mobx-form - Changelog
+## v5.2.2
+- **Refactoring**
+  - Upgrade node_modules and use latest babel - [b795e13]( https://github.com/royriojas/mobx-form/commit/b795e13 ), [Roy Riojas](https://github.com/Roy Riojas), 08/05/2019 00:11:58
+
+    Breaking change as now we transpile 2 versions of the module one for evergreen browsers and one for IE11
+    
 ## v5.2.1
 - **Refactoring**
   - Add rest spread support - [48ae905]( https://github.com/royriojas/mobx-form/commit/48ae905 ), [Roy Riojas](https://github.com/Roy Riojas), 13/01/2019 21:58:53
