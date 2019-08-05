@@ -176,7 +176,6 @@ export default class Field {
       this._setValueOnly(value);
       this.errorMessage = '';
       this._interacted = false;
-
     } else {
       this._setValue(value);
     }
