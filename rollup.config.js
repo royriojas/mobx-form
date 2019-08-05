@@ -29,7 +29,7 @@ export default [
     input: 'src/FormModel.js',
     external: ['mobx'],
     output: {
-      file: pkg.browser,
+      file: pkg._browser,
       name: 'MobxForm',
       format: 'umd',
     },

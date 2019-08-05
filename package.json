@@ -3,6 +3,7 @@
   "version": "7.0.0-alpha.2",
   "description": "A simple form helper for mobx",
   "main": "dist/mobx-form.cjs.js",
+  "_browser": "dist/mobx-form.umd.js",
   "browser": {
     "./dist/index.js": "./dist/mobx-form.umd.js",
     "./dist/index.esm.js": "./dist/mobx-form.esm.js"
