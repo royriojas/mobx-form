@@ -41,7 +41,6 @@ export class FormModel {
     return this.requiredFields.some(key => !!this.fields[key].hasValue);
   }
 
-  // the fields of the form
   @observable
   fields = {};
 
@@ -177,31 +176,15 @@ export class FormModel {
   /**
    * Creates an instance of FormModel.
    *
+   * @param {Object|Array} [descriptors={}]
    * @param {Object} [initialState={}]
-   * @param {Object} [validators={}]
    *
    * initialState => an object which keys are the names of the fields and the values the initial values for the form.
    * validators => an object which keys are the names of the fields and the values are the descriptors for the validators
-   * @example:
-   *
-   * ```
-   * {
-   *   fieldName: {
-   *     errorMessage: String,
-   *     validationType: VALIDATION_TYPES, // REQUIRED, EMAIL, DATE, PHONE or NUMBER.
-   *     fn: Function, // custom validator function
-   *   }
-   * }
-   * ```
    */
-  constructor(initialState = {}, validators = {}) {
-    const keys = Object.keys(initialState);
-
-    keys.forEach(key => {
-      extendObservable(this.fields, {
-        [key]: new Field(this, initialState[key], validators[key], key),
-      });
-    });
+  constructor({ descriptors = {}, initialState } = {}) {
+    this.addFields(descriptors);
+    initialState && this.updateFrom(initialState);
   }
 
   _getField(name) {
@@ -236,26 +219,28 @@ export class FormModel {
     });
   }
 
+  _createField({ value, name, descriptor }) {
+    extendObservable(this.fields, {
+      [name]: new Field(this, value, descriptor, name),
+    });
+  }
+
   @action
   addFields = fieldsDescriptor => {
     fieldsDescriptor = fieldsDescriptor || [];
 
     if (Array.isArray(fieldsDescriptor)) {
       fieldsDescriptor.forEach(field => {
-        const { value, name, ...rest } = field;
-        extendObservable(this.fields, {
-          [name]: new Field(this, value, rest, name),
-        });
+        const { value, name, ...descriptor } = field;
+        this._createField({ value, name, descriptor });
       });
       return;
     }
 
     const fieldsToAdd = Object.keys(fieldsDescriptor);
     fieldsToAdd.forEach(key => {
-      const { value, ...rest } = fieldsDescriptor[key];
-      extendObservable(this.fields, {
-        [key]: new Field(this, value, rest, key),
-      });
+      const { value, ...descriptor } = fieldsDescriptor[key];
+      this._createField({ value, name: key, descriptor });
     });
   };
 
@@ -274,7 +259,20 @@ export class FormModel {
 /**
  * return an instance of a FormModel refer to the constructor
  *
+ * @param {Object|Array} fieldDescriptors
  * @param {Object} initialState
- * @param {Object} _validators
  */
-export const createModel = (initialState, _validators) => new FormModel(initialState, _validators);
+export const createModel = ({ descriptors, initialState }) => new FormModel({ descriptors, initialState });
+
+export const createModelFromState = (initialState = {}, validators = {}) => {
+  const stateKeys = Object.keys(initialState);
+  const validatorsKeys = Object.keys(validators);
+
+  const descriptors = Array.from(new Set([...stateKeys, ...validatorsKeys]), key => ({
+    ...(validators[key] || {}),
+    value: initialState[key],
+    name: key,
+  }));
+
+  return createModel({ descriptors });
+};

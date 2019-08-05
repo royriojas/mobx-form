@@ -1,22 +1,26 @@
-import { observable, computed, isObservableArray, action } from 'mobx';
+import { observable, computed, action } from 'mobx';
 import debounce from 'debouncy';
-import clsc from 'coalescy';
 
 /**
  * Field class provides abstract the validation of a single field
  */
 
 export default class Field {
-  @computed
-  get waitForBlur() {
-    return this._waitForFirstBlur;
-  }
-
   @observable
-  disabled;
+  _disabled;
 
   @observable
   _required;
+
+  @computed
+  get waitForBlur() {
+    return this._waitForBlur;
+  }
+
+  @computed
+  get disabled() {
+    return this._disabled;
+  }
 
   @computed
   get required() {
@@ -32,20 +36,9 @@ export default class Field {
   }
 
   @computed
-  get notEmpty() {
-    if (this.disabled) return false;
-    if (typeof this.value !== 'string') return true;
-
-    if (this.hasValue && this.value.toString().trim() !== '') {
-      return true;
-    }
-    return false;
-  }
-
-  @computed
   get hasValue() {
-    if (this._hasValue) {
-      return this._hasValue(this.value);
+    if (this._hasValueFn) {
+      return this._hasValueFn(this.value);
     }
     // consider the case where the value is an array
     // we consider it actually has a value if the value is defined
@@ -55,6 +48,9 @@ export default class Field {
     }
     return !!this.value;
   }
+
+  @observable
+  _autoValidate;
 
   /**
    * field to store the initial value set on this field
@@ -102,14 +98,12 @@ export default class Field {
    * onChange event
    */
   @observable
-  interactive = true;
+  _interactive = false;
 
-  /**
-   * wheter validation should be skipped
-   * this is used to set new original
-   * values on the model
-   */
-  _skipValidation = false;
+  @computed
+  get interactive() {
+    return this._interactive;
+  }
 
   /**
    * used to keep track of the original message
@@ -136,14 +130,11 @@ export default class Field {
    * get the value set on the field
    */
   get value() {
-    if (isObservableArray(this._value)) {
-      return [].slice.call(this._value);
-    }
     return this._value;
   }
 
   @action
-  _setValue(val) {
+  _setValueOnly(val) {
     if (!this._interacted) {
       this._interacted = true;
     }
@@ -153,15 +144,14 @@ export default class Field {
     }
 
     this._value = val;
+  }
 
-    if (this._skipValidation) {
-      return;
-    }
+  @action
+  _setValue(val) {
+    this._setValueOnly(val);
 
-    if (this.interactive) {
+    if (this._autoValidate) {
       this._debouncedValidation();
-    } else {
-      this.clearValidation();
     }
   }
 
@@ -183,15 +173,12 @@ export default class Field {
   @action
   setValue(value, reset) {
     if (reset) {
-      this._skipValidation = true;
-    }
-
-    this._setValue(value);
-
-    if (reset) {
+      this._setValueOnly(value);
       this.errorMessage = '';
       this._interacted = false;
-      this._skipValidation = false;
+
+    } else {
+      this._setValue(value);
     }
   }
 
@@ -233,18 +220,35 @@ export default class Field {
   };
 
   @action
-  _doValidate() {
+  async _doValidate() {
     const { _validateFn, model } = this;
 
     if (!_validateFn) return Promise.resolve(true);
-    let ret;
-    try {
-      ret = _validateFn(this, model.fields, model);
-    } catch (err) {
-      return Promise.reject(err);
-    }
 
-    return Promise.resolve(ret);
+    let ret;
+    if (Array.isArray(_validateFn)) {
+      for (let i = 0; i < _validateFn.length; i++) {
+        const vfn = _validateFn[i];
+        if (typeof vfn !== 'function') {
+          throw new Error('Validator must be a function or a function[]  ');
+        }
+        try {
+          ret = await vfn(this, model.fields, model);
+          if (ret === false || ret?.error) {
+            return ret;
+          }
+        } catch (err) {
+          return Promise.reject(err);
+        }
+      }
+    } else {
+      try {
+        ret = _validateFn(this, model.fields, model);
+      } catch (err) {
+        return Promise.reject(err);
+      }
+    }
+    return ret;
   }
 
   @action
@@ -252,7 +256,7 @@ export default class Field {
     if (disabled) {
       this.errorMessage = '';
     }
-    this.disabled = disabled;
+    this._disabled = disabled;
   }
 
   /**
@@ -265,12 +269,12 @@ export default class Field {
   validate(force = false) {
     const { required } = this;
 
-    const shouldSkipValidation = (!required && !this._validateFn && !this._validationType) || this.disabled;
+    const shouldSkipValidation = this.disabled || (!required && !this._validateFn);
 
     if (shouldSkipValidation) return;
 
     if (!force) {
-      const userDidntInteractWithTheField = !this._interacted || (this._waitForFirstBlur && !this._blurredOnce);
+      const userDidntInteractWithTheField = !this._interacted || (this._waitForBlur && !this._blurredOnce);
 
       if (userDidntInteractWithTheField) {
         // if we're not forcing the validation
@@ -286,15 +290,10 @@ export default class Field {
         // we can indicate that the field is required by passing the error message as the value of
         // the required field. If we pass a boolean or a function then the value of the error message
         // can be set in the requiredMessage field of the validator descriptor
-        this.errorMessage = typeof this._required === 'string' ? this._required : this._requiredMessage || 'Required';
+        this.errorMessage = typeof this._required === 'string' ? this._required : 'Required';
         return;
       }
       this.errorMessage = '';
-    }
-
-    if (required && !this.notEmpty) {
-      this.errorMessage = this._notEmptyMessage ? this._notEmptyMessage : 'Required';
-      return;
     }
 
     const res = this._doValidate();
@@ -329,30 +328,34 @@ export default class Field {
     });
   }
 
+  @action
+  setRequired = val => {
+    this._required = val;
+  };
+
   constructor(model, value, validatorDescriptor = {}, fieldName) {
+    const DEBOUNCE_THRESHOLD = 300;
+
     this._value = value;
     this.model = model;
     this.name = fieldName;
 
-    this._debouncedValidation = debounce(this.validate, 300, this);
+    this._debouncedValidation = debounce(this.validate, DEBOUNCE_THRESHOLD, this);
     this._initialValue = value;
 
-    const { waitForBlur, errorMessage, fn, validator, notEmpty, notEmptyMessage, hasValue, required, requiredMessage, interactive, meta } = validatorDescriptor;
+    const { waitForBlur, disabled, errorMessage, validator, hasValueFn, required, autoValidate = true, meta } = validatorDescriptor;
 
-    this._waitForFirstBlur = waitForBlur;
+    this._waitForBlur = waitForBlur;
     this._originalErrorMessage = errorMessage;
-    this._validateFn = validator || fn || (() => Promise.resolve());
-
-    this._notEmpty = notEmpty;
-    this._notEmptyMessage = notEmptyMessage;
+    this._validateFn = validator || (() => Promise.resolve());
 
     // useful to determine if the field has a value set
     // only used if provided
-    this._hasValue = hasValue;
+    this._hasValueFn = hasValueFn;
 
     this._required = required;
-    this._requiredMessage = requiredMessage;
-    this.interactive = clsc(interactive, true);
+    this._autoValidate = autoValidate;
+    this._disabled = disabled;
 
     this.meta = meta; // store other props passed on the fields
   }

@@ -4,6 +4,26 @@ import babel from 'rollup-plugin-babel';
 import replace from 'rollup-plugin-replace';
 import pkg from './package.json';
 
+const commonBabelConfig = {
+  plugins: [
+    [
+      '@babel/plugin-proposal-decorators',
+      {
+        legacy: true,
+      },
+    ],
+    [
+      '@babel/plugin-proposal-class-properties',
+      {
+        loose: true,
+      },
+    ],
+    '@babel/plugin-proposal-object-rest-spread',
+    '@babel/plugin-proposal-optional-chaining',
+  ],
+  exclude: ['node_modules/**'], // only transpile our source code
+};
+
 export default [
   {
     input: 'src/FormModel.js',
@@ -28,22 +48,7 @@ export default [
             },
           ],
         ],
-        plugins: [
-          [
-            '@babel/plugin-proposal-decorators',
-            {
-              legacy: true,
-            },
-          ],
-          [
-            '@babel/plugin-proposal-class-properties',
-            {
-              loose: true,
-            },
-          ],
-          '@babel/plugin-proposal-object-rest-spread',
-        ],
-        exclude: ['node_modules/**'], // only transpile our source code
+        ...commonBabelConfig,
       }),
       replace({
         'process.env.NODE_ENV': JSON.stringify('production'),
@@ -80,22 +85,7 @@ export default [
             },
           ],
         ],
-        plugins: [
-          [
-            '@babel/plugin-proposal-decorators',
-            {
-              legacy: true,
-            },
-          ],
-          [
-            '@babel/plugin-proposal-class-properties',
-            {
-              loose: true,
-            },
-          ],
-          '@babel/plugin-proposal-object-rest-spread',
-        ],
-        exclude: ['node_modules/**'], // only transpile our source code
+        ...commonBabelConfig,
       }),
     ],
   },
@@ -118,22 +108,7 @@ export default [
             },
           ],
         ],
-        plugins: [
-          [
-            '@babel/plugin-proposal-decorators',
-            {
-              legacy: true,
-            },
-          ],
-          [
-            '@babel/plugin-proposal-class-properties',
-            {
-              loose: true,
-            },
-          ],
-          '@babel/plugin-proposal-object-rest-spread',
-        ],
-        exclude: ['node_modules/**'], // only transpile our source code
+        ...commonBabelConfig,
       }),
     ],
   },

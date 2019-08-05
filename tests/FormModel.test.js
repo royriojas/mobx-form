@@ -1,10 +1,10 @@
 import sleep from 'sleep.async';
-import { createModel } from '../src/FormModel';
+import { createModelFromState } from '../src/FormModel';
 
 describe('form-model', () => {
   describe('restoreInitialValues', () => {
     it('should reset the initial values on the form', () => {
-      const model = createModel({ valueA: '', valueB: '' });
+      const model = createModelFromState({ valueA: '', valueB: '' });
 
       model.updateField('valueA', 'some');
       model.updateField('valueB', 'b');
@@ -19,7 +19,7 @@ describe('form-model', () => {
     });
 
     it('should reset the initial values on the form even if not empty strings', () => {
-      const model = createModel({ valueA: [], valueB: [] });
+      const model = createModelFromState({ valueA: [], valueB: [] });
 
       model.updateField('valueA', [1, 2, 3]);
       model.updateField('valueB', [4, 5, 6]);
@@ -36,7 +36,7 @@ describe('form-model', () => {
 
   describe('serializedData', () => {
     it('should return always the data serialized as a Javascript object', () => {
-      const model = createModel({ name: 'John', lastName: 'Doe' });
+      const model = createModelFromState({ name: 'John', lastName: 'Doe' });
       expect(model.serializedData).toEqual({ name: 'John', lastName: 'Doe' });
 
       model.updateField('name', 'Jane');
@@ -51,7 +51,7 @@ describe('form-model', () => {
 
   describe('requiredAreFilled', () => {
     it('should be true if all required fields have a value', () => {
-      const model = createModel(
+      const model = createModelFromState(
         { name: '', lastName: '', email: '' },
         {
           name: { required: true, requiredMessage: 'The name is required' },
@@ -84,7 +84,7 @@ describe('form-model', () => {
     });
 
     it('should allow the creation of a form that will track if all required fields are filled', async () => {
-      const model = createModel(
+      const model = createModelFromState(
         { name: '', lastName: '', email: '' },
         {
           // using generic validation
@@ -92,13 +92,13 @@ describe('form-model', () => {
           // using a custom validation functiont that returns a Boolean
           lastName: {
             required: 'lastName is required',
-            fn: field => field.value !== 'Doe',
+            validator: field => field.value !== 'Doe',
             errorMessage: 'Please do not enter Doe',
           },
           // using an async function that throws when it fails, since throws are converted to rejections
           // this just works. If validation passed no need to return anything.
           email: {
-            fn: async ({ value }) => {
+            validator: async ({ value }) => {
               await sleep(100);
 
               if (value === 'johndoe@gmail.com') {
@@ -133,7 +133,7 @@ describe('form-model', () => {
     });
 
     it('errors thrown inside the validator execution should not break the validation when validation is not async', async () => {
-      const model = createModel(
+      const model = createModelFromState(
         { name: '', lastName: '', email: '' },
         {
           // using generic validation
@@ -141,13 +141,13 @@ describe('form-model', () => {
           // using a custom validation functiont that returns a Boolean
           lastName: {
             required: 'lastName is required',
-            fn: field => field.value !== 'Doe',
+            validator: field => field.value !== 'Doe',
             errorMessage: 'Please do not enter Doe',
           },
           // using an async function that throws when it fails, since throws are converted to rejections
           // this just works. If validation passed no need to return anything.
           email: {
-            fn: ({ value }) => {
+            validator: ({ value }) => {
               if (value === 'johndoe@gmail.com') {
                 throw new Error('Email already used');
               }
@@ -180,7 +180,7 @@ describe('form-model', () => {
     });
 
     it('should allow validators to access fields in the model', async () => {
-      const model = createModel(
+      const model = createModelFromState(
         { name: 'Snoopy', lastName: 'Brown', email: '' },
         {
           // using generic validation
@@ -188,13 +188,13 @@ describe('form-model', () => {
           // using a custom validation functiont that returns a Boolean
           lastName: {
             required: 'lastName is required',
-            fn: field => field.value !== 'Doe',
+            validator: field => field.value !== 'Doe',
             errorMessage: 'Please do not enter Doe',
           },
           // using an async function that throws when it fails, since throws are converted to rejections
           // this just works. If validation passed no need to return anything.
           email: {
-            fn: ({ value = '' }, fields, _model) => {
+            validator: ({ value = '' }, fields, _model) => {
               if (_model.validateEmails) {
                 if (!(value.indexOf('@') > 1)) {
                   throw new Error('INVALID_EMAIL');
@@ -217,7 +217,7 @@ describe('form-model', () => {
 
   describe('addFields', () => {
     it('should create a model from an object descriptor', async () => {
-      const model = createModel({});
+      const model = createModelFromState({});
 
       model.addFields({
         // using generic validation
@@ -253,7 +253,7 @@ describe('form-model', () => {
     });
 
     it('should create a model from a descriptor of type array', async () => {
-      const model = createModel({});
+      const model = createModelFromState({});
 
       model.addFields([
         {
@@ -298,7 +298,7 @@ describe('form-model', () => {
     });
 
     it('should store non recognized fields as meta in the fields', async () => {
-      const model = createModel({});
+      const model = createModelFromState({});
 
       const descriptorFields = [
         {
