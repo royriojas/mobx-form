@@ -15,9 +15,19 @@
   - Fix lint issues - [b0a850d]( https://github.com/royriojas/mobx-form/commit/b0a850d ), [royriojas](https://github.com/royriojas), 05/08/2019 01:13:30
 
     
-## v7.0.0-alpha.0
+## v7.0.0
 - **Refactoring**
+  - Attempt to change browser field to something webpack likes - take 2 - [95783ad]( https://github.com/royriojas/mobx-form/commit/95783ad ), [royriojas](https://github.com/royriojas), 05/08/2019 01:54:02
+
+    
+  - Attempt to change browser field to something webpack likes - [a7d9d65]( https://github.com/royriojas/mobx-form/commit/a7d9d65 ), [royriojas](https://github.com/royriojas), 05/08/2019 01:50:34
+
+    
   - Simplify and improve mobx-form api - [8f48e28]( https://github.com/royriojas/mobx-form/commit/8f48e28 ), [royriojas](https://github.com/royriojas), 05/08/2019 01:10:29
+
+    
+- **Bug Fixes**
+  - Fix lint issues - [b0a850d]( https://github.com/royriojas/mobx-form/commit/b0a850d ), [royriojas](https://github.com/royriojas), 05/08/2019 01:13:30
 
     
 ## v5.2.2
