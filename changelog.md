@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v7.0.0-alpha.0
+- **Refactoring**
+  - Simplify and improve mobx-form api - [8f48e28]( https://github.com/royriojas/mobx-form/commit/8f48e28 ), [royriojas](https://github.com/royriojas), 05/08/2019 01:10:29
+
+    
 ## v5.2.2
 - **Refactoring**
   - Upgrade node_modules and use latest babel - [b795e13]( https://github.com/royriojas/mobx-form/commit/b795e13 ), [Roy Riojas](https://github.com/Roy Riojas), 08/05/2019 01:11:58
