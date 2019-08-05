@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v7.0.0-alpha.2
+- **Refactoring**
+  - Attempt to change browser field to something webpack likes - [a7d9d65]( https://github.com/royriojas/mobx-form/commit/a7d9d65 ), [royriojas](https://github.com/royriojas), 05/08/2019 01:50:34
+
+    
 ## v7.0.0-alpha.1
 - **Bug Fixes**
   - Fix lint issues - [b0a850d]( https://github.com/royriojas/mobx-form/commit/b0a850d ), [royriojas](https://github.com/royriojas), 05/08/2019 01:13:30
