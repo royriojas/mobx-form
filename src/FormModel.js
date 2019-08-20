@@ -165,9 +165,10 @@ export class FormModel {
     return toJS(
       keys.reduce((seq, key) => {
         const field = this.fields[key];
+        const value = toJS(field.value);
         // this is required to make sure forms that use the serializedData object
         // have the values without leading or trailing spaces
-        seq[key] = typeof field.value === 'string' ? trim(field.value) : field.value;
+        seq[key] = typeof value === 'string' ? trim(value) : value;
         return seq;
       }, {}),
     );
