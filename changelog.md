@@ -1,5 +1,13 @@
 
 # mobx-form - Changelog
+## v8.0.0
+- **Refactoring**
+  - Fix lint - [11eb2d6]( https://github.com/royriojas/mobx-form/commit/11eb2d6 ), [royriojas](https://github.com/royriojas), 10/09/2019 11:19:36
+
+    
+  - Major refactor on mobx-form and adding tests - [d9b0da0]( https://github.com/royriojas/mobx-form/commit/d9b0da0 ), [royriojas](https://github.com/royriojas), 10/09/2019 11:18:28
+
+    
 ## v7.0.1
 - **Refactoring**
   - remove Observable arrays from serialization of fields - [741487e]( https://github.com/royriojas/mobx-form/commit/741487e ), [royriojas](https://github.com/royriojas), 19/08/2019 20:13:49
