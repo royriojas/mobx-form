@@ -1,370 +1,1103 @@
-import sleep from 'sleep.async';
-import { createModelFromState } from '../src/FormModel';
+import { createModel, createModelFromState, FormModel } from '../src/FormModel';
+import { deferred, sleep } from '../src/resources/utils';
 
-describe('form-model', () => {
-  describe('restoreInitialValues', () => {
-    it('should reset the initial values on the form', () => {
-      const model = createModelFromState({ valueA: '', valueB: '' });
+describe('FormModel', () => {
+  describe('A FormModel can be created using createModel, createModelFromState or using the Constructor directly', () => {
+    describe('FormModel', () => {
+      it('should create a simple form with two fields', () => {
+        const model = new FormModel({
+          descriptors: { name: {}, lastName: {} },
+          initialState: { name: 'Snoopy', lastName: 'Brown' },
+        });
+        expect(model.fields.name.value).toEqual('Snoopy');
+        expect(model.fields.lastName.value).toEqual('Brown');
+      });
 
-      model.updateField('valueA', 'some');
-      model.updateField('valueB', 'b');
+      it('should create a simple form with three fields', () => {
+        const model = new FormModel({
+          descriptors: { name: {}, lastName: {}, email: {} },
+          initialState: { name: 'Snoopy', lastName: 'Brown', email: 'snoopy@brown.net' },
+        });
+        expect(model.fields.name.value).toEqual('Snoopy');
+        expect(model.fields.lastName.value).toEqual('Brown');
+        expect(model.fields.email.value).toEqual('snoopy@brown.net');
+      });
 
-      expect(model.valueOf('valueA')).toEqual('some');
-      expect(model.valueOf('valueB')).toEqual('b');
-
-      model.restoreInitialValues();
-
-      expect(model.valueOf('valueA')).toEqual('');
-      expect(model.valueOf('valueB')).toEqual('');
+      it('can create an empty model', () => {
+        const model = new FormModel({});
+        expect(Object.keys(model.fields).length).toEqual(0);
+      });
     });
 
-    it('should reset the initial values on the form even if not empty strings', () => {
-      const model = createModelFromState({ valueA: [], valueB: [] });
+    describe('createModel', () => {
+      it('should create a simple form with two fields', () => {
+        const model = createModel({
+          descriptors: { name: {}, lastName: {} },
+          initialState: { name: 'Snoopy', lastName: 'Brown' },
+        });
+        expect(model.fields.name.value).toEqual('Snoopy');
+        expect(model.fields.lastName.value).toEqual('Brown');
+      });
 
-      model.updateField('valueA', [1, 2, 3]);
-      model.updateField('valueB', [4, 5, 6]);
+      it('should create a simple form with three fields', () => {
+        const model = createModel({
+          descriptors: { name: {}, lastName: {}, email: {} },
+          initialState: { name: 'Snoopy', lastName: 'Brown', email: 'snoopy@brown.net' },
+        });
+        expect(model.fields.name.value).toEqual('Snoopy');
+        expect(model.fields.lastName.value).toEqual('Brown');
+        expect(model.fields.email.value).toEqual('snoopy@brown.net');
+      });
 
-      expect(model.valueOf('valueA')).toEqual([1, 2, 3]);
-      expect(model.valueOf('valueB')).toEqual([4, 5, 6]);
+      describe('required fields', () => {
+        it('should allow certain fields to marked as required', () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
 
-      model.restoreInitialValues();
+          expect(model.requiredFields).toEqual(['name', 'email']);
+        });
 
-      expect(model.valueOf('valueA')).toEqual([]);
-      expect(model.valueOf('valueB')).toEqual([]);
+        it('should mark fields as required', () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
+
+          expect(model.fields.name.required).toEqual(true);
+          expect(model.fields.email.required).toEqual(true);
+        });
+
+        it('should fail validation if required fields are missing', async () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
+
+          await model.validate();
+          expect(model.valid).toEqual(false);
+        });
+
+        it('a field that is not required can be made required later', () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: false,
+              },
+            },
+          });
+
+          expect(model.fields.name.required).toEqual(false);
+
+          model.fields.name.setRequired(true);
+
+          expect(model.fields.name.required).toEqual(true);
+        });
+
+        describe('when required fields are missing', () => {
+          it('should contain a summary of missing fields', async () => {
+            const model = createModel({
+              descriptors: {
+                name: {
+                  required: 'The name is required',
+                },
+                lastName: {},
+                email: {
+                  required: true,
+                },
+              },
+            });
+
+            await model.validate();
+            expect(model.summary).toMatchSnapshot();
+          });
+
+          describe('when required property is set to a message', () => {
+            it('should have an errorMessage on failed fields', async () => {
+              const model = createModel({
+                descriptors: {
+                  name: {
+                    required: 'The name is required',
+                  },
+                  lastName: {},
+                  email: {
+                    required: 'The email is required',
+                  },
+                },
+              });
+
+              await model.validate();
+
+              expect(model.fields.name.errorMessage).toEqual('The name is required');
+              expect(model.fields.email.errorMessage).toEqual('The email is required');
+            });
+          });
+
+          describe('when required property is set to true (boolean)', () => {
+            it('should have an errorMessage on failed fields', async () => {
+              const model = createModel({
+                descriptors: {
+                  name: {
+                    required: true,
+                  },
+                  lastName: {},
+                  email: {
+                    required: true,
+                  },
+                },
+              });
+
+              await model.validate();
+
+              expect(model.fields.name.errorMessage).toMatchSnapshot();
+              expect(model.fields.email.errorMessage).toMatchSnapshot();
+            });
+          });
+        });
+
+        it('should pass the validation if required fields are set', async () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
+
+          model.fields.name.setValue('Snoopy');
+          model.fields.email.setValue('snoopy@brown.org');
+
+          await model.validate();
+          expect(model.valid).toEqual(true);
+        });
+
+        it('model should inform if required fields are set', async () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
+
+          model.fields.name.setValue('Snoopy');
+          model.fields.email.setValue('snoopy@brown.org');
+
+          expect(model.requiredAreFilled).toEqual(true);
+        });
+      });
+
+      describe('interacted', () => {
+        it('should be false when the model is created initially', async () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
+
+          expect(model.interacted).toEqual(false);
+        });
+
+        it('should be true after at least one value is set', async () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
+
+          model.fields.name.setValue('Snoopy');
+
+          expect(model.interacted).toEqual(true);
+        });
+
+        it('should reset the value of the interacted flag on all fields if the value ', () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
+
+          model.fields.name.setValue('Snoopy');
+
+          expect(model.interacted).toEqual(true);
+
+          model.resetInteractedFlag();
+
+          expect(model.interacted).toEqual(false);
+        });
+      });
+
+      describe('dataIsReady', () => {
+        it('should be false when the required data is missing', () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
+
+          model.fields.lastName.setValue('Doo');
+          expect(model.dataIsReady).toEqual(false);
+        });
+
+        it('should be true when the required data is provided', () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
+
+          model.fields.name.setValue('Snoopy');
+          model.fields.email.setValue('snoopy@doo');
+
+          expect(model.dataIsReady).toEqual(true);
+        });
+
+        it('should be true when the required data is provided unless the field is marked as disabled', async () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
+
+          model.fields.name.setValue('Snoopy');
+
+          model.disableFields(['email']);
+
+          expect(model.dataIsReady).toEqual(true);
+        });
+
+        it('disabled fields will be considered not required', async () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
+
+          expect(model.fields.email.required).toEqual(true);
+
+          model.disableFields(['email']);
+
+          expect(model.fields.email.required).toEqual(false);
+        });
+
+        it('disabled fields will be considered not required', async () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
+
+          expect(model.fields.email.required).toEqual(true);
+
+          model.disableFields(['email']);
+
+          expect(model.fields.email.required).toEqual(false);
+        });
+
+        it('disabled fields can also be enabled back again', async () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
+
+          expect(model.fields.email.required).toEqual(true);
+
+          model.disableFields(['email']);
+
+          expect(model.fields.email.required).toEqual(false);
+
+          model.enableFields(['email']);
+
+          expect(model.fields.email.required).toEqual(true);
+        });
+
+        it('should throw when calling disableFields with no parameters', () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
+
+          expect(() => {
+            model.disableFields();
+          }).toThrowErrorMatchingSnapshot();
+        });
+
+        it('should throw when calling disableFields with null', () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
+
+          expect(() => {
+            model.disableFields(null);
+          }).toThrowErrorMatchingSnapshot();
+        });
+
+        it('should throw when calling disableFields with an argument different from an array', () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
+
+          expect(() => {
+            model.disableFields({});
+          }).toThrowErrorMatchingSnapshot();
+        });
+
+        it('should throw when calling enableFields with an argument different from an array', () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+              },
+            },
+          });
+
+          expect(() => {
+            model.enableFields();
+          }).toThrowErrorMatchingSnapshot();
+
+          expect(() => {
+            model.enableFields({});
+          }).toThrowErrorMatchingSnapshot();
+        });
+
+        describe('when trying to disable a field that does not exist', () => {
+          it('should throw an error', () => {
+            const model = createModel({
+              descriptors: {
+                name: {
+                  required: 'The name is required',
+                },
+                lastName: {},
+                email: {
+                  required: true,
+                },
+              },
+            });
+
+            expect(() => {
+              model.disableFields(['non existant field']);
+            }).toThrowErrorMatchingSnapshot();
+          });
+        });
+
+        it('should be true when the required data is provided unless the validation function fails', async () => {
+          const model = createModel({
+            descriptors: {
+              name: {
+                required: 'The name is required',
+              },
+              lastName: {},
+              email: {
+                required: true,
+                validator: field => {
+                  if (field.value.indexOf('@') === -1) {
+                    throw new Error('A valid email is required');
+                  }
+                },
+              },
+            },
+          });
+
+          await model.validate();
+
+          model.fields.name.setValue('Snoopy');
+          model.fields.email.setValue('snoopy');
+
+          expect(model.dataIsReady).toEqual(false);
+        });
+      });
     });
-  });
 
-  describe('serializedData', () => {
-    it('should return always the data serialized as a Javascript object', () => {
-      const model = createModelFromState({ name: 'John', lastName: 'Doe' });
-      expect(model.serializedData).toEqual({ name: 'John', lastName: 'Doe' });
+    describe('createModelFromState', () => {
+      it('creates a model given only an object with keys and values', () => {
+        const model = createModelFromState({ name: 'Snoopy', lastName: 'Brown', email: 'snoopy@brown.net' });
+        expect(model.fields.name.value).toEqual('Snoopy');
+        expect(model.fields.lastName.value).toEqual('Brown');
+        expect(model.fields.email.value).toEqual('snoopy@brown.net');
+      });
 
-      model.updateField('name', 'Jane');
-      model.updateField('lastName', 'Martins');
+      it('can also create a model from no state or undefined state', () => {
+        const model = createModelFromState();
+        expect(Object.keys(model.fields).length).toEqual(0);
 
-      expect(model.serializedData).toEqual({
-        name: 'Jane',
-        lastName: 'Martins',
+        const model1 = createModelFromState(undefined);
+        expect(Object.keys(model1.fields).length).toEqual(0);
       });
     });
   });
 
-  describe('requiredAreFilled', () => {
-    it('should be true if all required fields have a value', () => {
-      const model = createModelFromState(
-        { name: '', lastName: '', email: '' },
-        {
-          name: { required: true, requiredMessage: 'The name is required' },
-          lastName: {
-            required: ({ fields }) => !!fields.name.value,
-            requiredMessage: 'lastName is required',
+  describe('Adding fields after model is created', () => {
+    it('field can be validated and serialized as other normal fields', async () => {
+      const model = createModel({
+        descriptors: {
+          name: {
+            required: 'The name is required',
           },
+          lastName: {},
           email: {
-            required: ({ fields }) => fields.lastName.value === 'Doo',
-            requiredMessage: 'Email is required for all Doos',
-          }, // only required when last name is Doo
+            required: true,
+          },
         },
-      );
+      });
 
-      expect(model.requiredAreFilled).toBe(false);
-      expect(model.requiredFields).toEqual(['name']);
+      expect(model.requiredFields).toEqual(['name', 'email']);
 
-      model.updateField('name', 'John');
+      expect(model.fields.address).not.toBeDefined();
 
-      expect(model.requiredAreFilled).toBe(false); // now lastName is also required!
-      expect(model.requiredFields.sort()).toEqual(['name', 'lastName'].sort());
+      model.addFields({
+        address: {
+          required: true,
+        },
+      });
 
-      model.updateField('lastName', 'Doo');
+      expect(model.requiredFields).toEqual(['name', 'email', 'address']);
+      expect(model.fields.address).toBeDefined();
 
-      expect(model.requiredFields.sort()).toEqual(['name', 'lastName', 'email'].sort());
-      expect(model.requiredAreFilled).toBe(false);
+      await model.validate();
 
-      model.updateField('email', 'some@email.com');
-      expect(model.requiredAreFilled).toBe(true);
+      model.fields.address.setValue('1200 Elm street');
+
+      const data = model.serializedData;
+      expect(data.address).toEqual('1200 Elm street');
     });
 
-    it('should allow the creation of a form that will track if all required fields are filled', async () => {
-      const model = createModelFromState(
-        { name: '', lastName: '', email: '' },
-        {
-          // using generic validation
-          name: { required: 'Name is required' },
-          // using a custom validation functiont that returns a Boolean
-          lastName: {
-            required: 'lastName is required',
-            validator: field => field.value !== 'Doe',
-            errorMessage: 'Please do not enter Doe',
+    it('should throw when calling addFields with no values', () => {
+      const model = createModel({
+        descriptors: {
+          name: {
+            required: 'The name is required',
           },
-          // using an async function that throws when it fails, since throws are converted to rejections
-          // this just works. If validation passed no need to return anything.
+          lastName: {},
           email: {
-            validator: async ({ value }) => {
+            required: true,
+          },
+        },
+      });
+
+      expect(() => model.addFields()).toThrowErrorMatchingSnapshot();
+    });
+  });
+
+  describe('while validating model.valid', () => {
+    it('should be false', async () => {
+      const dfd = deferred();
+      const model = createModel({
+        descriptors: {
+          name: {
+            required: 'The name is required',
+          },
+          lastName: {},
+          email: {
+            required: true,
+            validator: async () => dfd,
+          },
+        },
+      });
+
+      expect(model.valid).toEqual(true);
+
+      model.fields.name.setValue('Snoopy');
+      model.fields.email.setValue('snoopy@brown.org');
+
+      model.validate();
+
+      expect(model.valid).toEqual(false);
+
+      dfd.resolve();
+
+      await sleep(50);
+
+      expect(model.valid).toEqual(true);
+    });
+
+    describe('restoreInitialValues', () => {
+      it('should restore any data to its original values', async () => {
+        const dfd = deferred();
+
+        const model = createModel({
+          descriptors: {
+            name: {
+              required: 'The name is required',
+            },
+            lastName: {},
+            email: {
+              required: true,
+              validator: async () => dfd,
+            },
+          },
+        });
+
+        model.updateFrom({ name: 'snoopy', email: 'snoopy@brown.org' }, { commit: true });
+
+        model.fields.name.setValue('Top cat');
+        model.fields.email.setValue('topcat@barbera.org');
+
+        expect(model.serializedData).toEqual({ name: 'Top cat', lastName: undefined, email: 'topcat@barbera.org' });
+
+        model.restoreInitialValues();
+
+        expect(model.serializedData).toEqual({ name: 'snoopy', lastName: undefined, email: 'snoopy@brown.org' });
+      });
+    });
+  });
+
+  describe('validation', () => {
+    it('by default fields auto validate themselves', () => {
+      const model = createModel({
+        descriptors: {
+          name: {
+            required: '',
+          },
+        },
+      });
+
+      expect(model.fields.name.autoValidate).toEqual(true);
+    });
+
+    it('auto validation has to be turned off manually', () => {
+      const model = createModel({
+        descriptors: {
+          name: {
+            required: '',
+            autoValidate: false,
+          },
+        },
+      });
+
+      expect(model.fields.name.autoValidate).toEqual(false);
+    });
+
+    it('by default fields auto validate after any change', async () => {
+      const validator = jest.fn();
+      const model = createModel({
+        descriptors: {
+          name: {
+            autoValidate: true,
+            validator,
+          },
+        },
+      });
+
+      model.fields.name.setValue('some value');
+
+      await sleep(400);
+
+      expect(validator).toHaveBeenCalled();
+    });
+
+    it('if autoValidate is false, validate is not called after any change', async () => {
+      const validator = jest.fn();
+      const model = createModel({
+        descriptors: {
+          name: {
+            autoValidate: false,
+            validator,
+          },
+        },
+      });
+
+      model.fields.name.setValue('some value');
+
+      await sleep(400);
+
+      expect(validator).not.toHaveBeenCalled();
+    });
+
+    it('a validation function can be async', async () => {
+      const model = createModel({
+        descriptors: {
+          name: {
+            validator: async field => {
               await sleep(100);
+              return field.value !== 'John';
+            },
+            errorMessage: 'Please do not use John as name',
+          },
+        },
+      });
 
-              if (value === 'johndoe@gmail.com') {
-                throw new Error('Email already used');
-              }
+      model.fields.name.value = 'John';
+
+      await model.validate();
+
+      expect(model.valid).toEqual(false);
+    });
+
+    it('a validation function does not need a default error message. One will be provided if ommited', async () => {
+      const model = createModel({
+        descriptors: {
+          name: {
+            validator: async field => {
+              await sleep(100);
+              return field.value !== 'John';
             },
           },
         },
-      );
-
-      expect(model.requiredAreFilled).toEqual(false);
-
-      model.updateField('name', 'Snoopy');
-      expect(model.requiredAreFilled).toEqual(false);
-
-      model.updateField('lastName', 'Doo');
-      expect(model.requiredAreFilled).toEqual(true);
-
-      await model.validate();
-      expect(model.valid).toEqual(true);
-
-      model.updateFrom({
-        name: '',
-        lastName: 'Doe',
-        email: 'johndoe@gmail.com',
       });
 
-      await model.validate();
-      expect(model.valid).toEqual(false);
+      model.fields.name.value = 'John';
 
-      expect(model.summary).toEqual(['Name is required', 'Please do not enter Doe', 'Email already used']);
+      await model.validate();
+
+      expect(model.valid).toEqual(false);
+      expect(model.fields.name.errorMessage).toEqual('Validation for "name" failed');
     });
 
-    it('errors thrown inside the validator execution should not break the validation when validation is not async', async () => {
-      const model = createModelFromState(
-        { name: '', lastName: '', email: '' },
-        {
-          // using generic validation
-          name: { required: 'Name is required' },
-          // using a custom validation functiont that returns a Boolean
-          lastName: {
-            required: 'lastName is required',
-            validator: field => field.value !== 'Doe',
-            errorMessage: 'Please do not enter Doe',
-          },
-          // using an async function that throws when it fails, since throws are converted to rejections
-          // this just works. If validation passed no need to return anything.
-          email: {
-            validator: ({ value }) => {
-              if (value === 'johndoe@gmail.com') {
-                throw new Error('Email already used');
-              }
+    it('If validation function rejected without an error message. One will be provided by default', async () => {
+      const model = createModel({
+        descriptors: {
+          name: {
+            validator: field => {
+              if (field.value === 'John') return Promise.reject(); // eslint-disable-line prefer-promise-reject-errors
+              return true;
             },
           },
         },
-      );
-
-      expect(model.requiredAreFilled).toEqual(false);
-
-      model.updateField('name', 'Snoopy');
-      expect(model.requiredAreFilled).toEqual(false);
-
-      model.updateField('lastName', 'Doo');
-      expect(model.requiredAreFilled).toEqual(true);
-
-      await model.validate();
-      expect(model.valid).toEqual(true);
-
-      model.updateFrom({
-        name: '',
-        lastName: 'Doe',
-        email: 'johndoe@gmail.com',
       });
 
-      await model.validate();
-      expect(model.valid).toEqual(false);
+      model.fields.name.value = 'John';
 
-      expect(model.summary).toEqual(['Name is required', 'Please do not enter Doe', 'Email already used']);
+      await model.validate();
+
+      expect(model.valid).toEqual(false);
+      expect(model.fields.name.errorMessage).toEqual('Validation for "name" failed');
     });
 
-    it('should allow validators to access fields in the model', async () => {
-      const model = createModelFromState(
-        { name: 'Snoopy', lastName: 'Brown', email: '' },
-        {
-          // using generic validation
-          name: { required: 'Name is required' },
-          // using a custom validation functiont that returns a Boolean
-          lastName: {
-            required: 'lastName is required',
-            validator: field => field.value !== 'Doe',
-            errorMessage: 'Please do not enter Doe',
-          },
-          // using an async function that throws when it fails, since throws are converted to rejections
-          // this just works. If validation passed no need to return anything.
+    it('a single field can have multiple validations in an array', async () => {
+      const model = createModel({
+        descriptors: {
           email: {
-            validator: ({ value = '' }, fields, _model) => {
-              if (_model.validateEmails) {
-                if (!(value.indexOf('@') > 1)) {
-                  throw new Error('INVALID_EMAIL');
+            required: 'Email is required',
+            validator: [
+              field => {
+                if (field.value.indexOf('@') === -1) {
+                  throw new Error('A valid email is required');
                 }
+              },
+              async field => {
+                await sleep(200);
+                if (field.value === 'snoopy@brown.org') {
+                  return { error: 'Email is taken' };
+                }
+                return true;
+              },
+            ],
+          },
+        },
+      });
+
+      model.fields.email.value = '';
+
+      await model.validate();
+
+      expect(model.valid).toEqual(false);
+      expect(model.fields.email.errorMessage).toEqual('Email is required');
+
+      model.fields.email.value = 'snoopy';
+
+      await model.validate();
+
+      expect(model.valid).toEqual(false);
+      expect(model.fields.email.errorMessage).toEqual('A valid email is required');
+
+      model.fields.email.value = 'snoopy@brown.org';
+
+      await model.validate();
+
+      expect(model.valid).toEqual(false);
+      expect(model.fields.email.errorMessage).toEqual('Email is taken');
+
+      model.fields.email.value = 'topcat@barbera.org';
+
+      await model.validate();
+
+      expect(model.valid).toEqual(true);
+      expect(model.fields.email.errorMessage).toEqual('');
+    });
+
+    it('The validation function can return an error object to describe the error', async () => {
+      const model = createModel({
+        descriptors: {
+          name: {
+            validator: field => {
+              if (field.value === 'John') {
+                return { error: 'Name cannot be John' };
               }
               return true;
             },
           },
         },
-      );
+      });
+
+      model.fields.name.value = 'John';
 
       await model.validate();
-      expect(model.valid).toEqual(true);
 
-      model.validateEmails = true;
-      await model.validate();
       expect(model.valid).toEqual(false);
+      expect(model.fields.name.errorMessage).toEqual('Name cannot be John');
     });
-  });
 
-  describe('addFields', () => {
-    it('should create a model from an object descriptor', async () => {
-      const model = createModelFromState({});
+    describe('If the validator function is an array', () => {
+      it('should throw if elements of the array are not functions', async () => {
+        const model = createModel({
+          descriptors: {
+            email: {
+              validator: [
+                'some string',
+                field => {
+                  if (field.value.indexOf('@') === -1) {
+                    throw new Error('A valid email is required');
+                  }
+                },
+                async field => {
+                  await sleep(200);
+                  if (field.value === 'snoopy@brown.org') {
+                    return { error: 'Email is taken' };
+                  }
+                  return true;
+                },
+              ],
+            },
+          },
+        });
 
-      model.addFields({
-        // using generic validation
-        name: {
-          value: 'Snoopy',
-          required: 'Name is required',
-        },
-        // using a custom validation functiont that returns a Boolean
-        lastName: {
-          value: 'Brown',
-          required: 'lastName is required',
-          validator: field => field.value !== 'Doe',
-          errorMessage: 'Please do not enter Doe',
-        },
-        email: {
-          validator: ({ value = '' }, fields, _model) => {
-            if (_model.validateEmails) {
-              if (!(value.indexOf('@') > 1)) {
-                throw new Error('INVALID_EMAIL');
+        model.fields.email.value = '';
+
+        await model.validate();
+
+        expect(model.valid).toEqual(false);
+        expect(model.fields.email.errorMessage).toEqual('Validator must be a function or a function[]');
+      });
+    });
+
+    describe('if an errorMessage is set in the field', () => {
+      it('should report the field as not valid and the entire model is not valid', async () => {
+        const model = createModel({
+          descriptors: {
+            email: {
+              autoValidate: false,
+              validator: [
+                field => {
+                  if (field.value.indexOf('@') === -1) {
+                    throw new Error('A valid email is required');
+                  }
+                },
+                async field => {
+                  await sleep(200);
+                  if (field.value === 'snoopy@brown.org') {
+                    return { error: 'Email is taken' };
+                  }
+                  return true;
+                },
+              ],
+            },
+          },
+        });
+
+        model.fields.email.setErrorMessage('Email is disabled');
+        expect(model.valid).toEqual(false);
+
+        model.fields.email.setValue('snoopy@brown.org');
+
+        await model.validate();
+
+        expect(model.valid).toEqual(false);
+        expect(model.fields.email.errorMessage).toEqual('Email is taken');
+
+        model.fields.email.setValue('snoopy1@brown.org');
+        await model.validate();
+
+        expect(model.valid).toEqual(true);
+        expect(model.fields.email.errorMessage).toEqual('');
+      });
+
+      it('error message can be cleared from the field and make the form to be considered valid again', async () => {
+        const model = createModel({
+          descriptors: {
+            email: {
+              autoValidate: false,
+              validator: [
+                field => {
+                  if (field.value.indexOf('@') === -1) {
+                    throw new Error('A valid email is required');
+                  }
+                },
+                async field => {
+                  await sleep(200);
+                  if (field.value === 'snoopy@brown.org') {
+                    return { error: 'Email is taken' };
+                  }
+                  return true;
+                },
+              ],
+            },
+          },
+        });
+
+        model.fields.email.setErrorMessage('Email is disabled');
+        expect(model.valid).toEqual(false);
+
+        model.fields.email.clearValidation();
+
+        expect(model.valid).toEqual(true);
+        expect(model.fields.email.errorMessage).toEqual('');
+      });
+    });
+
+    describe('field.hasValue function', () => {
+      it('should be used to determine if a field has value, useful in case of arrays', () => {
+        const model = createModel({
+          descriptors: {
+            selectedPhone: {
+              required: true,
+              hasValue: value => !!value && value.length > 0,
+            },
+          },
+        });
+
+        model.fields.selectedPhone.setValue(['some']);
+        expect(model.fields.selectedPhone.hasValue).toEqual(true);
+
+        model.fields.selectedPhone.setValue([]);
+        expect(model.fields.selectedPhone.hasValue).toEqual(false);
+      });
+    });
+
+    describe('field.hasValue', () => {
+      it('By default arrays are considered as empty if no values are set', () => {
+        const model = createModel({
+          descriptors: {
+            selectedPhone: {
+              required: true,
+            },
+          },
+        });
+
+        model.fields.selectedPhone.setValue(['some']);
+        expect(model.fields.selectedPhone.hasValue).toEqual(true);
+
+        model.fields.selectedPhone.setValue([]);
+        expect(model.fields.selectedPhone.hasValue).toEqual(false);
+      });
+    });
+
+    it('The validation function can return a rejected promise', async () => {
+      const model = createModel({
+        descriptors: {
+          name: {
+            validator: field => {
+              if (field.value === 'John') {
+                return Promise.reject({ error: 'Name cannot be John' }); // eslint-disable-line prefer-promise-reject-errors
               }
-            }
-            return true;
+              return Promise.resolve(true);
+            },
           },
         },
       });
 
-      await model.validate();
-      expect(model.valid).toEqual(true);
+      model.fields.name.value = 'John';
 
-      model.validateEmails = true;
       await model.validate();
+
       expect(model.valid).toEqual(false);
+      expect(model.fields.name.errorMessage).toEqual('Name cannot be John');
     });
 
-    it('should create a model from a descriptor of type array', async () => {
-      const model = createModelFromState({});
-
-      model.addFields([
-        {
-          name: 'name',
-          value: 'Snoopy',
-          required: 'Name is required',
-        },
-        {
-          name: 'lastName',
-          value: 'Brown',
-          required: 'lastName is required',
-          validator: field => field.value !== 'Doe',
-          errorMessage: 'Please do not enter Doe',
-        },
-        {
-          name: 'email',
-          validator: ({ value = '' }, fields, _model) => {
-            if (_model.validateEmails) {
-              if (!(value.indexOf('@') > 1)) {
-                throw new Error('INVALID_EMAIL');
+    it('The validation can be async and return the error from the function', async () => {
+      const model = createModel({
+        descriptors: {
+          name: {
+            validator: async field => {
+              await sleep(100);
+              if (field.value === 'John') {
+                throw new Error('Name cannot be John');
               }
-            }
-            return true;
+            },
           },
         },
-      ]);
+      });
 
-      expect(model.fields.name.name).toEqual('name');
-      expect(model.fields.lastName.name).toEqual('lastName');
-      expect(model.fields.email.name).toEqual('email');
-
-      expect(model.fields.name.value).toEqual('Snoopy');
-      expect(model.fields.lastName.value).toEqual('Brown');
-      expect(model.fields.email.value).toEqual(undefined);
+      model.fields.name.value = 'John';
 
       await model.validate();
-      expect(model.valid).toEqual(true);
 
-      model.validateEmails = true;
-      await model.validate();
       expect(model.valid).toEqual(false);
+      expect(model.fields.name.errorMessage).toEqual('Name cannot be John');
     });
 
-    it('should store non recognized fields as meta in the fields', async () => {
-      const model = createModelFromState({});
-
-      const descriptorFields = [
-        {
-          name: 'numOfBedrooms',
-          value: undefined,
-          required: '# of bedrooms is required',
-          meta: {
-            type: 'Select',
-            label: '# of Bedrooms',
-            items: [
-              { id: 'STUDIO', value: 'Studio' },
-              { id: 'ONE_BED', value: 'One bed' },
-              { id: 'TWO_BEDS', value: 'Two beds' },
-              { id: 'THREE_BEDS', value: 'Three beds' },
-              { id: 'FOUR_BEDS', value: 'Four beds' },
-            ],
+    it('validation is skipped if field is disabled even when using force = true', async () => {
+      const validator = jest.fn();
+      const model = createModel({
+        descriptors: {
+          name: {
+            autoValidate: false,
+            validator,
           },
         },
-        {
-          name: 'moveInRange',
-          value: undefined,
-          required: 'Move-in range is required',
-          meta: {
-            type: 'Select',
-            label: 'When do you plan to rent?',
-            items: [
-              { id: 'NEXT_4_WEEKS', value: 'Next 4 weeks' },
-              { id: 'NEXT_2_MONTHS', value: 'Next 2 months' },
-              { id: 'NEXT_4_MONTHS', value: 'Next 4 months' },
-              { id: 'BEYOND_4_MONTHS', value: 'Beyond 4 months' },
-              { id: 'I_DONT_KNOW', value: "I don't know" },
-            ],
+      });
+
+      model.fields.name.setDisabled(true);
+
+      model.fields.name.validate();
+
+      await sleep(400);
+
+      expect(validator).not.toHaveBeenCalled();
+
+      model.fields.name.validate({ force: true });
+
+      await sleep(400);
+
+      expect(validator).not.toHaveBeenCalled();
+    });
+
+    it('validation is skipped the first time if waitForBlur is true', async () => {
+      const validator = jest.fn();
+      const model = createModel({
+        descriptors: {
+          name: {
+            waitForBlur: true,
+            autoValidate: true,
+            validator,
           },
         },
-        {
-          name: 'comments',
-          value: '',
-          required: 'Comments are required',
-          meta: {
-            type: 'TextArea',
-            label: 'Comments',
-          },
-        },
-      ];
+      });
 
-      model.addFields(descriptorFields);
+      model.fields.name.setValue('Snoopy');
 
-      const { fields } = model;
+      await sleep(400);
 
-      expect(fields.numOfBedrooms.meta).toEqual(descriptorFields[0].meta);
-      expect(fields.moveInRange.meta).toEqual(descriptorFields[1].meta);
-      expect(fields.comments.meta).toEqual(descriptorFields[2].meta);
+      expect(validator).not.toHaveBeenCalled();
 
-      await model.validate();
-      expect(model.valid).toEqual(false);
+      model.fields.name.markBlurredAndValidate();
 
-      expect(fields.numOfBedrooms.errorMessage).toEqual(descriptorFields[0].required);
-      expect(fields.moveInRange.errorMessage).toEqual(descriptorFields[1].required);
-      expect(fields.comments.errorMessage).toEqual(descriptorFields[2].required);
+      
+    });
+  });
 
-      fields.numOfBedrooms.setValue('STUDIO');
-      fields.moveInRange.setValue('NEXT_4_WEEKS');
-      fields.comments.setValue('Some comment');
+  describe('serializedData', () => {
+    it('creates a model given only an object with keys and values', () => {
+      const model = createModelFromState({ name: 'Snoopy', lastName: 'Brown', email: 'snoopy@brown.net' });
+      expect(model.serializedData).toEqual({ name: 'Snoopy', lastName: 'Brown', email: 'snoopy@brown.net' });
+    });
+  });
 
-      await model.validate();
-      expect(model.valid).toEqual(true);
+  describe('fields in a model are not disabled by default', () => {
+    it('creates a model given only an object with keys and values', () => {
+      const model = createModelFromState({ name: 'Snoopy', lastName: 'Brown', email: 'snoopy@brown.net' });
+      expect(model.fields.name.disabled).toEqual(false);
     });
   });
 });

@@ -58,7 +58,7 @@ export default [
   },
   {
     input: 'src/FormModel.js',
-    external: ['mobx', 'debouncy', 'coalescy', 'jq-trim'],
+    external: ['mobx', 'debouncy', 'jq-trim'],
     output: [{ file: pkg.main, format: 'cjs' }, { file: pkg.module, format: 'es' }],
     plugins: [
       babel({
@@ -92,7 +92,7 @@ export default [
 
   {
     input: 'src/FormModel.js',
-    external: ['mobx', 'debouncy', 'coalescy', 'jq-trim'],
+    external: ['mobx', 'debouncy', 'jq-trim'],
     output: [{ file: pkg._legacy_module, format: 'es' }],
     plugins: [
       babel({

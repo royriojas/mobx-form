@@ -14,20 +14,19 @@ export default class Field {
 
   @computed
   get waitForBlur() {
-    return this._waitForBlur;
+    return !!this._waitForBlur;
   }
 
   @computed
   get disabled() {
-    return this._disabled;
+    return !!this._disabled;
   }
 
   @computed
   get required() {
     if (this.disabled) return false;
-    // if this._required is a function we evaluate it
-    // to find if the field needs to be considered required
-    return typeof this._required === 'function' ? this._required({ field: this, fields: this.model.fields }) : !!this._required;
+
+    return !!this._required;
   }
 
   @action
@@ -98,11 +97,11 @@ export default class Field {
    * onChange event
    */
   @observable
-  _interactive = false;
+  _autoValidate = false;
 
   @computed
-  get interactive() {
-    return this._interactive;
+  get autoValidate() {
+    return this._autoValidate;
   }
 
   /**
@@ -167,32 +166,36 @@ export default class Field {
    * reset the errorMessage and interacted flags
    *
    * @param {any} value
-   * @param {Boolean} reset
+   * @param { object} params the options object
+   * @param {Boolean} params.resetInteractedFlag whether or not to reset the interacted flag
    *
    */
   @action
-  setValue(value, reset) {
-    if (reset) {
+  setValue(value, { resetInteractedFlag, commit } = {}) {
+    if (resetInteractedFlag) {
       this._setValueOnly(value);
       this.errorMessage = '';
       this._interacted = false;
     } else {
       this._setValue(value);
     }
-  }
 
-  @action
-  replaceValue(value, reset) {
-    this.setValue(value, reset);
-    this._initialValue = value;
+    if (commit) {
+      this.commit();
+    }
   }
 
   /**
    * Restore the initial value of the field
    */
   @action
-  restoreInitialValue() {
-    this.setValue(this._initialValue, true);
+  restoreInitialValue({ resetInteractedFlag = true } = {}) {
+    this.setValue(this._initialValue, { resetInteractedFlag });
+  }
+
+  @action
+  commit() {
+    this._initialValue = this.value;
   }
 
   /**
@@ -258,14 +261,26 @@ export default class Field {
     this._disabled = disabled;
   }
 
+  @action
+  validate = opts => {
+    this._debouncedValidation.cancel();
+    return this._validate(opts);
+  };
+
+  @computed
+  get originalErrorMessage() {
+    return this._originalErrorMessage || `Validation for "${this.name}" failed`;
+  }
+
   /**
    * validate the field. If force is true the validation will be perform
    * even if the field was not initially interacted or blurred
    *
-   * @param {boolean} [force=false]
+   * @param params {object} arguments object
+   * @param params.force {boolean} [force=false]
    */
   @action
-  validate(force = false) {
+  _validate({ force = false } = {}) {
     const { required } = this;
 
     const shouldSkipValidation = this.disabled || (!required && !this._validateFn);
@@ -273,7 +288,7 @@ export default class Field {
     if (shouldSkipValidation) return;
 
     if (!force) {
-      const userDidntInteractWithTheField = !this._interacted || (this._waitForBlur && !this._blurredOnce);
+      const userDidntInteractWithTheField = !this._interacted || (this.waitForBlur && !this._blurredOnce);
 
       if (userDidntInteractWithTheField) {
         // if we're not forcing the validation
@@ -289,7 +304,7 @@ export default class Field {
         // we can indicate that the field is required by passing the error message as the value of
         // the required field. If we pass a boolean or a function then the value of the error message
         // can be set in the requiredMessage field of the validator descriptor
-        this.errorMessage = typeof this._required === 'string' ? this._required : 'Required';
+        this.errorMessage = typeof this._required === 'string' ? this._required : `Field: "${this.name}" is required`;
         return;
       }
       this.errorMessage = '';
@@ -304,7 +319,7 @@ export default class Field {
           // if the function returned a boolean we assume it is
           // the flag for the valid state
           if (typeof res_ === 'boolean') {
-            this.errorMessage = res_ ? '' : this._originalErrorMessage;
+            this.errorMessage = res_ ? '' : this.originalErrorMessage;
             resolve();
             return;
           }
@@ -320,7 +335,7 @@ export default class Field {
         }),
         action((errorArg = {}) => {
           const { error, message } = errorArg;
-          this.errorMessage = (error || message || '').trim() || this._originalErrorMessage;
+          this.errorMessage = (error || message || '').trim() || this.originalErrorMessage;
           resolve(); // we use this to chain validators
         }),
       );
@@ -332,6 +347,11 @@ export default class Field {
     this._required = val;
   };
 
+  @action
+  setErrorMessage(msg) {
+    this.errorMessage = msg;
+  }
+
   constructor(model, value, validatorDescriptor = {}, fieldName) {
     const DEBOUNCE_THRESHOLD = 300;
 
@@ -339,18 +359,18 @@ export default class Field {
     this.model = model;
     this.name = fieldName;
 
-    this._debouncedValidation = debounce(this.validate, DEBOUNCE_THRESHOLD, this);
+    this._debouncedValidation = debounce(this._validate, DEBOUNCE_THRESHOLD);
     this._initialValue = value;
 
-    const { waitForBlur, disabled, errorMessage, validator, hasValueFn, required, autoValidate = true, meta } = validatorDescriptor;
+    const { waitForBlur, disabled, errorMessage, validator, hasValue, required, autoValidate = true, meta } = validatorDescriptor;
 
     this._waitForBlur = waitForBlur;
     this._originalErrorMessage = errorMessage;
-    this._validateFn = validator || (() => Promise.resolve());
+    this._validateFn = validator;
 
     // useful to determine if the field has a value set
     // only used if provided
-    this._hasValueFn = hasValueFn;
+    this._hasValueFn = hasValue;
 
     this._required = required;
     this._autoValidate = autoValidate;

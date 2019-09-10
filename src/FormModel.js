@@ -1,7 +1,10 @@
 import { observable, computed, extendObservable, action, toJS } from 'mobx';
-import clsc from 'coalescy';
 import trim from 'jq-trim';
 import Field from './Field';
+
+const toString = Object.prototype.toString;
+
+const isObject = o => o && toString.call(o) === '[object Object]';
 
 /**
  * a helper class to generate a dynamic form
@@ -11,8 +14,6 @@ import Field from './Field';
  * @class FormModel
  */
 export class FormModel {
-  // TODO: what would be a better name for this??
-  // I'm not convinced, but I guess this is good enough for now
   @computed
   get dataIsReady() {
     return this.interacted && this.requiredAreFilled && this.valid;
@@ -34,11 +35,6 @@ export class FormModel {
       }
       return true;
     });
-  }
-
-  @computed
-  get atLeastOneRequiredIsFilled() {
-    return this.requiredFields.some(key => !!this.fields[key].hasValue);
   }
 
   @observable
@@ -82,8 +78,8 @@ export class FormModel {
    * Restore the initial values set at the creation time of the model
    * */
   @action
-  restoreInitialValues() {
-    this._eachField(field => field.restoreInitialValue());
+  restoreInitialValues(opts) {
+    this._eachField(field => field.restoreInitialValue(opts));
   }
 
   /**
@@ -93,23 +89,8 @@ export class FormModel {
    * initial values. Validation and interacted flags are also reset if the second argument is true
    * */
   @action
-  updateFrom(obj, reset = true) {
-    Object.keys(obj).forEach(key => this.updateField(key, obj[key], reset));
-  }
-
-  /**
-   * return the value of the field which name is provided. Aditionally a
-   * default value can be provided.
-   * */
-  valueOf(name, defaultValue) {
-    return clsc(this._getField(name).value, defaultValue);
-  }
-
-  /**
-   * return the errorMessage of the field which name is provided.
-   * */
-  errorOf(name) {
-    return this._getField(name).errorMessage;
+  updateFrom(obj, { resetInteractedFlag = true, ...opts } = {}) {
+    Object.keys(obj).forEach(key => this.updateField(key, obj[key], { resetInteractedFlag, ...opts }));
   }
 
   /**
@@ -131,17 +112,18 @@ export class FormModel {
    * */
   @action
   validate() {
-    this.validating = true;
+    this._validating = true;
 
     return Promise.all(
       this._fieldKeys().map(key => {
         const field = this.fields[key];
-        return Promise.resolve(field.validate(true));
+        return Promise.resolve(field.validate({ force: true }));
       }),
-    ).then(() => {
-      this.validating = false;
-      return Promise.resolve();
-    });
+    ).then(
+      action(() => {
+        this._validating = false;
+      }),
+    );
   }
 
   /**
@@ -150,10 +132,10 @@ export class FormModel {
    * errorMessage are cleared in the Field.
    * */
   @action
-  updateField(name, value, reset) {
+  updateField(name, value, opts) {
     const theField = this._getField(name);
 
-    theField.setValue(value, reset);
+    theField.setValue(value, opts);
   }
 
   /**
@@ -210,12 +192,10 @@ export class FormModel {
   }
 
   @action
-  disableFields(fieldKeys = []) {
+  disableFields(fieldKeys) {
+    if (!Array.isArray(fieldKeys)) throw new TypeError('fieldKeys should be an array with the names of the fields to disable');
     fieldKeys.forEach(key => {
-      const field = this.fields[key];
-      if (!field) {
-        throw new Error(`FormModel: Field ${key} not found`);
-      }
+      const field = this._getField(key);
       field.setDisabled(true);
     });
   }
@@ -228,7 +208,9 @@ export class FormModel {
 
   @action
   addFields = fieldsDescriptor => {
-    fieldsDescriptor = fieldsDescriptor || [];
+    if (fieldsDescriptor == null || (!isObject(fieldsDescriptor) && !Array.isArray(fieldsDescriptor))) {
+      throw new Error('fieldDescriptor has to be an Object or an Array');
+    }
 
     if (Array.isArray(fieldsDescriptor)) {
       fieldsDescriptor.forEach(field => {
@@ -246,12 +228,10 @@ export class FormModel {
   };
 
   @action
-  enableFields(fieldKeys = []) {
+  enableFields(fieldKeys) {
+    if (!Array.isArray(fieldKeys)) throw new TypeError('fieldKeys should be an array with the names of the fields to disable');
     fieldKeys.forEach(key => {
-      const field = this.fields[key];
-      if (!field) {
-        throw new Error(`FormModel: Field ${key} not found`);
-      }
+      const field = this._getField(key);
       field.setDisabled(false);
     });
   }
