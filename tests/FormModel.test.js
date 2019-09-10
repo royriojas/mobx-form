@@ -1082,8 +1082,6 @@ describe('FormModel', () => {
       expect(validator).not.toHaveBeenCalled();
 
       model.fields.name.markBlurredAndValidate();
-
-      
     });
   });
 
