@@ -1,6 +1,6 @@
 {
   "name": "mobx-form",
-  "version": "8.0.0-beta.2",
+  "version": "8.0.0-beta.3",
   "description": "A simple form helper for mobx",
   "main": "dist/mobx-form.cjs.js",
   "_browser": "dist/mobx-form.umd.js",
@@ -63,7 +63,7 @@
   },
   "peerDependencies": {
     "@babel/runtime": "^7.9.2",
-    "mobx": "5.9.4"
+    "mobx": "^5.9.4"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
