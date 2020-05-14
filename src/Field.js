@@ -82,6 +82,11 @@ export default class Field {
   @observable
   _blurredOnce = false;
 
+  @computed
+  get blurred() {
+    return !!this._blurredOnce;
+  }
+
   /**
    * the error message associated with this field.
    * This is used to indicate what error happened during
