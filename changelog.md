@@ -1,5 +1,33 @@
 
 # mobx-form - Changelog
+## v9.0.0
+- **Refactoring**
+  - Add a minor version change - [e6a016c]( https://github.com/royriojas/mobx-form/commit/e6a016c ), [Roy Riojas](https://github.com/Roy Riojas), 14/05/2020 03:06:33
+
+    
+## v8.0.0-beta.4
+- **Refactoring**
+  - Upgrade beta version - [f467f2e]( https://github.com/royriojas/mobx-form/commit/f467f2e ), [Roy Riojas](https://github.com/Roy Riojas), 14/05/2020 01:27:03
+
+    
+  - publish beta-2 version - [9eb8f21]( https://github.com/royriojas/mobx-form/commit/9eb8f21 ), [Roy Riojas](https://github.com/Roy Riojas), 14/05/2020 01:16:39
+
+    
+  - bump beta version - [4ad0319]( https://github.com/royriojas/mobx-form/commit/4ad0319 ), [Roy Riojas](https://github.com/Roy Riojas), 14/05/2020 01:05:12
+
+    
+  - Upgrade modules - [b88b0d0]( https://github.com/royriojas/mobx-form/commit/b88b0d0 ), [Roy Riojas](https://github.com/Roy Riojas), 14/05/2020 01:03:38
+
+    
+  - Add blurredOnce getter - [b9b1309]( https://github.com/royriojas/mobx-form/commit/b9b1309 ), [Roy Riojas](https://github.com/Roy Riojas), 13/05/2020 23:25:42
+
+    
+  - Update babel pacakge version - [6a85d4d]( https://github.com/royriojas/mobx-form/commit/6a85d4d ), [Roy Riojas](https://github.com/Roy Riojas), 28/04/2020 03:34:54
+
+    
+  - Make use of latest rollup and babel plugins - [6bb8cbd]( https://github.com/royriojas/mobx-form/commit/6bb8cbd ), [Roy Riojas](https://github.com/Roy Riojas), 28/04/2020 03:34:22
+
+    
 ## v8.0.0
 - **Refactoring**
   - Fix lint - [11eb2d6]( https://github.com/royriojas/mobx-form/commit/11eb2d6 ), [royriojas](https://github.com/royriojas), 10/09/2019 11:19:36
@@ -28,19 +56,9 @@
   - Fix lint issues - [b0a850d]( https://github.com/royriojas/mobx-form/commit/b0a850d ), [royriojas](https://github.com/royriojas), 05/08/2019 00:13:30
 
     
-## v7.0.0
+## v7.0.0-alpha.0
 - **Refactoring**
-  - Attempt to change browser field to something webpack likes - take 2 - [95783ad]( https://github.com/royriojas/mobx-form/commit/95783ad ), [royriojas](https://github.com/royriojas), 05/08/2019 00:54:02
-
-    
-  - Attempt to change browser field to something webpack likes - [a7d9d65]( https://github.com/royriojas/mobx-form/commit/a7d9d65 ), [royriojas](https://github.com/royriojas), 05/08/2019 00:50:34
-
-    
   - Simplify and improve mobx-form api - [8f48e28]( https://github.com/royriojas/mobx-form/commit/8f48e28 ), [royriojas](https://github.com/royriojas), 05/08/2019 00:10:29
-
-    
-- **Bug Fixes**
-  - Fix lint issues - [b0a850d]( https://github.com/royriojas/mobx-form/commit/b0a850d ), [royriojas](https://github.com/royriojas), 05/08/2019 00:13:30
 
     
 ## v5.2.2
