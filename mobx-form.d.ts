@@ -24,7 +24,7 @@ declare module 'mobx-form' {
 
     value: T;
 
-    required?: boolean;
+    required?: boolean | string;
 
     autoValidate?: boolean;
 
