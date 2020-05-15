@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v9.0.6
+- **Refactoring**
+  - force validation marks the field as blurred - [e520d0c]( https://github.com/royriojas/mobx-form/commit/e520d0c ), [Roy Riojas](https://github.com/Roy Riojas), 14/05/2020 23:59:39
+
+    
 ## v9.0.5
 - **Refactoring**
   - Update tests and typings - [5df9baa]( https://github.com/royriojas/mobx-form/commit/5df9baa ), [Roy Riojas](https://github.com/Roy Riojas), 14/05/2020 23:46:02
