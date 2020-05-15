@@ -1,4 +1,5 @@
 import sleep from 'sleep.async';
+import { reaction } from 'mobx';
 import { createModelFromState } from '../src/FormModel';
 
 describe('form-model', () => {
@@ -9,13 +10,12 @@ describe('form-model', () => {
       model.updateField('valueA', 'some');
       model.updateField('valueB', 'b');
 
-      expect(model.valueOf('valueA')).toEqual('some');
-      expect(model.valueOf('valueB')).toEqual('b');
+      expect(model.fields.valueA.value).toEqual('some');
+      expect(model.fields.valueB.value).toEqual('b');
 
       model.restoreInitialValues();
-
-      expect(model.valueOf('valueA')).toEqual('');
-      expect(model.valueOf('valueB')).toEqual('');
+      expect(model.fields.valueA.value).toEqual('');
+      expect(model.fields.valueB.value).toEqual('');
     });
 
     it('should reset the initial values on the form even if not empty strings', () => {
@@ -24,13 +24,13 @@ describe('form-model', () => {
       model.updateField('valueA', [1, 2, 3]);
       model.updateField('valueB', [4, 5, 6]);
 
-      expect(model.valueOf('valueA')).toEqual([1, 2, 3]);
-      expect(model.valueOf('valueB')).toEqual([4, 5, 6]);
+      expect(model.fields.valueA.value).toEqual([1, 2, 3]);
+      expect(model.fields.valueB.value).toEqual([4, 5, 6]);
 
       model.restoreInitialValues();
 
-      expect(model.valueOf('valueA')).toEqual([]);
-      expect(model.valueOf('valueB')).toEqual([]);
+      expect(model.fields.valueA.value).toEqual([]);
+      expect(model.fields.valueB.value).toEqual([]);
     });
   });
 
@@ -54,15 +54,30 @@ describe('form-model', () => {
       const model = createModelFromState(
         { name: '', lastName: '', email: '' },
         {
-          name: { required: true, requiredMessage: 'The name is required' },
+          name: { required: 'The name is required' },
           lastName: {
-            required: ({ fields }) => !!fields.name.value,
-            requiredMessage: 'lastName is required',
+            // required: ({ fields }) => !!fields.name.value && 'lastName is required',
           },
           email: {
-            required: ({ fields }) => fields.lastName.value === 'Doo',
-            requiredMessage: 'Email is required for all Doos',
+            // required: ({ fields }) => fields.lastName.value === 'Doo' && 'Email is required for all Doos',
           }, // only required when last name is Doo
+        },
+      );
+
+      const stop = reaction(
+        () => {
+          const { name, email, lastName } = model.fields;
+          return {
+            name: name.value,
+            lastName: lastName.value,
+            email: email.value,
+            fields: model.fields,
+          };
+        },
+        ({ fields, name }) => {
+          console.log('name', name);
+          fields.lastName.setRequired(!!fields.name.value && 'lastName is required');
+          fields.email.setRequired(fields.lastName.value === 'Doo' && 'Email is required for all Doos');
         },
       );
 
@@ -81,6 +96,8 @@ describe('form-model', () => {
 
       model.updateField('email', 'some@email.com');
       expect(model.requiredAreFilled).toBe(true);
+
+      stop();
     });
 
     it('should allow the creation of a form that will track if all required fields are filled', async () => {

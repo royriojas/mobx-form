@@ -1,6 +1,10 @@
 declare module 'mobx-form' {
+
+  export interface IFieldsHash {
+    [key: string]: IField<any>;
+  }
   export interface IValidatorFn {
-    (field: IField<any>, formModel: IFormModel<any>): Promise<void>;
+    (field: IField<any>, fields:IFieldsHash, formModel: IFormModel<any>): Promise<void>;
   }
 
   export interface IFields {
@@ -142,7 +146,7 @@ declare module 'mobx-form' {
 
     serializedData: T;
 
-    addFields(descriptors: IValidatorDescriptor[] | IValidatorDescriptorHash);
+    addFields(descriptors: IValidatorDescriptor[] | IValidatorDescriptorHash): void;
 
     new (descriptors: object, initialState: T);
   }
