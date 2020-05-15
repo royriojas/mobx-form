@@ -302,6 +302,8 @@ export default class Field {
         this.errorMessage = '';
         return;
       }
+    } else {
+      this._blurredOnce = true;
     }
 
     if (required) {
