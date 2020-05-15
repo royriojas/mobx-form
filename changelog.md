@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v9.0.3
+- **Refactoring**
+  - Make the required prop also a string - [8b6995e]( https://github.com/royriojas/mobx-form/commit/8b6995e ), [Roy Riojas](https://github.com/Roy Riojas), 14/05/2020 22:03:02
+
+    
 ## v9.0.1-beta.1
 - **Refactoring**
   - Add typings for mobx-form - [bceb65f]( https://github.com/royriojas/mobx-form/commit/bceb65f ), [Roy Riojas](https://github.com/Roy Riojas), 14/05/2020 21:46:10
