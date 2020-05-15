@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v9.0.5
+- **Refactoring**
+  - Update tests and typings - [5df9baa]( https://github.com/royriojas/mobx-form/commit/5df9baa ), [Roy Riojas](https://github.com/Roy Riojas), 14/05/2020 23:46:02
+
+    
 ## v9.0.4
 - **Refactoring**
   - Update typings - [994336d]( https://github.com/royriojas/mobx-form/commit/994336d ), [Roy Riojas](https://github.com/Roy Riojas), 14/05/2020 22:16:51
