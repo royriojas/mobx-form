@@ -1,6 +1,6 @@
 {
   "name": "mobx-form",
-  "version": "9.0.0",
+  "version": "9.0.1-beta.0",
   "description": "A simple form helper for mobx",
   "main": "dist/mobx-form.cjs.js",
   "_browser": "dist/mobx-form.umd.js",
@@ -10,8 +10,10 @@
   },
   "module": "dist/mobx-form.esm.js",
   "_legacy_module": "dist/mobx-form.legacy.js",
+  "typings": "mobx-form.d.ts",
   "files": [
-    "dist/"
+    "dist/",
+    "mobx-form.d.ts"
   ],
   "scripts": {
     "check": "eslint --cache --cache-location node_modules/.cache/ -f friendly 'src/**/*.js' 'tests/**/*.js'",
@@ -24,6 +26,7 @@
     "bump-major": "npm run pre-v && npm version major -m 'BLD: Release v%s' && npm run post-v",
     "bump-minor": "npm run pre-v && npm version minor -m 'BLD: Release v%s' && npm run post-v",
     "bump-patch": "npm run pre-v && npm version patch -m 'BLD: Release v%s' && npm run post-v",
+    "bump-prerelease": "npm run pre-v && npm version prerelease -m 'BLD: Release v%s' && npm run post-v",
     "prepublishOnly": "npm run build",
     "build": "rollup -c",
     "dev": "rollup -c -w",
