@@ -1,6 +1,6 @@
 declare module 'mobx-form' {
   export interface IValidatorFn {
-    (): Promise<void>;
+    (field: IField<any>, formModel: IFormModel<any>): Promise<void>;
   }
 
   export interface IFields {
@@ -18,7 +18,7 @@ declare module 'mobx-form' {
 
     errorMessage?: string;
 
-    validator?: IValidatorFn;
+    validator?: IValidatorFn | IValidatorFn[];
 
     hasValue?: IHasValueFn<T>;
 
@@ -29,9 +29,6 @@ declare module 'mobx-form' {
     autoValidate?: boolean;
 
     meta?: object;
-  }
-  export interface IValidateFn {
-    (): Promise<void>;
   }
 
   export type ResetInteractedFlagType = {
@@ -107,7 +104,7 @@ declare module 'mobx-form' {
 
     setErrorMessage(message: string): void;
 
-    new (model: IFormModel, value: T, validatorDescriptor: IValidatorDescriptor, fieldName: string): IFilter;
+    new (model: IFormModel<any>, value: T, validatorDescriptor: IValidatorDescriptor, fieldName: string): IFilter;
   }
 
   export interface IvalidatorDescriptorHash {
