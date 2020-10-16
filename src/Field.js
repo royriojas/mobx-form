@@ -41,8 +41,6 @@ export default class Field {
     return !!this.value;
   }
 
-  _autoValidate;
-
   /**
    * field to store the initial value set on this field
    * */
@@ -343,7 +341,6 @@ export default class Field {
       _blurredOnce: observable,
       blurred: computed,
       errorMessage: observable,
-      _autoValidate: observable,
       autoValidate: computed,
       valid: computed,
       interacted: computed,
@@ -360,7 +357,7 @@ export default class Field {
       originalErrorMessage: computed,
       _validate: action,
       setRequired: action,
-      setErrorMessage: action
+      setErrorMessage: action,
     });
 
     const DEBOUNCE_THRESHOLD = 300;

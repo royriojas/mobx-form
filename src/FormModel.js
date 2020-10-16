@@ -170,7 +170,7 @@ export class FormModel {
       resetInteractedFlag: action,
       disableFields: action,
       addFields: action,
-      enableFields: action
+      enableFields: action,
     });
 
     this.addFields(descriptors);
