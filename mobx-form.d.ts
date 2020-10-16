@@ -25,7 +25,7 @@ declare module 'mobx-form' {
 
     hasValue?: IHasValueFn<T>;
 
-    value: T;
+    value?: T;
 
     required?: boolean | string;
 
