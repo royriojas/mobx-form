@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v10.0.2
+- **Refactoring**
+  - Upgrade typescript types - [be233df]( https://github.com/royriojas/mobx-form/commit/be233df ), [Roy Riojas](https://github.com/Roy Riojas), 16/10/2020 00:47:04
+
+    
 ## v10.0.1
 - **Refactoring**
   - Upgrade babel runtime dep - [0f6dc9c]( https://github.com/royriojas/mobx-form/commit/0f6dc9c ), [Roy Riojas](https://github.com/Roy Riojas), 15/10/2020 23:23:40
