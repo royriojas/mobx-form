@@ -1,4 +1,4 @@
-import { observable, computed, action } from 'mobx';
+import { observable, computed, action, makeObservable } from 'mobx';
 import debounce from 'debouncy';
 
 /**
@@ -6,35 +6,28 @@ import debounce from 'debouncy';
  */
 
 export default class Field {
-  @observable
   _disabled;
 
-  @observable
   _required;
 
-  @computed
   get waitForBlur() {
     return !!this._waitForBlur;
   }
 
-  @computed
   get disabled() {
     return !!this._disabled;
   }
 
-  @computed
   get required() {
     if (this.disabled) return false;
 
     return !!this._required;
   }
 
-  @action
   resetInteractedFlag() {
     this._interacted = false;
   }
 
-  @computed
   get hasValue() {
     if (this._hasValueFn) {
       return this._hasValueFn(this.value);
@@ -48,7 +41,6 @@ export default class Field {
     return !!this.value;
   }
 
-  @observable
   _autoValidate;
 
   /**
@@ -59,7 +51,6 @@ export default class Field {
   /**
    * the value of the field
    * */
-  @observable
   _value;
 
   /**
@@ -69,7 +60,6 @@ export default class Field {
    * the setter `value`. This is useful to know if
    * the user has interacted with teh form in any way
    */
-  @observable
   _interacted;
 
   /**
@@ -79,10 +69,8 @@ export default class Field {
    * too invasive. This flag be used to keep track of
    * the fact that the user already blurred of a field
    */
-  @observable
   _blurredOnce = false;
 
-  @computed
   get blurred() {
     return !!this._blurredOnce;
   }
@@ -92,7 +80,6 @@ export default class Field {
    * This is used to indicate what error happened during
    * the validation process
    */
-  @observable
   errorMessage;
 
   /**
@@ -101,10 +88,8 @@ export default class Field {
    * to forms that set the value on the fields after each
    * onChange event
    */
-  @observable
   _autoValidate = false;
 
-  @computed
   get autoValidate() {
     return this._autoValidate;
   }
@@ -117,7 +102,6 @@ export default class Field {
   /**
    * whether the field is valid or not
    */
-  @computed
   get valid() {
     return !this.errorMessage;
   }
@@ -125,7 +109,6 @@ export default class Field {
   /**
    * whether the user has interacted or not with the field
    */
-  @computed
   get interacted() {
     return this._interacted;
   }
@@ -137,7 +120,6 @@ export default class Field {
     return this._value;
   }
 
-  @action
   _setValueOnly(val) {
     if (!this._interacted) {
       this._interacted = true;
@@ -150,7 +132,6 @@ export default class Field {
     this._value = val;
   }
 
-  @action
   _setValue(val) {
     this._setValueOnly(val);
 
@@ -175,7 +156,6 @@ export default class Field {
    * @param {Boolean} params.resetInteractedFlag whether or not to reset the interacted flag
    *
    */
-  @action
   setValue(value, { resetInteractedFlag, commit } = {}) {
     if (resetInteractedFlag) {
       this._setValueOnly(value);
@@ -193,12 +173,10 @@ export default class Field {
   /**
    * Restore the initial value of the field
    */
-  @action
   restoreInitialValue({ resetInteractedFlag = true } = {}) {
     this.setValue(this._initialValue, { resetInteractedFlag });
   }
 
-  @action
   commit() {
     this._initialValue = this.value;
   }
@@ -208,7 +186,6 @@ export default class Field {
    * removing the errorMessage string. A field is
    * considered valid if the errorMessage is not empty
    */
-  @action
   clearValidation() {
     this.errorMessage = '';
   }
@@ -217,7 +194,6 @@ export default class Field {
    * mark the field as already blurred so validation can
    * start to be applied to  the field.
    */
-  @action
   markBlurredAndValidate = () => {
     if (!this._blurredOnce) {
       this._blurredOnce = true;
@@ -226,7 +202,6 @@ export default class Field {
     this.validate();
   };
 
-  @action
   async _doValidate() {
     const { _validateFn, model } = this;
 
@@ -258,7 +233,6 @@ export default class Field {
     return ret;
   }
 
-  @action
   setDisabled(disabled) {
     if (disabled) {
       this.errorMessage = '';
@@ -266,13 +240,11 @@ export default class Field {
     this._disabled = disabled;
   }
 
-  @action
   validate = opts => {
     this._debouncedValidation.cancel();
     return this._validate(opts);
   };
 
-  @computed
   get originalErrorMessage() {
     return this._originalErrorMessage || `Validation for "${this.name}" failed`;
   }
@@ -284,7 +256,6 @@ export default class Field {
    * @param params {object} arguments object
    * @param params.force {boolean} [force=false]
    */
-  @action
   _validate({ force = false } = {}) {
     const { required } = this;
 
@@ -349,17 +320,49 @@ export default class Field {
     });
   }
 
-  @action
   setRequired = val => {
     this._required = val;
   };
 
-  @action
   setErrorMessage(msg) {
     this.errorMessage = msg;
   }
 
   constructor(model, value, validatorDescriptor = {}, fieldName) {
+    makeObservable(this, {
+      _disabled: observable,
+      _required: observable,
+      waitForBlur: computed,
+      disabled: computed,
+      required: computed,
+      resetInteractedFlag: action,
+      hasValue: computed,
+      _autoValidate: observable,
+      _value: observable,
+      _interacted: observable,
+      _blurredOnce: observable,
+      blurred: computed,
+      errorMessage: observable,
+      _autoValidate: observable,
+      autoValidate: computed,
+      valid: computed,
+      interacted: computed,
+      _setValueOnly: action,
+      _setValue: action,
+      setValue: action,
+      restoreInitialValue: action,
+      commit: action,
+      clearValidation: action,
+      markBlurredAndValidate: action,
+      _doValidate: action,
+      setDisabled: action,
+      validate: action,
+      originalErrorMessage: computed,
+      _validate: action,
+      setRequired: action,
+      setErrorMessage: action
+    });
+
     const DEBOUNCE_THRESHOLD = 300;
 
     this._value = value;

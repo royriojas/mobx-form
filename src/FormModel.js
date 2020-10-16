@@ -1,4 +1,4 @@
-import { observable, computed, extendObservable, action, toJS } from 'mobx';
+import { observable, computed, extendObservable, action, toJS, makeObservable } from 'mobx';
 import trim from 'jq-trim';
 import Field from './Field';
 
@@ -14,18 +14,15 @@ const isObject = o => o && toString.call(o) === '[object Object]';
  * @class FormModel
  */
 export class FormModel {
-  @computed
   get dataIsReady() {
     return this.interacted && this.requiredAreFilled && this.valid;
   }
 
-  @computed
   get requiredFields() {
     const keys = Object.keys(this.fields);
     return keys.filter(key => this.fields[key].required);
   }
 
-  @computed
   get requiredAreFilled() {
     const keys = Object.keys(this.fields);
     return keys.every(key => {
@@ -37,18 +34,15 @@ export class FormModel {
     });
   }
 
-  @observable
   fields = {};
 
   // whether or not the there is a validation
   // process running
-  @observable
   _validating = false;
 
   // flag to indicate whether the form is valid or not
   // since some of the validators might be async validators
   // this value might be false until the validation process finish
-  @computed
   get valid() {
     if (this._validating) {
       return false; // consider the form invalid until the validation process finish
@@ -65,7 +59,6 @@ export class FormModel {
    * least a value has set on any of the fields after the model
    * has been created
    */
-  @computed
   get interacted() {
     const keys = this._fieldKeys();
     return keys.some(key => {
@@ -77,7 +70,6 @@ export class FormModel {
   /**
    * Restore the initial values set at the creation time of the model
    * */
-  @action
   restoreInitialValues(opts) {
     this._eachField(field => field.restoreInitialValue(opts));
   }
@@ -88,7 +80,6 @@ export class FormModel {
    * field and from that point on the values set are considered the new
    * initial values. Validation and interacted flags are also reset if the second argument is true
    * */
-  @action
   updateFrom(obj, { resetInteractedFlag = true, ...opts } = {}) {
     Object.keys(obj).forEach(key => this.updateField(key, obj[key], { resetInteractedFlag, ...opts }));
   }
@@ -96,7 +87,6 @@ export class FormModel {
   /**
    * return the array of errors found. The array is an Array<String>
    * */
-  @computed
   get summary() {
     return this._fieldKeys().reduce((seq, key) => {
       const field = this.fields[key];
@@ -110,7 +100,6 @@ export class FormModel {
   /**
    * Manually perform the form validation
    * */
-  @action
   validate() {
     this._validating = true;
 
@@ -131,7 +120,6 @@ export class FormModel {
    * Optionally if reset is set to true, interacted and
    * errorMessage are cleared in the Field.
    * */
-  @action
   updateField(name, value, opts) {
     const theField = this._getField(name);
 
@@ -141,7 +129,6 @@ export class FormModel {
   /**
    * return the data as plain Javascript object (mobx magic removed from the fields)
    * */
-  @computed
   get serializedData() {
     const keys = Object.keys(this.fields);
     return toJS(
@@ -166,6 +153,26 @@ export class FormModel {
    * validators => an object which keys are the names of the fields and the values are the descriptors for the validators
    */
   constructor({ descriptors = {}, initialState } = {}) {
+    makeObservable(this, {
+      dataIsReady: computed,
+      requiredFields: computed,
+      requiredAreFilled: computed,
+      fields: observable,
+      _validating: observable,
+      valid: computed,
+      interacted: computed,
+      restoreInitialValues: action,
+      updateFrom: action,
+      summary: computed,
+      validate: action,
+      updateField: action,
+      serializedData: computed,
+      resetInteractedFlag: action,
+      disableFields: action,
+      addFields: action,
+      enableFields: action
+    });
+
     this.addFields(descriptors);
     initialState && this.updateFrom(initialState);
   }
@@ -186,12 +193,10 @@ export class FormModel {
     return Object.keys(this.fields);
   }
 
-  @action
   resetInteractedFlag() {
     this._eachField(field => field.resetInteractedFlag());
   }
 
-  @action
   disableFields(fieldKeys) {
     if (!Array.isArray(fieldKeys)) throw new TypeError('fieldKeys should be an array with the names of the fields to disable');
     fieldKeys.forEach(key => {
@@ -206,7 +211,6 @@ export class FormModel {
     });
   }
 
-  @action
   addFields = fieldsDescriptor => {
     if (fieldsDescriptor == null || (!isObject(fieldsDescriptor) && !Array.isArray(fieldsDescriptor))) {
       throw new Error('fieldDescriptor has to be an Object or an Array');
@@ -227,7 +231,6 @@ export class FormModel {
     });
   };
 
-  @action
   enableFields(fieldKeys) {
     if (!Array.isArray(fieldKeys)) throw new TypeError('fieldKeys should be an array with the names of the fields to disable');
     fieldKeys.forEach(key => {
