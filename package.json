@@ -50,7 +50,8 @@
   "homepage": "https://github.com/royriojas/mobx-form#readme",
   "dependencies": {
     "debouncy": "1.0.8",
-    "jq-trim": "0.1.2"
+    "jq-trim": "0.1.2",
+    "mobx": "^6.0.1"
   },
   "changelogx": {
     "ignoreRegExp": [
@@ -65,7 +66,7 @@
     "projectName": "mobx-form"
   },
   "peerDependencies": {
-    "@babel/runtime": "^7.9.2",
+    "@babel/runtime": "^7.12.1",
     "mobx": "^6.0.1"
   },
   "devDependencies": {
