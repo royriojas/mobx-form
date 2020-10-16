@@ -155,11 +155,7 @@ declare module 'mobx-form' {
     initialState: T;
   }
 
-  export interface createModel<T> {
-    (options: ICreateModelOptions<T>): IFormModel<T>;
-  }
+  export declare function createModel<T>(options: ICreateModelOptions<T>): IFormModel<T>;
 
-  export interface createModelFromState<T> {
-    (initialState: T, descriptors: IValidatorDescriptor<T>[] | IValidatorDescriptorHash);
-  }
+  export declare function createModelFromState<T>(initialState: T, descriptors: IValidatorDescriptor[] | IValidatorDescriptorHash): IFormModel<T>;
 }
