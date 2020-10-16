@@ -53,15 +53,15 @@ declare module 'mobx-form' {
   export type SetValueFnArgs = ResetInteractedFlagType & CommitType;
 
   export interface ISetValueFn<T> {
-    (value: T, options: SetValueFnArgs): void;
+    (value: T, options?: SetValueFnArgs): void;
   }
 
   export interface IRestoreIntialValueFn {
-    (options: ResetInteractedFlagType): void;
+    (options?: ResetInteractedFlagType): void;
   }
 
   export interface ISetDisabledFn {
-    (options: DisabledType): void;
+    (options?: DisabledType): void;
   }
 
   export interface IField<T> {
@@ -141,7 +141,7 @@ declare module 'mobx-form' {
 
     validate(): Promise<void>;
 
-    updateField(name: string, value: any, SetValueFnArgs): void;
+    updateField(name: string, value: any, options?: SetValueFnArgs): void;
 
     serializedData: T;
 
