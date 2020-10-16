@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v10.0.1
+- **Refactoring**
+  - Upgrade babel runtime dep - [0f6dc9c]( https://github.com/royriojas/mobx-form/commit/0f6dc9c ), [Roy Riojas](https://github.com/Roy Riojas), 15/10/2020 23:23:40
+
+    
 ## v10.0.0
 - **Bug Fixes**
   - fix lint issues - [0bc9c13]( https://github.com/royriojas/mobx-form/commit/0bc9c13 ), [Roy Riojas](https://github.com/Roy Riojas), 15/10/2020 23:19:25
