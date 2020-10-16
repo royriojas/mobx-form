@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v10.0.5
+- **Refactoring**
+  - Upgrade typescript types - [e37000c]( https://github.com/royriojas/mobx-form/commit/e37000c ), [Roy Riojas](https://github.com/Roy Riojas), 16/10/2020 01:58:23
+
+    
 ## v10.0.4
 - **Refactoring**
   - Upgrade typescript types - [64610cf]( https://github.com/royriojas/mobx-form/commit/64610cf ), [Roy Riojas](https://github.com/Roy Riojas), 16/10/2020 01:52:30
