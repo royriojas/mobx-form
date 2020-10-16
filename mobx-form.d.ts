@@ -1,5 +1,4 @@
 declare module 'mobx-form' {
-
   export interface IFieldsHash {
     [key: string]: IField<any>;
   }
@@ -88,7 +87,7 @@ declare module 'mobx-form' {
 
     value: T;
 
-    setValue: ISetValueFn;
+    setValue: ISetValueFn<T>;
 
     restoreInitialValue: IRestoreIntialValueFn;
 
@@ -100,7 +99,7 @@ declare module 'mobx-form' {
 
     setDisabled: ISetDisabledFn;
 
-    validate(options: ForceType): Promise<void>;
+    validate(options?: ForceType): Promise<void>;
 
     originalErrorMessage: string;
 
@@ -108,10 +107,10 @@ declare module 'mobx-form' {
 
     setErrorMessage(message: string): void;
 
-    new (model: IFormModel<any>, value: T, validatorDescriptor: IValidatorDescriptor, fieldName: string): IFilter;
+    new (model: IFormModel<any>, value: T, validatorDescriptor: IValidatorDescriptor<T>, fieldName: string): IField<T>;
   }
 
-  export interface IvalidatorDescriptorHash {
+  export interface IValidatorDescriptorHash {
     [key: string]: IValidatorDescriptor<any>;
   }
 
@@ -128,11 +127,11 @@ declare module 'mobx-form' {
 
     interacted: boolean;
 
-    restoreInitialValues(options: RestoreInitialValuesType): void;
+    restoreInitialValues(options?: ResetInteractedFlagType): void;
 
-    resetInteractedFlag(options: ResetInteractedFlagType): void;
+    resetInteractedFlag(options?: ResetInteractedFlagType): void;
 
-    updateFrom(obj: T, ResetInteractedFlagType?): void;
+    updateFrom(obj: T, options?: ResetInteractedFlagType): void;
 
     enableFields(fieldNames: string[]): void;
 
@@ -146,17 +145,21 @@ declare module 'mobx-form' {
 
     serializedData: T;
 
-    addFields(descriptors: IValidatorDescriptor[] | IValidatorDescriptorHash): void;
+    addFields(descriptors: IValidatorDescriptor<T>[] | IValidatorDescriptorHash): void;
 
     new (descriptors: object, initialState: T);
   }
 
   export interface ICreateModelOptions<T> {
-    descriptors: IValidatorDescriptor[] | IValidatorDescriptorHash;
+    descriptors: IValidatorDescriptor<T>[] | IValidatorDescriptorHash;
     initialState: T;
   }
 
-  export declare function createModel<T>(options: ICreateModelOptions<T>): IFormModel;
+  export interface createModel<T> {
+    (options: ICreateModelOptions<T>): IFormModel<T>;
+  }
 
-  export declare function createModelFromState<T>(initialState: T, descriptors: IValidatorDescriptor[] | IValidatorDescriptorHash);
+  export interface createModelFromState<T> {
+    (initialState: T, descriptors: IValidatorDescriptor<T>[] | IValidatorDescriptorHash);
+  }
 }
