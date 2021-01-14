@@ -120,10 +120,11 @@ export class FormModel {
    * Optionally if reset is set to true, interacted and
    * errorMessage are cleared in the Field.
    * */
-  updateField(name, value, opts) {
-    const theField = this._getField(name);
+  updateField(name, value, opts = {}) {
+    const { throwIfMissingField, ...restOpts } = opts;
+    const theField = this._getField(name, { throwIfMissingField });
 
-    theField.setValue(value, opts);
+    theField?.setValue(value, restOpts);
   }
 
   /**
@@ -152,7 +153,7 @@ export class FormModel {
    * initialState => an object which keys are the names of the fields and the values the initial values for the form.
    * validators => an object which keys are the names of the fields and the values are the descriptors for the validators
    */
-  constructor({ descriptors = {}, initialState } = {}) {
+  constructor({ descriptors = {}, initialState, options = {} } = {}) {
     makeObservable(this, {
       dataIsReady: computed,
       requiredFields: computed,
@@ -174,12 +175,12 @@ export class FormModel {
     });
 
     this.addFields(descriptors);
-    initialState && this.updateFrom(initialState);
+    initialState && this.updateFrom(initialState, { throwIfMissingField: options.throwIfMissingField });
   }
 
-  _getField(name) {
+  _getField(name, { throwIfMissingField = true } = {}) {
     const theField = this.fields[name];
-    if (!theField) {
+    if (!theField && throwIfMissingField) {
       throw new Error(`Field "${name}" not found`);
     }
     return theField;
@@ -245,10 +246,11 @@ export class FormModel {
  *
  * @param {Object|Array} fieldDescriptors
  * @param {Object} initialState
+ * @param {Object} options
  */
-export const createModel = ({ descriptors, initialState }) => new FormModel({ descriptors, initialState });
+export const createModel = ({ descriptors, initialState, options }) => new FormModel({ descriptors, initialState, options });
 
-export const createModelFromState = (initialState = {}, validators = {}) => {
+export const createModelFromState = (initialState = {}, validators = {}, options = {}) => {
   const stateKeys = Object.keys(initialState);
   const validatorsKeys = Object.keys(validators);
 
@@ -258,5 +260,5 @@ export const createModelFromState = (initialState = {}, validators = {}) => {
     name: key,
   }));
 
-  return createModel({ descriptors });
+  return createModel({ descriptors, options });
 };

@@ -150,9 +150,14 @@ declare module 'mobx-form' {
     new (descriptors: object, initialState: T);
   }
 
+  export interface ICreateModelOpts {
+    throwIfMissingField: boolean = true;
+  }
+
   export interface ICreateModelOptions<T> {
     descriptors: IValidatorDescriptor<T>[] | IValidatorDescriptorHash;
     initialState: T;
+    options: ICreateModelOpts;
   }
 
   export declare function createModel<T>(options: ICreateModelOptions<T>): IFormModel<T>;
