@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v10.1.2
+- **Bug Fixes**
+  - fix TS types - [6c9c250]( https://github.com/royriojas/mobx-form/commit/6c9c250 ), [Roy Riojas](https://github.com/Roy Riojas), 13/01/2021 21:42:54
+
+    
 ## v10.1.1
 - **Refactoring**
   - upgrade deps to latest versions - [d4d2256]( https://github.com/royriojas/mobx-form/commit/d4d2256 ), [Roy Riojas](https://github.com/Roy Riojas), 13/01/2021 18:49:59
