@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v10.1.1
+- **Refactoring**
+  - upgrade deps to latest versions - [d4d2256]( https://github.com/royriojas/mobx-form/commit/d4d2256 ), [Roy Riojas](https://github.com/Roy Riojas), 13/01/2021 18:49:59
+
+    
 ## v10.1.0
 - **Refactoring**
   - add option to not to throw if field is missing - [b51a63c]( https://github.com/royriojas/mobx-form/commit/b51a63c ), [Roy Riojas](https://github.com/Roy Riojas), 13/01/2021 18:28:20
