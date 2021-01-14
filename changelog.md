@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v10.1.0
+- **Refactoring**
+  - add option to not to throw if field is missing - [b51a63c]( https://github.com/royriojas/mobx-form/commit/b51a63c ), [Roy Riojas](https://github.com/Roy Riojas), 13/01/2021 18:28:20
+
+    
 ## v10.0.5
 - **Refactoring**
   - Upgrade typescript types - [e37000c]( https://github.com/royriojas/mobx-form/commit/e37000c ), [Roy Riojas](https://github.com/Roy Riojas), 16/10/2020 01:58:23
