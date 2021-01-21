@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v11.0.0
+- **Bug Fixes**
+  - fields with boolean values should be considered empty only if no value is set - [98112c6]( https://github.com/royriojas/mobx-form/commit/98112c6 ), [Roy Riojas](https://github.com/Roy Riojas), 21/01/2021 03:58:25
+
+    
 ## v10.1.2
 - **Bug Fixes**
   - fix TS types - [6c9c250]( https://github.com/royriojas/mobx-form/commit/6c9c250 ), [Roy Riojas](https://github.com/Roy Riojas), 13/01/2021 21:42:54
