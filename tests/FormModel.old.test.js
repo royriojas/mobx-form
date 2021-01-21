@@ -74,8 +74,7 @@ describe('form-model', () => {
             fields: model.fields,
           };
         },
-        ({ fields, name }) => {
-          console.log('name', name);
+        ({ fields }) => {
           fields.lastName.setRequired(!!fields.name.value && 'lastName is required');
           fields.email.setRequired(fields.lastName.value === 'Doo' && 'Email is required for all Doos');
         },

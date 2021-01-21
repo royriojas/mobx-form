@@ -1,5 +1,8 @@
 import { observable, computed, action, makeObservable } from 'mobx';
 import debounce from 'debouncy';
+import trim from 'jq-trim';
+
+const isNullishOrEmpty = value => typeof value === 'undefined' || value === null || value === '';
 
 /**
  * Field class provides abstract the validation of a single field
@@ -38,7 +41,8 @@ export default class Field {
     if (Array.isArray(this.value)) {
       return this.value.length > 0;
     }
-    return !!this.value;
+
+    return !isNullishOrEmpty(this.value);
   }
 
   /**
@@ -157,7 +161,7 @@ export default class Field {
   setValue(value, { resetInteractedFlag, commit } = {}) {
     if (resetInteractedFlag) {
       this._setValueOnly(value);
-      this.errorMessage = '';
+      this.errorMessage = undefined;
       this._interacted = false;
     } else {
       this._setValue(value);
@@ -185,7 +189,7 @@ export default class Field {
    * considered valid if the errorMessage is not empty
    */
   clearValidation() {
-    this.errorMessage = '';
+    this.errorMessage = undefined;
   }
 
   /**
@@ -268,7 +272,7 @@ export default class Field {
         // if we're not forcing the validation
         // and we haven't interacted with the field
         // we asume this field pass the validation status
-        this.errorMessage = '';
+        this.errorMessage = undefined;
         return;
       }
     } else {
@@ -283,7 +287,7 @@ export default class Field {
         this.errorMessage = typeof this._required === 'string' ? this._required : `Field: "${this.name}" is required`;
         return;
       }
-      this.errorMessage = '';
+      this.errorMessage = undefined;
     }
 
     const res = this._doValidate();
@@ -295,7 +299,7 @@ export default class Field {
           // if the function returned a boolean we assume it is
           // the flag for the valid state
           if (typeof res_ === 'boolean') {
-            this.errorMessage = res_ ? '' : this.originalErrorMessage;
+            this.errorMessage = res_ ? undefined : this.originalErrorMessage;
             resolve();
             return;
           }
@@ -306,12 +310,19 @@ export default class Field {
             return;
           }
 
-          this.errorMessage = '';
+          this.errorMessage = undefined;
           resolve(); // we use this to chain validators
         }),
         action((errorArg = {}) => {
           const { error, message } = errorArg;
-          this.errorMessage = (error || message || '').trim() || this.originalErrorMessage;
+
+          let errorMessageToSet = (error || message || '').trim() || this.originalErrorMessage;
+
+          if (errorMessageToSet === '') {
+            errorMessageToSet = undefined; // empty string is not longer a valid value for error message
+          }
+
+          this.errorMessage = errorMessageToSet;
           resolve(); // we use this to chain validators
         }),
       );
@@ -323,6 +334,10 @@ export default class Field {
   };
 
   setErrorMessage(msg) {
+    if (trim(msg) === '') {
+      msg = undefined;
+    }
+
     this.errorMessage = msg;
   }
 

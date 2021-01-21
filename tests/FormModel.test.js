@@ -824,7 +824,7 @@ describe('FormModel', () => {
       await model.validate();
 
       expect(model.valid).toEqual(true);
-      expect(model.fields.email.errorMessage).toEqual('');
+      expect(model.fields.email.errorMessage).toEqual(undefined);
     });
 
     it('The validation function can return an error object to describe the error', async () => {
@@ -920,7 +920,7 @@ describe('FormModel', () => {
         await model.validate();
 
         expect(model.valid).toEqual(true);
-        expect(model.fields.email.errorMessage).toEqual('');
+        expect(model.fields.email.errorMessage).toEqual(undefined);
       });
 
       it('error message can be cleared from the field and make the form to be considered valid again', async () => {
@@ -952,7 +952,7 @@ describe('FormModel', () => {
         model.fields.email.clearValidation();
 
         expect(model.valid).toEqual(true);
-        expect(model.fields.email.errorMessage).toEqual('');
+        expect(model.fields.email.errorMessage).toEqual(undefined);
       });
     });
 

@@ -18,8 +18,8 @@ describe('FormModel.options.throwIfMissingField', () => {
     });
   });
 
-  describe('if throwIfMissingField is not specified it should behave as if it is true by default', () => {
-    it('should not throw if ', () => {
+  describe('if throwIfMissingField is not specified', () => {
+    it('it should behave as if it is true by default', () => {
       expect(() => {
         createModel({
           descriptors: { name: {}, lastName: {} },
@@ -34,7 +34,7 @@ describe('FormModel.options.throwIfMissingField', () => {
   });
 
   describe('if throwIfMissingField is false', () => {
-    it('should not throw if ', () => {
+    it('should not throw if a field is passed that do not match the ones specified in the descriptors', () => {
       let model;
       expect(() => {
         model = createModel({
