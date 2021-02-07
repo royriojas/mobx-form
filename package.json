@@ -10,7 +10,7 @@
   },
   "module": "dist/mobx-form.esm.js",
   "_legacy_module": "dist/mobx-form.legacy.js",
-  "typings": "mobx-form.d.ts",
+  "types": "mobx-form.d.ts",
   "files": [
     "dist/",
     "mobx-form.d.ts"
