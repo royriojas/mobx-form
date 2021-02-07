@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v11.0.1
+- **Refactoring**
+  - use types instead of typings - [d53d463]( https://github.com/royriojas/mobx-form/commit/d53d463 ), [Roy Riojas](https://github.com/Roy Riojas), 07/02/2021 01:52:43
+
+    
 ## v11.0.0
 - **Bug Fixes**
   - fields with boolean values should be considered empty only if no value is set - [98112c6]( https://github.com/royriojas/mobx-form/commit/98112c6 ), [Roy Riojas](https://github.com/Roy Riojas), 21/01/2021 03:58:25
