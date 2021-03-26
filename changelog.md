@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v12.0.0
+- **Features**
+  - Add isValidating prop to fields - [6240db6]( https://github.com/royriojas/mobx-form/commit/6240db6 ), [Roy Riojas](https://github.com/Roy Riojas), 26/03/2021 05:21:23
+
+    
 ## v11.0.1
 - **Refactoring**
   - use types instead of typings - [d53d463]( https://github.com/royriojas/mobx-form/commit/d53d463 ), [Roy Riojas](https://github.com/Roy Riojas), 07/02/2021 01:52:43
