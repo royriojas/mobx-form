@@ -11,12 +11,12 @@ describe('FormModel with boolean fields', () => {
 
     await model.validate();
 
-    expect(model.fields.isFunny.errorMessage).toMatchInlineSnapshot('"Field: \\"isFunny\\" is required"');
+    expect(model.fields.isFunny.error).toMatchInlineSnapshot('"Field: \\"isFunny\\" is required"');
 
     model.fields.isFunny.setValue(false);
 
     await model.validate();
 
-    expect(model.fields.isFunny.errorMessage).toEqual(undefined);
+    expect(model.fields.isFunny.error).toEqual(undefined);
   });
 });

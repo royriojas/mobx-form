@@ -6,10 +6,6 @@ declare module 'mobx-form' {
     (field: IField<any>, fields:IFieldsHash, formModel: IFormModel<any>): Promise<void>;
   }
 
-  export interface IFields {
-    [key: string]: IField<any>;
-  }
-
   export interface IHasValueFn<T> {
     (value: T): boolean;
   }
@@ -31,7 +27,7 @@ declare module 'mobx-form' {
 
     autoValidate?: boolean;
 
-    meta?: object;
+    meta?: Record<string, any>;
   }
 
   export type ResetInteractedFlagType = {
@@ -79,9 +75,13 @@ declare module 'mobx-form' {
 
     errorMessage?: string;
 
+    error?: string;
+
     autoValidate: boolean;
 
     valid: boolean;
+
+    validating: boolean;
 
     interacted: boolean;
 
@@ -110,10 +110,6 @@ declare module 'mobx-form' {
     new (model: IFormModel<any>, value: T, validatorDescriptor: IValidatorDescriptor<T>, fieldName: string): IField<T>;
   }
 
-  export interface IValidatorDescriptorHash {
-    [key: string]: IValidatorDescriptor<any>;
-  }
-
   export interface IFormModel<T> {
     dataIsReady: boolean;
 
@@ -121,9 +117,13 @@ declare module 'mobx-form' {
 
     requiredAreFilled: boolean;
 
-    fields: IFields;
+    fields: {
+      [P in keyof T]: IField<T[P]>;
+    };
 
     valid: boolean;
+
+    validating: boolean;
 
     interacted: boolean;
 
@@ -154,13 +154,17 @@ declare module 'mobx-form' {
     throwIfMissingField?: boolean = true;
   }
 
+  export type Descriptors<T> = IValidatorDescriptor<T[keyof T]>[] | {
+    [P in keyof T]: IValidatorDescriptor<T[P]>;
+  };
+
   export interface ICreateModelOptions<T> {
-    descriptors: IValidatorDescriptor<T>[] | IValidatorDescriptorHash;
+    descriptors: Descriptors<T>;
     initialState: T;
     options?: ICreateModelOpts;
   }
 
   export declare function createModel<T>(options: ICreateModelOptions<T>): IFormModel<T>;
 
-  export declare function createModelFromState<T>(initialState: T, descriptors: IValidatorDescriptor[] | IValidatorDescriptorHash): IFormModel<T>;
+  export declare function createModelFromState<T>(initialState: T, descriptors: Descriptors<T>): IFormModel<T>;
 }

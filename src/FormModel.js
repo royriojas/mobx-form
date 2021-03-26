@@ -97,6 +97,20 @@ export class FormModel {
     }, []);
   }
 
+  setValidating = validating => {
+    this._validating = validating;
+  };
+
+  get validating() {
+    return (
+      this._validating ||
+      this._fieldKeys().some(key => {
+        const f = this._getField(key);
+        return f.validating;
+      })
+    );
+  }
+
   /**
    * Manually perform the form validation
    * */
@@ -108,11 +122,13 @@ export class FormModel {
         const field = this.fields[key];
         return Promise.resolve(field.validate({ force: true }));
       }),
-    ).then(
-      action(() => {
-        this._validating = false;
-      }),
-    );
+    )
+      .then(() => {
+        this.setValidating(false);
+      })
+      .catch(() => {
+        this.setValidating(false);
+      });
   }
 
   /**
@@ -160,6 +176,8 @@ export class FormModel {
       requiredAreFilled: computed,
       fields: observable,
       _validating: observable,
+      setValidating: action,
+      validating: computed,
       valid: computed,
       interacted: computed,
       restoreInitialValues: action,

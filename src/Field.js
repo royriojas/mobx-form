@@ -46,6 +46,11 @@ export default class Field {
   }
 
   /**
+   * flag to know if a validation is in progress on this field
+   */
+  _validating = false;
+
+  /**
    * field to store the initial value set on this field
    * */
   _initialValue;
@@ -251,6 +256,14 @@ export default class Field {
     return this._originalErrorMessage || `Validation for "${this.name}" failed`;
   }
 
+  setValidating = validating => {
+    this._validating = validating;
+  };
+
+  get validating() {
+    return this._validating;
+  }
+
   /**
    * validate the field. If force is true the validation will be perform
    * even if the field was not initially interacted or blurred
@@ -266,13 +279,20 @@ export default class Field {
     if (shouldSkipValidation) return;
 
     if (!force) {
-      const userDidntInteractWithTheField = !this._interacted || (this.waitForBlur && !this._blurredOnce);
+      const userDidntInteractedWithTheField = !this._interacted;
 
-      if (userDidntInteractWithTheField) {
+      if (userDidntInteractedWithTheField && !this.hasValue) {
         // if we're not forcing the validation
         // and we haven't interacted with the field
         // we asume this field pass the validation status
         this.errorMessage = undefined;
+        return;
+      }
+
+      // if the field requires the user to lost focus before starting the validation
+      // we wait until the field is marked as blurredOnce. Except in the case the
+      // field has an error already in which case we do want to execute the validation
+      if (this.waitForBlur && !this._blurredOnce && !this.errorMessage) {
         return;
       }
     } else {
@@ -290,12 +310,15 @@ export default class Field {
       this.errorMessage = undefined;
     }
 
+    this.setValidating(true);
+
     const res = this._doValidate();
 
     // eslint-disable-next-line consistent-return
     return new Promise(resolve => {
       res.then(
         action(res_ => {
+          this.setValidating(false);
           // if the function returned a boolean we assume it is
           // the flag for the valid state
           if (typeof res_ === 'boolean') {
@@ -311,9 +334,11 @@ export default class Field {
           }
 
           this.errorMessage = undefined;
+
           resolve(); // we use this to chain validators
         }),
         action((errorArg = {}) => {
+          this.setValidating(false);
           const { error, message } = errorArg;
 
           let errorMessageToSet = (error || message || '').trim() || this.originalErrorMessage;
@@ -341,6 +366,10 @@ export default class Field {
     this.errorMessage = msg;
   }
 
+  get error() {
+    return this.errorMessage;
+  }
+
   constructor(model, value, validatorDescriptor = {}, fieldName) {
     makeObservable(this, {
       _disabled: observable,
@@ -356,8 +385,12 @@ export default class Field {
       _blurredOnce: observable,
       blurred: computed,
       errorMessage: observable,
+      error: computed,
       autoValidate: computed,
       valid: computed,
+      validating: computed,
+      _validating: observable,
+      setValidating: action,
       interacted: computed,
       _setValueOnly: action,
       _setValue: action,
