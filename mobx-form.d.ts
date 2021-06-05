@@ -1,9 +1,6 @@
 declare module 'mobx-form' {
-  export interface IFieldsHash {
-    [key: string]: IField<any>;
-  }
-  export interface IValidatorFn {
-    (field: IField<any>, fields:IFieldsHash, formModel: IFormModel<any>): Promise<void>;
+  export interface IValidatorFn<FieldType, ModelType> {
+    (field: IField<FieldType>, fields: { [P in keyof ModelType]: IField<ModelType[P]> }, formModel: IFormModel<ModelType>): Promise<void>;
   }
 
   export interface IHasValueFn<T> {
