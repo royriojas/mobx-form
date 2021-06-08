@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v12.0.2
+- **Features**
+  - Add custom debounce threshold for validator and ignoring of stale validations - [387d4b0]( https://github.com/royriojas/mobx-form/commit/387d4b0 ), [Roy Riojas](https://github.com/Roy Riojas), 08/06/2021 01:10:16
+
+    
 ## v12.0.1
 - **Features**
   - Add better types for validator functions - [9170451]( https://github.com/royriojas/mobx-form/commit/9170451 ), [Roy Riojas](https://github.com/Roy Riojas), 04/06/2021 18:07:55
