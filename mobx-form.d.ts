@@ -24,6 +24,8 @@ declare module 'mobx-form' {
 
     autoValidate?: boolean;
 
+    validationDebounceThreshold?: number;
+
     meta?: Record<string, any>;
   }
 

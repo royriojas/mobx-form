@@ -312,12 +312,16 @@ export default class Field {
 
     this.setValidating(true);
 
+    const validationTs = (this._validationTs = Date.now());
+
     const res = this._doValidate();
 
     // eslint-disable-next-line consistent-return
     return new Promise(resolve => {
       res.then(
         action(res_ => {
+          if (validationTs !== this._validationTs) return; // ignore stale validations
+
           this.setValidating(false);
           // if the function returned a boolean we assume it is
           // the flag for the valid state
@@ -338,6 +342,7 @@ export default class Field {
           resolve(); // we use this to chain validators
         }),
         action((errorArg = {}) => {
+          if (validationTs !== this._validationTs) return; // ignore stale validations
           this.setValidating(false);
           const { error, message } = errorArg;
 
@@ -414,10 +419,21 @@ export default class Field {
     this.model = model;
     this.name = fieldName;
 
-    this._debouncedValidation = debounce(this._validate, DEBOUNCE_THRESHOLD);
     this._initialValue = value;
 
-    const { waitForBlur, disabled, errorMessage, validator, hasValue, required, autoValidate = true, meta } = validatorDescriptor;
+    const {
+      waitForBlur,
+      disabled,
+      errorMessage,
+      validator,
+      hasValue,
+      required,
+      autoValidate = true,
+      meta,
+      validationDebounceThreshold = DEBOUNCE_THRESHOLD,
+    } = validatorDescriptor;
+
+    this._debouncedValidation = debounce(this._validate, validationDebounceThreshold);
 
     this._waitForBlur = waitForBlur;
     this._originalErrorMessage = errorMessage;
