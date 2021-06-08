@@ -26,6 +26,8 @@ declare module 'mobx-form' {
 
     validationDebounceThreshold?: number;
 
+    clearErrorOnValueChange?: boolean;
+
     meta?: Record<string, any>;
   }
 

@@ -140,6 +140,10 @@ export default class Field {
   }
 
   _setValue(val) {
+    if (this._value !== val && this._clearErrorOnValueChange && !this.valid) {
+      this.clearValidation();
+    }
+
     this._setValueOnly(val);
 
     if (this._autoValidate) {
@@ -431,6 +435,7 @@ export default class Field {
       autoValidate = true,
       meta,
       validationDebounceThreshold = DEBOUNCE_THRESHOLD,
+      clearErrorOnValueChange,
     } = validatorDescriptor;
 
     this._debouncedValidation = debounce(this._validate, validationDebounceThreshold);
@@ -438,6 +443,7 @@ export default class Field {
     this._waitForBlur = waitForBlur;
     this._originalErrorMessage = errorMessage;
     this._validateFn = validator;
+    this._clearErrorOnValueChange = clearErrorOnValueChange;
 
     // useful to determine if the field has a value set
     // only used if provided
