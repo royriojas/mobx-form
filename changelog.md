@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v12.0.3
+- **Features**
+  - add option to clear the error on value change - [bf370dc]( https://github.com/royriojas/mobx-form/commit/bf370dc ), [Roy Riojas](https://github.com/Roy Riojas), 08/06/2021 01:22:11
+
+    
 ## v12.0.2
 - **Features**
   - Add custom debounce threshold for validator and ignoring of stale validations - [387d4b0]( https://github.com/royriojas/mobx-form/commit/387d4b0 ), [Roy Riojas](https://github.com/Roy Riojas), 08/06/2021 01:10:16
