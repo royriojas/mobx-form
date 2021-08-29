@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v12.0.4
+- **Bug Fixes**
+  - update types for updateFrom method - [8187fbc]( https://github.com/royriojas/mobx-form/commit/8187fbc ), [Roy Riojas](https://github.com/Roy Riojas), 29/08/2021 02:04:19
+
+    
 ## v12.0.3
 - **Features**
   - add option to clear the error on value change - [bf370dc]( https://github.com/royriojas/mobx-form/commit/bf370dc ), [Roy Riojas](https://github.com/Roy Riojas), 08/06/2021 01:22:11
