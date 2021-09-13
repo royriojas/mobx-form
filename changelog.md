@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v13.0.0
+- **Bug Fixes**
+  - include runtime to fix federated issue - [6a6d243]( https://github.com/royriojas/mobx-form/commit/6a6d243 ), [Roy Riojas](https://github.com/Roy Riojas), 13/09/2021 03:13:33
+
+    
 ## v12.0.4
 - **Bug Fixes**
   - update types for updateFrom method - [8187fbc]( https://github.com/royriojas/mobx-form/commit/8187fbc ), [Roy Riojas](https://github.com/Roy Riojas), 29/08/2021 02:04:19
