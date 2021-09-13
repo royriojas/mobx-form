@@ -90,7 +90,7 @@ export default [
     plugins: [
       babel({
         babelrc: false,
-        babelHelpers: 'runtime',
+        babelHelpers: 'bundled',
         presets: [
           [
             '@babel/preset-env',
@@ -114,7 +114,7 @@ export default [
           ],
         ],
         ...commonBabelConfig,
-        plugins: getBabelPlugins({ includeRuntime: true }),
+        plugins: getBabelPlugins({ includeRuntime: false }),
       }),
       commonjs(),
     ],
@@ -127,7 +127,7 @@ export default [
     plugins: [
       babel({
         babelrc: false,
-        babelHelpers: 'runtime',
+        babelHelpers: 'bundled',
         presets: [
           [
             '@babel/preset-env',
@@ -140,7 +140,7 @@ export default [
           ],
         ],
         ...commonBabelConfig,
-        plugins: getBabelPlugins({ includeRuntime: true }),
+        plugins: getBabelPlugins({ includeRuntime: false }),
       }),
       commonjs(),
     ],

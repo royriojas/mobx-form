@@ -66,7 +66,6 @@
     "projectName": "mobx-form"
   },
   "peerDependencies": {
-    "@babel/runtime": "^7.12.1",
     "mobx": "^6.0.1"
   },
   "devDependencies": {
@@ -79,6 +78,7 @@
     "@babel/plugin-proposal-optional-chaining": "^7.9.0",
     "@babel/plugin-transform-runtime": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
+    "@babel/runtime": "^7.12.1",
     "@redisrupt/eslint-red": "^6.0.0",
     "@rollup/plugin-babel": "^5.0.0",
     "@rollup/plugin-commonjs": "^11.1.0",
