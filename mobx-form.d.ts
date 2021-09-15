@@ -70,6 +70,8 @@ declare module 'mobx-form' {
 
     resetInteractedFlag(): void;
 
+    markAsInteracted(): void;
+
     hasValue: boolean;
 
     blurred: boolean;
@@ -131,8 +133,6 @@ declare module 'mobx-form' {
     restoreInitialValues(options?: ResetInteractedFlagType): void;
 
     resetInteractedFlag(options?: ResetInteractedFlagType): void;
-
-    markAsInteracted(): void;
 
     updateFrom(obj: Partial<T>, options?: ResetInteractedFlagType): void;
 
