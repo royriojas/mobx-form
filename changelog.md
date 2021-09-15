@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v13.1.1
+- **Bug Fixes**
+  - fix typings - [973031f]( https://github.com/royriojas/mobx-form/commit/973031f ), [Roy Riojas](https://github.com/Roy Riojas), 14/09/2021 18:38:35
+
+    
 ## v13.1.0
 - **Bug Fixes**
   - add method to mark as interacted - [0b56ae4]( https://github.com/royriojas/mobx-form/commit/0b56ae4 ), [Roy Riojas](https://github.com/Roy Riojas), 14/09/2021 18:35:37
