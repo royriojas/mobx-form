@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v13.1.0
+- **Bug Fixes**
+  - add method to mark as interacted - [0b56ae4]( https://github.com/royriojas/mobx-form/commit/0b56ae4 ), [Roy Riojas](https://github.com/Roy Riojas), 14/09/2021 18:35:37
+
+    
 ## v13.0.0
 - **Bug Fixes**
   - include runtime to fix federated issue - [6a6d243]( https://github.com/royriojas/mobx-form/commit/6a6d243 ), [Roy Riojas](https://github.com/Roy Riojas), 13/09/2021 03:13:33
