@@ -132,6 +132,8 @@ declare module 'mobx-form' {
 
     resetInteractedFlag(options?: ResetInteractedFlagType): void;
 
+    markAsInteracted(): void;
+
     updateFrom(obj: Partial<T>, options?: ResetInteractedFlagType): void;
 
     enableFields(fieldNames: string[]): void;

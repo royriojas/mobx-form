@@ -31,6 +31,10 @@ export default class Field {
     this._interacted = false;
   }
 
+  markAsInteracted() {
+    this._interacted = true;
+  }
+
   get hasValue() {
     if (this._hasValueFn) {
       return this._hasValueFn(this.value);
@@ -387,6 +391,7 @@ export default class Field {
       disabled: computed,
       required: computed,
       resetInteractedFlag: action,
+      markAsInteracted: action,
       hasValue: computed,
       _autoValidate: observable,
       _value: observable,
