@@ -86,12 +86,17 @@ export default class Field {
     return !!this._blurredOnce;
   }
 
+  /** the raw error in caes validator throws a real error */
+  rawError;
+
   /**
    * the error message associated with this field.
    * This is used to indicate what error happened during
    * the validation process
    */
-  errorMessage;
+  get errorMessage() {
+    return this.rawError?.message;
+  }
 
   /**
    * whether the validation should be launch after a
@@ -145,7 +150,7 @@ export default class Field {
 
   _setValue(val) {
     if (this._value !== val && this._clearErrorOnValueChange && !this.valid) {
-      this.clearValidation();
+      this.resetError();
     }
 
     this._setValueOnly(val);
@@ -174,7 +179,7 @@ export default class Field {
   setValue(value, { resetInteractedFlag, commit } = {}) {
     if (resetInteractedFlag) {
       this._setValueOnly(value);
-      this.errorMessage = undefined;
+      this.rawError = undefined;
       this._interacted = false;
     } else {
       this._setValue(value);
@@ -201,8 +206,12 @@ export default class Field {
    * removing the errorMessage string. A field is
    * considered valid if the errorMessage is not empty
    */
+  resetError() {
+    this.rawError = undefined;
+  }
+
   clearValidation() {
-    this.errorMessage = undefined;
+    this.resetError();
   }
 
   /**
@@ -227,7 +236,7 @@ export default class Field {
       for (let i = 0; i < _validateFn.length; i++) {
         const vfn = _validateFn[i];
         if (typeof vfn !== 'function') {
-          throw new Error('Validator must be a function or a function[]  ');
+          throw new Error('Validator must be a function or a function[]');
         }
         try {
           ret = await vfn(this, model.fields, model);
@@ -250,7 +259,7 @@ export default class Field {
 
   setDisabled(disabled) {
     if (disabled) {
-      this.errorMessage = '';
+      this.resetError();
     }
     this._disabled = disabled;
   }
@@ -293,7 +302,7 @@ export default class Field {
         // if we're not forcing the validation
         // and we haven't interacted with the field
         // we asume this field pass the validation status
-        this.errorMessage = undefined;
+        this.resetError();
         return;
       }
 
@@ -312,10 +321,10 @@ export default class Field {
         // we can indicate that the field is required by passing the error message as the value of
         // the required field. If we pass a boolean or a function then the value of the error message
         // can be set in the requiredMessage field of the validator descriptor
-        this.errorMessage = typeof this._required === 'string' ? this._required : `Field: "${this.name}" is required`;
+        this.setError({ message: typeof this._required === 'string' ? this._required : `Field: "${this.name}" is required` });
         return;
       }
-      this.errorMessage = undefined;
+      this.resetError();
     }
 
     this.setValidating(true);
@@ -334,33 +343,45 @@ export default class Field {
           // if the function returned a boolean we assume it is
           // the flag for the valid state
           if (typeof res_ === 'boolean') {
-            this.errorMessage = res_ ? undefined : this.originalErrorMessage;
+            this.setErrorMessage(res_ ? undefined : this.originalErrorMessage);
             resolve();
             return;
           }
 
           if (res_ && res_.error) {
-            this.errorMessage = res_.error;
+            this.setErrorMessage(res_.error);
             resolve();
             return;
           }
 
-          this.errorMessage = undefined;
+          this.resetError();
 
           resolve(); // we use this to chain validators
         }),
         action((errorArg = {}) => {
           if (validationTs !== this._validationTs) return; // ignore stale validations
           this.setValidating(false);
+
           const { error, message } = errorArg;
 
-          let errorMessageToSet = (error || message || '').trim() || this.originalErrorMessage;
+          let errorToSet = errorArg;
 
-          if (errorMessageToSet === '') {
-            errorMessageToSet = undefined; // empty string is not longer a valid value for error message
+          if (!message) {
+            errorToSet = {
+              ...errorToSet,
+              message: message || this.originalErrorMessage,
+            };
           }
 
-          this.errorMessage = errorMessageToSet;
+          if (error) {
+            errorToSet = {
+              ...errorToSet,
+              message: error,
+            };
+          }
+
+          this.setError(errorToSet);
+
           resolve(); // we use this to chain validators
         }),
       );
@@ -376,7 +397,15 @@ export default class Field {
       msg = undefined;
     }
 
-    this.errorMessage = msg;
+    if (!msg) {
+      this.resetError();
+    } else {
+      this.setError({ message: msg });
+    }
+  }
+
+  setError(error) {
+    this.rawError = error;
   }
 
   get error() {
@@ -398,7 +427,10 @@ export default class Field {
       _interacted: observable,
       _blurredOnce: observable,
       blurred: computed,
-      errorMessage: observable,
+      errorMessage: computed,
+      rawError: observable.ref,
+      setError: action,
+      resetError: action,
       error: computed,
       autoValidate: computed,
       valid: computed,

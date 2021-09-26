@@ -14,7 +14,7 @@ declare module 'mobx-form' {
 
     errorMessage?: string;
 
-    validator?: IValidatorFn | IValidatorFn[];
+    validator?: IValidatorFn<T> | IValidatorFn<T>[];
 
     hasValue?: IHasValueFn<T>;
 
@@ -61,6 +61,8 @@ declare module 'mobx-form' {
     (options?: DisabledType): void;
   }
 
+  export type ErrorLike = Error | { message?: string } | any;
+
   export interface IField<T> {
     waitForBlur: boolean;
 
@@ -79,6 +81,12 @@ declare module 'mobx-form' {
     errorMessage?: string;
 
     error?: string;
+
+    rawError?: ErrorLike;
+
+    setError(err: ErrorLike): void;
+
+    resetError(): void;
 
     autoValidate: boolean;
 
@@ -106,7 +114,7 @@ declare module 'mobx-form' {
 
     originalErrorMessage: string;
 
-    setRequired(value: T): void;
+    setRequired(value: boolean | string): void;
 
     setErrorMessage(message: string): void;
 
