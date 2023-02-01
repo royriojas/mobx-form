@@ -1,20 +1,20 @@
 declare module 'mobx-form' {
   export interface IValidatorFn<FieldType, ModelType> {
-    (field: IField<FieldType>, fields: { [P in keyof ModelType]: IField<ModelType[P]> }, formModel: IFormModel<ModelType>): Promise<void>;
+    (field: IField<FieldType, ModelType>, fields: { [P in keyof ModelType]: IField<ModelType[P], ModelType> }, formModel: IFormModel<ModelType>): Promise<void>;
   }
 
   export interface IHasValueFn<T> {
     (value: T): boolean;
   }
 
-  export interface IValidatorDescriptor<T> {
+  export interface IValidatorDescriptor<T, K> {
     waitForBlur?: boolean;
 
     disabled?: boolean;
 
     errorMessage?: string;
 
-    validator?: IValidatorFn<T> | IValidatorFn<T>[];
+    validator?: IValidatorFn<T, K> | IValidatorFn<T, K>[];
 
     hasValue?: IHasValueFn<T>;
 
@@ -61,9 +61,7 @@ declare module 'mobx-form' {
     (options?: DisabledType): void;
   }
 
-  export type ErrorLike = Error | { message?: string } | any;
-
-  export interface IField<T> {
+  export interface IField<T, K> {
     waitForBlur: boolean;
 
     disabled: boolean;
@@ -72,8 +70,6 @@ declare module 'mobx-form' {
 
     resetInteractedFlag(): void;
 
-    markAsInteracted(): void;
-
     hasValue: boolean;
 
     blurred: boolean;
@@ -81,12 +77,6 @@ declare module 'mobx-form' {
     errorMessage?: string;
 
     error?: string;
-
-    rawError?: ErrorLike;
-
-    setError(err: ErrorLike): void;
-
-    resetError(): void;
 
     autoValidate: boolean;
 
@@ -114,11 +104,11 @@ declare module 'mobx-form' {
 
     originalErrorMessage: string;
 
-    setRequired(value: boolean | string): void;
+    setRequired(value: T): void;
 
     setErrorMessage(message: string): void;
 
-    new (model: IFormModel<any>, value: T, validatorDescriptor: IValidatorDescriptor<T>, fieldName: string): IField<T>;
+    new (model: IFormModel<K>, value: T, validatorDescriptor: IValidatorDescriptor<T, K>, fieldName: string): IField<T, K>;
   }
 
   export interface IFormModel<T> {
@@ -129,7 +119,7 @@ declare module 'mobx-form' {
     requiredAreFilled: boolean;
 
     fields: {
-      [P in keyof T]: IField<T[P]>;
+      [P in keyof T]: IField<T[P], T>;
     };
 
     valid: boolean;
@@ -166,7 +156,7 @@ declare module 'mobx-form' {
   }
 
   export type Descriptors<T> = IValidatorDescriptor<T[keyof T]>[] | {
-    [P in keyof T]: IValidatorDescriptor<T[P]>;
+    [P in keyof T]: IValidatorDescriptor<T[P], T>;
   };
 
   export interface ICreateModelOptions<T> {
