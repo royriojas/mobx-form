@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v13.2.1
+- **Other changes**
+  - improved typings - [c9fa38e]( https://github.com/royriojas/mobx-form/commit/c9fa38e ), [Roy Riojas](https://github.com/Roy Riojas), 01/02/2023 01:42:51
+
+    
 ## v13.2.0
 - **Other changes**
   - add option to store raw error - [e516ca0]( https://github.com/royriojas/mobx-form/commit/e516ca0 ), [Roy Riojas](https://github.com/Roy Riojas), 26/09/2021 07:49:51
