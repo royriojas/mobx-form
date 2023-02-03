@@ -62,6 +62,11 @@ declare module 'mobx-form' {
   }
 
   export interface IField<T, K> {
+    
+    validatedAtLeastOnce: boolean;
+    
+    resetValidatedOnce(): void;
+    
     waitForBlur: boolean;
 
     disabled: boolean;
@@ -112,11 +117,15 @@ declare module 'mobx-form' {
   }
 
   export interface IFormModel<T> {
+    validatedAtLeastOnce: boolean;
+    
     dataIsReady: boolean;
 
     requiredFields: string[];
 
     requiredAreFilled: boolean;
+    
+    resetValidatedOnce(): void;
 
     fields: {
       [P in keyof T]: IField<T[P], T>;

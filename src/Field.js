@@ -13,6 +13,12 @@ export default class Field {
 
   _required;
 
+  _validatedOnce = false;
+
+  get validatedAtLeastOnce() {
+    return this._validatedOnce;
+  }
+
   get waitForBlur() {
     return !!this._waitForBlur;
   }
@@ -33,6 +39,10 @@ export default class Field {
 
   markAsInteracted() {
     this._interacted = true;
+  }
+
+  resetValidatedOnce() {
+    this._validatedOnce = false;
   }
 
   get hasValue() {
@@ -291,6 +301,10 @@ export default class Field {
   _validate({ force = false } = {}) {
     const { required } = this;
 
+    if (!this._validatedOnce) {
+      this._validatedOnce = true;
+    }
+
     const shouldSkipValidation = this.disabled || (!required && !this._validateFn);
 
     if (shouldSkipValidation) return;
@@ -414,6 +428,9 @@ export default class Field {
 
   constructor(model, value, validatorDescriptor = {}, fieldName) {
     makeObservable(this, {
+      resetValidatedOnce: action,
+      _validatedOnce: observable,
+      validatedAtLeastOnce: computed,
       _disabled: observable,
       _required: observable,
       waitForBlur: computed,

@@ -14,6 +14,11 @@ const isObject = o => o && toString.call(o) === '[object Object]';
  * @class FormModel
  */
 export class FormModel {
+  get validatedAtLeastOnce() {
+    const keys = Object.keys(this.fields);
+    return keys.every(key => this.fields[key].validatedAtLeastOnce);
+  }
+
   get dataIsReady() {
     return this.interacted && this.requiredAreFilled && this.valid;
   }
@@ -171,6 +176,8 @@ export class FormModel {
    */
   constructor({ descriptors = {}, initialState, options = {} } = {}) {
     makeObservable(this, {
+      resetValidatedOnce: action,
+      validatedAtLeastOnce: computed,
       dataIsReady: computed,
       requiredFields: computed,
       requiredAreFilled: computed,
@@ -255,6 +262,12 @@ export class FormModel {
     fieldKeys.forEach(key => {
       const field = this._getField(key);
       field.setDisabled(false);
+    });
+  }
+
+  resetValidatedOnce() {
+    this._fieldKeys().forEach(key => {
+      this.fields[key].resetValidatedOnce();
     });
   }
 }
