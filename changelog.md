@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v13.3.0
+- **Features**
+  - add validatedOnce flag - [64cfa58]( https://github.com/royriojas/mobx-form/commit/64cfa58 ), [Roy Riojas](https://github.com/Roy Riojas), 03/02/2023 12:27:36
+
+    
 ## v13.2.1
 - **Other changes**
   - improved typings - [c9fa38e]( https://github.com/royriojas/mobx-form/commit/c9fa38e ), [Roy Riojas](https://github.com/Roy Riojas), 01/02/2023 01:42:51
