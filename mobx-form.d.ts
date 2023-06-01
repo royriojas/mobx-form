@@ -137,11 +137,15 @@ declare module 'mobx-form' {
 
     interacted: boolean;
 
-    restoreInitialValues(options?: ResetInteractedFlagType): void;
+    dirty: boolean;
+
+    commit(): void;
+
+    restoreInitialValues(options?: SetValueFnArgs): void;
 
     resetInteractedFlag(options?: ResetInteractedFlagType): void;
 
-    updateFrom(obj: Partial<T>, options?: ResetInteractedFlagType): void;
+    updateFrom(obj: Partial<T>, options?: SetValueFnArgs): void;
 
     enableFields(fieldNames: string[]): void;
 

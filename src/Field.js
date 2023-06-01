@@ -203,8 +203,12 @@ export default class Field {
   /**
    * Restore the initial value of the field
    */
-  restoreInitialValue({ resetInteractedFlag = true } = {}) {
-    this.setValue(this._initialValue, { resetInteractedFlag });
+  restoreInitialValue({ resetInteractedFlag = true, commit = true } = {}) {
+    this.setValue(this._initialValue, { resetInteractedFlag, commit });
+  }
+
+  get dirty() {
+    return this._initialValue !== this.value;
   }
 
   commit() {
@@ -441,8 +445,10 @@ export default class Field {
       hasValue: computed,
       _autoValidate: observable,
       _value: observable,
+      _initialValue: observable,
       _interacted: observable,
       _blurredOnce: observable,
+      dirty: computed,
       blurred: computed,
       errorMessage: computed,
       rawError: observable.ref,

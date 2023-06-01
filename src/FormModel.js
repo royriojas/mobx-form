@@ -79,6 +79,17 @@ export class FormModel {
     this._eachField(field => field.restoreInitialValue(opts));
   }
 
+  commit() {
+    this._eachField(field => field.commit());
+  }
+
+  get dirty() {
+    return this._fieldKeys().some(key => {
+      const f = this._getField(key);
+      return f.dirty;
+    });
+  }
+
   /**
    * Set multiple values to more than one field a time using an object
    * where each key is the name of a field. The value will be set to each
@@ -197,10 +208,12 @@ export class FormModel {
       disableFields: action,
       addFields: action,
       enableFields: action,
+      commit: action,
+      dirty: computed,
     });
 
     this.addFields(descriptors);
-    initialState && this.updateFrom(initialState, { throwIfMissingField: options.throwIfMissingField });
+    initialState && this.updateFrom(initialState, { throwIfMissingField: options.throwIfMissingField, commit: true });
   }
 
   _getField(name, { throwIfMissingField = true } = {}) {
