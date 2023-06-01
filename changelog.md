@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v13.3.1
+- **Features**
+  - add dirty flag and commit method to form - [ebcc44a]( https://github.com/royriojas/mobx-form/commit/ebcc44a ), [Roy Riojas](https://github.com/Roy Riojas), 31/05/2023 17:37:50
+
+    
 ## v13.3.0
 - **Features**
   - add validatedOnce flag - [64cfa58]( https://github.com/royriojas/mobx-form/commit/64cfa58 ), [Roy Riojas](https://github.com/Roy Riojas), 03/02/2023 12:27:36
