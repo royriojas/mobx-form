@@ -1,6 +1,8 @@
 declare module 'mobx-form' {
+  
+  export type Ret = boolean | { error: string } | void;
   export interface IValidatorFn<FieldType, ModelType> {
-    (field: IField<FieldType, ModelType>, fields: { [P in keyof ModelType]: IField<ModelType[P], ModelType> }, formModel: IFormModel<ModelType>): Promise<void>;
+    (field: IField<FieldType, ModelType>, fields: { [P in keyof ModelType]: IField<ModelType[P], ModelType> }, formModel: IFormModel<ModelType>): Promise<Ret> | Ret;
   }
 
   export interface IHasValueFn<T> {
