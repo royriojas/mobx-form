@@ -163,7 +163,7 @@ declare module 'mobx-form' {
 
     addFields(descriptors: IValidatorDescriptor<T>[] | IValidatorDescriptorHash): void;
 
-    new (descriptors: object, initialState: T);
+    new (descriptors: object, initialState: Partial<T>);
   }
 
   export interface ICreateModelOpts {
@@ -176,11 +176,11 @@ declare module 'mobx-form' {
 
   export interface ICreateModelOptions<T> {
     descriptors: Descriptors<T>;
-    initialState: T;
+    initialState: Partial<T>;
     options?: ICreateModelOpts;
   }
 
   export declare function createModel<T>(options: ICreateModelOptions<T>): IFormModel<T>;
 
-  export declare function createModelFromState<T>(initialState: T, descriptors: Descriptors<T>): IFormModel<T>;
+  export declare function createModelFromState<T>(initialState: Partial<T>, descriptors: Descriptors<T>): IFormModel<T>;
 }
