@@ -73,7 +73,7 @@ declare module 'mobx-form' {
 
     disabled: boolean;
 
-    required: boolean;
+    required: boolean | string;
 
     resetInteractedFlag(): void;
 
@@ -111,7 +111,7 @@ declare module 'mobx-form' {
 
     originalErrorMessage: string;
 
-    setRequired(value: T): void;
+    setRequired(value: boolean | string): void;
 
     setErrorMessage(message: string): void;
 
