@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v13.3.4
+- **Features**
+  - fix types for setRequired - [4ff1bd8]( https://github.com/royriojas/mobx-form/commit/4ff1bd8 ), [Roy Riojas](https://github.com/Roy Riojas), 29/09/2024 03:43:53
+
+    
 ## v13.3.3
 - **Refactoring**
   - refine types - [0d25596]( https://github.com/royriojas/mobx-form/commit/0d25596 ), [Roy Riojas](https://github.com/Roy Riojas), 23/10/2023 21:27:04
