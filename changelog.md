@@ -1,6 +1,10 @@
 
 # mobx-form - Changelog
-## v13.3.4
+## v13.3.5
+- **Bug Fixes**
+  - fix wrong initializer in exported types - [de648e7]( https://github.com/royriojas/mobx-form/commit/de648e7 ), [Roy Riojas](https://github.com/Roy Riojas), 01/10/2024 01:29:09
+
+    
 - **Features**
   - fix types for setRequired - [4ff1bd8]( https://github.com/royriojas/mobx-form/commit/4ff1bd8 ), [Roy Riojas](https://github.com/Roy Riojas), 29/09/2024 03:43:53
 
