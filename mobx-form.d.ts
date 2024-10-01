@@ -167,7 +167,7 @@ declare module 'mobx-form' {
   }
 
   export interface ICreateModelOpts {
-    throwIfMissingField?: boolean = true;
+    throwIfMissingField?: boolean;
   }
 
   export type Descriptors<T> = IValidatorDescriptor<T[keyof T]>[] | {
