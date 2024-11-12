@@ -161,7 +161,7 @@ declare module 'mobx-form' {
 
     serializedData: T;
 
-    addFields(descriptors: IValidatorDescriptor<T>[] | IValidatorDescriptorHash): void;
+    addFields(descriptors: Descriptors<T>, initialState: Partial<T>): void;
 
     new (descriptors: object, initialState: Partial<T>);
   }
@@ -170,7 +170,7 @@ declare module 'mobx-form' {
     throwIfMissingField?: boolean;
   }
 
-  export type Descriptors<T> = IValidatorDescriptor<T[keyof T]>[] | {
+  export type Descriptors<T> = IValidatorDescriptor<T[keyof T], T>[] | {
     [P in keyof T]: IValidatorDescriptor<T[P], T>;
   };
 
