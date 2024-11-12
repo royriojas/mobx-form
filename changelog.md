@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v13.3.6
+- **Features**
+  - fix typings - [85a0035]( https://github.com/royriojas/mobx-form/commit/85a0035 ), [Roy Riojas](https://github.com/Roy Riojas), 12/11/2024 03:14:16
+
+    
 ## v13.3.5
 - **Bug Fixes**
   - fix wrong initializer in exported types - [de648e7]( https://github.com/royriojas/mobx-form/commit/de648e7 ), [Roy Riojas](https://github.com/Roy Riojas), 01/10/2024 01:29:09
