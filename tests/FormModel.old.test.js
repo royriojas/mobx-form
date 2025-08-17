@@ -1,6 +1,6 @@
-import sleep from 'sleep.async';
 import { reaction } from 'mobx';
 import { createModelFromState } from '../src/FormModel';
+import { sleep } from '../src/resources/utils';
 
 describe('form-model', () => {
   describe('restoreInitialValues', () => {

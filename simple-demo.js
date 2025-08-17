@@ -1,4 +1,4 @@
-import trim from 'jq-trim';
+import trim from 'lodash/trim';
 import { createModel } from './src/FormModel';
 
 const model = createModel({

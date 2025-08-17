@@ -1,5 +1,5 @@
 import { observable, computed, extendObservable, action, toJS, makeObservable } from 'mobx';
-import trim from 'jq-trim';
+import trim from 'lodash/trim';
 import Field from './Field';
 
 const toString = Object.prototype.toString;

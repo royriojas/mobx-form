@@ -1,6 +1,6 @@
 import { observable, computed, action, makeObservable } from 'mobx';
-import debounce from 'debouncy';
-import trim from 'jq-trim';
+import debounce from 'lodash/debounce';
+import trim from 'lodash/trim';
 
 const isNullishOrEmpty = value => typeof value === 'undefined' || value === null || value === '';
 

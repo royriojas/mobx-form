@@ -35,8 +35,6 @@ const commonBabelConfig = {
 
 const commonExternals = [
   'mobx',
-  'debouncy',
-  'jq-trim',
   '@babel/runtime/helpers/initializerDefineProperty',
   '@babel/runtime/helpers/toConsumableArray',
   '@babel/runtime/helpers/defineProperty',

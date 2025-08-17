@@ -48,11 +48,6 @@
     "url": "https://github.com/royriojas/mobx-form/issues"
   },
   "homepage": "https://github.com/royriojas/mobx-form#readme",
-  "dependencies": {
-    "debouncy": "1.0.8",
-    "jq-trim": "0.1.2",
-    "mobx": "^6.0.1"
-  },
   "changelogx": {
     "ignoreRegExp": [
       "BLD: Release",
@@ -64,6 +59,9 @@
     "authorURL": "https://github.com/{0}",
     "issueIDURL": "https://github.com/royriojas/mobx-form/issues/{0}",
     "projectName": "mobx-form"
+  },
+  "dependencies": {
+    "lodash": "4.17.21"
   },
   "peerDependencies": {
     "mobx": "^6.0.1"
@@ -86,7 +84,6 @@
     "@rollup/plugin-replace": "^2.3.2",
     "changelogx": "^5.0.4",
     "jest": "^26.6.3",
-    "rollup": "^2.10.0",
-    "sleep.async": "^1.0.4"
+    "rollup": "^2.10.0"
   }
 }
