@@ -1,4 +1,4 @@
-import { createModel, createModelFromState, FormModel } from '../src/FormModel';
+import { createModel, FormModel, createModelFromState } from '../src/index';
 import { deferred, sleep } from '../src/resources/utils';
 
 describe('FormModel', () => {
@@ -760,7 +760,7 @@ describe('FormModel', () => {
         descriptors: {
           name: {
             validator: field => {
-              if (field.value === 'John') return Promise.reject(); // eslint-disable-line prefer-promise-reject-errors
+              if (field.value === 'John') return false;
               return true;
             },
           },

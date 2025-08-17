@@ -1,4 +1,4 @@
-import { createModel } from '../src/FormModel';
+import { createModel } from '../src/index';
 
 describe('FormModel with boolean fields', () => {
   it('it should not complain value is required if value is set to a boolean', async () => {

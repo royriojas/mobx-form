@@ -23,4 +23,4 @@ exports[`FormModel A FormModel can be created using createModel, createModelFrom
 
 exports[`FormModel A FormModel can be created using createModel, createModelFromState or using the Constructor directly createModel dataIsReady should throw when calling enableFields with an argument different from an array 2`] = `"fieldKeys should be an array with the names of the fields to disable"`;
 
-exports[`FormModel Adding fields after model is created should throw when calling addFields with no values 1`] = `"fieldDescriptor has to be an Object or an Array"`;
+exports[`FormModel Adding fields after model is created should throw when calling addFields with no values 1`] = `"fieldDescriptor has to be an Object"`;

@@ -1,4 +1,4 @@
-import { createModel } from '../src/FormModel';
+import { createModel } from '../src/index';
 
 describe('FormModel.validatedAtLeastOnce', () => {
   it('should be false initially as no validation was executed', () => {

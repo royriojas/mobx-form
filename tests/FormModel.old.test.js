@@ -1,5 +1,5 @@
 import { reaction } from 'mobx';
-import { createModelFromState } from '../src/FormModel';
+import { createModelFromState } from '../src/index';
 import { sleep } from '../src/resources/utils';
 
 describe('form-model', () => {
@@ -268,51 +268,6 @@ describe('form-model', () => {
       expect(model.valid).toEqual(false);
     });
 
-    it('should create a model from a descriptor of type array', async () => {
-      const model = createModelFromState({});
-
-      model.addFields([
-        {
-          name: 'name',
-          value: 'Snoopy',
-          required: 'Name is required',
-        },
-        {
-          name: 'lastName',
-          value: 'Brown',
-          required: 'lastName is required',
-          validator: field => field.value !== 'Doe',
-          errorMessage: 'Please do not enter Doe',
-        },
-        {
-          name: 'email',
-          validator: ({ value = '' }, fields, _model) => {
-            if (_model.validateEmails) {
-              if (!(value.indexOf('@') > 1)) {
-                throw new Error('INVALID_EMAIL');
-              }
-            }
-            return true;
-          },
-        },
-      ]);
-
-      expect(model.fields.name.name).toEqual('name');
-      expect(model.fields.lastName.name).toEqual('lastName');
-      expect(model.fields.email.name).toEqual('email');
-
-      expect(model.fields.name.value).toEqual('Snoopy');
-      expect(model.fields.lastName.value).toEqual('Brown');
-      expect(model.fields.email.value).toEqual(undefined);
-
-      await model.validate();
-      expect(model.valid).toEqual(true);
-
-      model.validateEmails = true;
-      await model.validate();
-      expect(model.valid).toEqual(false);
-    });
-
     it('should store non recognized fields as meta in the fields', async () => {
       const model = createModelFromState({});
 
@@ -359,8 +314,13 @@ describe('form-model', () => {
           },
         },
       ];
+      
+      const descriptors = descriptorFields.reduce((seq, field) => {
+        seq[field.name] = field;
+        return seq;
+      }, {});
 
-      model.addFields(descriptorFields);
+      model.addFields(descriptors);
 
       const { fields } = model;
 

@@ -1,4 +1,4 @@
-import { createModel } from '../src/FormModel';
+import { createModel } from '../src/index';
 
 const createDeferred = () => {
   let resolver;

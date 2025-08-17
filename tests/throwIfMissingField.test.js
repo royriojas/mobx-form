@@ -1,4 +1,5 @@
-import { createModel } from '../src/FormModel';
+import { createModel } from '../src/index';
+
 describe('FormModel.options.throwIfMissingField', () => {
   describe('if throwIfMissingField is true', () => {
     it('should complain if trying to set the initial state of a missing field', () => {
