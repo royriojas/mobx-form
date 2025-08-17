@@ -20,7 +20,7 @@ describe('form-model', () => {
     });
 
     it('should reset the initial values on the form even if not empty strings', () => {
-      const model = createModelFromState({ valueA: [], valueB: [] });
+      const model = createModelFromState<{ valueA: number[], valueB: number[] }>({ valueA: [], valueB: [] });
 
       model.updateField('valueA', [1, 2, 3]);
       model.updateField('valueB', [4, 5, 6]);
@@ -145,6 +145,7 @@ describe('form-model', () => {
       });
 
       await model.validate();
+
       expect(model.valid).toEqual(false);
 
       expect(model.summary).toEqual(['Name is required', 'Please do not enter Doe', 'Email already used']);

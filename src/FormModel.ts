@@ -1,4 +1,4 @@
-import { observable, computed, extendObservable, action, makeObservable } from 'mobx';
+import { observable, extendObservable, makeAutoObservable } from 'mobx';
 import trim from 'lodash/trim';
 import debounce from 'lodash/debounce';
 import type { DebouncedFunc } from 'lodash';
@@ -355,7 +355,7 @@ export class Field<T, K> {
   }
 
   validate = async (opts?: ForceType) => {
-    this._debouncedValidation?.cancel();
+    this._debouncedValidation?.cancel?.();
     return await this._validate(opts);
   };
 
@@ -500,11 +500,6 @@ export class Field<T, K> {
   _debouncedValidation?: DebouncedFunc<Field<T, K>['_validate']>;
 
   constructor(model: FormModel<K>, value: T, validatorDescriptor: FieldDescriptor<T, K>, fieldName: string) {
-    makeObservable(this, {
-      _value: observable.ref,
-      _initialValue: observable.ref,
-    });
-
     const DEBOUNCE_THRESHOLD = 300;
 
     this._value = value;
@@ -542,6 +537,11 @@ export class Field<T, K> {
     this._disabled = disabled;
 
     this.meta = meta; // store other props passed on the fields
+    
+    makeAutoObservable(this, {
+      _value: observable.ref,
+      _initialValue: observable.ref,
+    });
   }
 }
 
@@ -680,7 +680,8 @@ export class FormModel<K> {
           const field = this.fields[key];
           return field.validate({ force: true });
         }),
-      );  
+      );
+      
       this.setValidating(false);
     }
     catch(err) {
@@ -729,7 +730,9 @@ export class FormModel<K> {
     this.addFields(descriptors);
     initialState && this.updateFrom(initialState, { throwIfMissingField: options.throwIfMissingField, commit: true });
     
-    makeObservable(this);
+    makeAutoObservable(this, {
+      fields: observable.shallow,
+    });
   }
 
   _getField(name: keyof K, { throwIfMissingField = true }: ThrowIfMissingFieldType = {}) {
