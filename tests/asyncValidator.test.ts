@@ -1,36 +1,17 @@
+import { describe, it, expect } from 'bun:test';
 import { createModel } from '../src/index';
-
-const createDeferred = () => {
-  let resolver;
-  let rejector;
-
-  const p = new Promise((resolve, reject) => {
-    resolver = resolve;
-    rejector = reject;
-  });
-
-  p.resolve = (...args) => {
-    resolver && resolver(...args);
-  };
-
-  p.reject = (...args) => {
-    rejector && rejector(...args);
-  };
-
-  return p;
-};
 
 describe('async validators', () => {
   it('should mark the field as validating while validation is being performed', async () => {
-    let dfd;
+    let dfd: PromiseWithResolvers<{ error: string } | boolean> = Promise.withResolvers();
 
     const model = createModel({
       descriptors: {
         name: {
           validator: () => {
-            dfd = createDeferred();
 
-            return dfd;
+
+            return dfd.promise;
           },
         },
         lastName: {},
@@ -42,7 +23,7 @@ describe('async validators', () => {
 
     expect(model.fields.name.validating).toEqual(true);
 
-    dfd.resolve();
+    dfd.resolve(true);
 
     await p;
 
@@ -50,15 +31,13 @@ describe('async validators', () => {
   });
 
   it('should mark the field as validating while validation is being performed even if validation fails', async () => {
-    let dfd;
+    let dfd: PromiseWithResolvers<{ error: string } | boolean> = Promise.withResolvers();
 
     const model = createModel({
       descriptors: {
         name: {
           validator: () => {
-            dfd = createDeferred();
-
-            return dfd;
+            return dfd.promise;
           },
         },
         lastName: {},
@@ -80,15 +59,13 @@ describe('async validators', () => {
   });
 
   it('should mark the entire form as validating while validation is on the fly', async () => {
-    let dfd;
+    let dfd: PromiseWithResolvers<{ error: string } | boolean> = Promise.withResolvers();
 
     const model = createModel({
       descriptors: {
         name: {
           validator: () => {
-            dfd = createDeferred();
-
-            return dfd;
+            return dfd.promise;
           },
         },
         lastName: {},
@@ -110,15 +87,13 @@ describe('async validators', () => {
   });
 
   it('should mark the entire form as validating while validation is on the fly even for a single field', async () => {
-    let dfd;
+    let dfd: PromiseWithResolvers<{ error: string } | boolean> = Promise.withResolvers();
 
     const model = createModel({
       descriptors: {
         name: {
           validator: () => {
-            dfd = createDeferred();
-
-            return dfd;
+            return dfd.promise;
           },
         },
         lastName: {},

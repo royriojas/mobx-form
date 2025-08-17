@@ -13,7 +13,7 @@ const model = createModel({
         const email = trim(field.value);
         // super simple and naive email validation
         if (!email || !(email.indexOf('@') > 0)) {
-          throw new Error('Please provide an error message');
+          throw new Error('Please provide a valid email');
         }
       },
     },
@@ -28,6 +28,7 @@ const model = createModel({
     },
   },
   initialState: {
+    name: 'Snoopy',
     email: '',
     password: '',
   },

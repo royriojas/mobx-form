@@ -22,7 +22,7 @@ export type FormModelArgs<T> = {
 
 export type ResultObj = { error: string };
 export type ErrorLike = { message: string } | Error;
-export type ValidatorResult = boolean | ResultObj;
+export type ValidatorResult = boolean | ResultObj | void;
 export type ValidateFn<T, K> = ((field: Field<T, K>, fields: FormModel<K>['fields'], model: FormModel<K>) => Promise<ValidatorResult>);
 export type ResetInteractedFlagType = {
   resetInteractedFlag?: boolean;
