@@ -11,11 +11,11 @@ const isNullishOrEmpty = (value: unknown): value is null | undefined | string =>
 };
 
 export type Descriptors<T> = {
-  [P in keyof T]: ValidatorDescriptor<T[P], T>;
+  [P in keyof T]: FieldDescriptor<T[P], T>;
 };
 
 export type FormModelArgs<T> = {
-  descriptors: Descriptors<T>;
+  descriptors: Partial<Descriptors<T>>;
   initialState?: Partial<T>;
   options?: ThrowIfMissingFieldType;
 };
@@ -23,7 +23,7 @@ export type FormModelArgs<T> = {
 export type ResultObj = { error: string };
 export type ErrorLike = { message: string } | Error;
 export type ValidatorResult = boolean | ResultObj | void;
-export type ValidateFn<T, K> = ((field: Field<T, K>, fields: FormModel<K>['fields'], model: FormModel<K>) => Promise<ValidatorResult>);
+export type ValidateFn<T, K> = ((field: Field<T, K>, fields: FormModel<K>['fields'], model: FormModel<K>) => Promise<ValidatorResult> | ValidatorResult);
 export type ResetInteractedFlagType = {
   resetInteractedFlag?: boolean;
 };
@@ -32,7 +32,7 @@ export type ThrowIfMissingFieldType = {
   throwIfMissingField?: boolean;
 }
 
-export interface ValidatorDescriptor<T, K> {
+export interface FieldDescriptor<T, K> {
   waitForBlur?: boolean;
 
   disabled?: boolean;
@@ -188,7 +188,7 @@ export class Field<T, K> {
    * This is used to indicate what error happened during
    * the validation process
    */
-  get errorMessage() {
+  get errorMessage(): string | undefined {
     return (this.rawError as ErrorLike)?.message;
   }
 
@@ -499,7 +499,7 @@ export class Field<T, K> {
   
   _debouncedValidation?: DebouncedFunc<Field<T, K>['_validate']>;
 
-  constructor(model: FormModel<K>, value: T, validatorDescriptor: ValidatorDescriptor<T, K>, fieldName: string) {
+  constructor(model: FormModel<K>, value: T, validatorDescriptor: FieldDescriptor<T, K>, fieldName: string) {
     makeObservable(this, {
       _value: observable.ref,
       _initialValue: observable.ref,
@@ -554,9 +554,6 @@ export class Field<T, K> {
  * @class FormModel
  */
 export class FormModel<K> {
-  
-  
-  
   get validatedAtLeastOnce() {
     const keys = this._fieldKeys;
     return keys.every(key => this.fields[key].validatedAtLeastOnce);
@@ -566,7 +563,7 @@ export class FormModel<K> {
     return this.interacted && this.requiredAreFilled && this.valid;
   }
 
-  get requiredFields() {
+  get requiredFields(): (keyof K)[] {
     const keys = this._fieldKeys;
     return keys.filter(key => this.fields[key].required);
   }
@@ -618,7 +615,7 @@ export class FormModel<K> {
   /**
    * Restore the initial values set at the creation time of the model
    * */
-  restoreInitialValues(opts: SetValueFnArgs) {
+  restoreInitialValues(opts: SetValueFnArgs = {}) {
     this._eachField(field => field.restoreInitialValue(opts));
   }
 
@@ -759,7 +756,7 @@ export class FormModel<K> {
     this._eachField(field => field.resetInteractedFlag());
   }
 
-  disableFields = (fieldKeys: keyof K[]) => {
+  disableFields = (fieldKeys: (keyof K)[]) => {
     if (!Array.isArray(fieldKeys)) throw new TypeError('fieldKeys should be an array with the names of the fields to disable');
     fieldKeys.forEach(key => {
       const field = this._getField(key);
@@ -767,21 +764,21 @@ export class FormModel<K> {
     });
   }
 
-  _createField({ name, descriptor }: { name: keyof K, descriptor: ValidatorDescriptor<K[keyof K], K> }) {
+  _createField({ name, descriptor }: { name: keyof K, descriptor: FieldDescriptor<K[keyof K], K> }) {
     const { value, ...restDescriptor } = descriptor;
     extendObservable(this.fields, {
       [name]: new Field(this, value as K[keyof K], restDescriptor, name as string),
     });
   }
 
-  addFields = (fieldsDescriptor: Descriptors<K>) => {
+  addFields = (fieldsDescriptor: Partial<Descriptors<K>>) => {
     if (fieldsDescriptor == null || !isObject(fieldsDescriptor)) {
       throw new Error('fieldDescriptor has to be an Object');
     }
 
-    const fieldsToAdd = Object.keys(fieldsDescriptor) as (keyof K)[];
+    const fieldsToAdd = Object.keys(fieldsDescriptor) as (keyof Partial<Descriptors<K>>)[];
     fieldsToAdd.forEach(key => {
-      this._createField({ name: key, descriptor: fieldsDescriptor[key] });
+      this._createField({ name: key, descriptor: fieldsDescriptor[key]! });
     });
   };
 
@@ -806,7 +803,7 @@ export class FormModel<K> {
  */
 export const createModel = <T>(args: FormModelArgs<T> ) => new FormModel(args);
 
-export const createModelFromState = <T>(initialState: Partial<T> = {}, validators: Descriptors<T>, options?: ThrowIfMissingFieldType) => {
+export const createModelFromState = <T>(initialState: Partial<T> = {}, validators: Descriptors<T> = {} as Descriptors<T>, options?: ThrowIfMissingFieldType) => {
   const theValidators = validators || {};
   
   const stateKeys = Object.keys(initialState);

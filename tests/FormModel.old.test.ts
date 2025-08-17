@@ -1,6 +1,7 @@
 import { reaction } from 'mobx';
-import { createModelFromState } from '../src/index';
+import { createModelFromState, FormModel, type Descriptors } from '../src/index';
 import { sleep } from '../src/resources/utils';
+import { describe, it, expect } from 'bun:test';
 
 describe('form-model', () => {
   describe('restoreInitialValues', () => {
@@ -51,8 +52,9 @@ describe('form-model', () => {
 
   describe('requiredAreFilled', () => {
     it('should be true if all required fields have a value', () => {
+      const initialState = { name: '', lastName: '', email: '' };
       const model = createModelFromState(
-        { name: '', lastName: '', email: '' },
+        initialState,
         {
           name: { required: 'The name is required' },
           lastName: {
@@ -86,11 +88,11 @@ describe('form-model', () => {
       model.updateField('name', 'John');
 
       expect(model.requiredAreFilled).toBe(false); // now lastName is also required!
-      expect(model.requiredFields.sort()).toEqual(['name', 'lastName'].sort());
+      expect(model.requiredFields.sort()).toEqual(['name', 'lastName'].sort() as (keyof typeof initialState)[]);
 
       model.updateField('lastName', 'Doo');
 
-      expect(model.requiredFields.sort()).toEqual(['name', 'lastName', 'email'].sort());
+      expect(model.requiredFields.sort()).toEqual(['name', 'lastName', 'email'].sort() as (keyof typeof initialState)[]);
       expect(model.requiredAreFilled).toBe(false);
 
       model.updateField('email', 'some@email.com');
@@ -196,6 +198,7 @@ describe('form-model', () => {
     });
 
     it('should allow validators to access fields in the model', async () => {
+      type CustomModel = FormModel<{ name: string, lastName: string, email: string }> & {validateEmails: boolean};
       const model = createModelFromState(
         { name: 'Snoopy', lastName: 'Brown', email: '' },
         {
@@ -211,7 +214,7 @@ describe('form-model', () => {
           // this just works. If validation passed no need to return anything.
           email: {
             validator: ({ value = '' }, fields, _model) => {
-              if (_model.validateEmails) {
+              if ((_model as CustomModel).validateEmails) {
                 if (!(value.indexOf('@') > 1)) {
                   throw new Error('INVALID_EMAIL');
                 }
@@ -220,7 +223,7 @@ describe('form-model', () => {
             },
           },
         },
-      );
+      ) as CustomModel;
 
       await model.validate();
       expect(model.valid).toEqual(true);
@@ -233,7 +236,8 @@ describe('form-model', () => {
 
   describe('addFields', () => {
     it('should create a model from an object descriptor', async () => {
-      const model = createModelFromState({});
+      type CustomModel = FormModel<{ name: string, lastName: string, email: string }> & {validateEmails: boolean};
+      const model = createModelFromState({}) as CustomModel;
 
       model.addFields({
         // using generic validation
@@ -250,7 +254,7 @@ describe('form-model', () => {
         },
         email: {
           validator: ({ value = '' }, fields, _model) => {
-            if (_model.validateEmails) {
+            if ((_model as CustomModel).validateEmails) {
               if (!(value.indexOf('@') > 1)) {
                 throw new Error('INVALID_EMAIL');
               }
@@ -269,7 +273,13 @@ describe('form-model', () => {
     });
 
     it('should store non recognized fields as meta in the fields', async () => {
-      const model = createModelFromState({});
+      type StateType = {
+        numOfBedrooms: string;
+        moveInRange: string;
+        comments: string;
+      };
+      
+      const model = createModelFromState({}) as FormModel<StateType>;
 
       const descriptorFields = [
         {
@@ -316,24 +326,25 @@ describe('form-model', () => {
       ];
       
       const descriptors = descriptorFields.reduce((seq, field) => {
-        seq[field.name] = field;
+        seq[field.name as keyof StateType] = field;
         return seq;
-      }, {});
+      }, {} as Descriptors<StateType>);
 
       model.addFields(descriptors);
 
       const { fields } = model;
 
-      expect(fields.numOfBedrooms.meta).toEqual(descriptorFields[0].meta);
-      expect(fields.moveInRange.meta).toEqual(descriptorFields[1].meta);
-      expect(fields.comments.meta).toEqual(descriptorFields[2].meta);
+      expect(fields.numOfBedrooms.meta).toEqual(descriptors.numOfBedrooms.meta!);
+      expect(fields.moveInRange.meta).toEqual(descriptors.moveInRange.meta!);
+      expect(fields.comments.meta).toEqual(descriptors.comments.meta!);
+      
 
       await model.validate();
       expect(model.valid).toEqual(false);
 
-      expect(fields.numOfBedrooms.errorMessage).toEqual(descriptorFields[0].required);
-      expect(fields.moveInRange.errorMessage).toEqual(descriptorFields[1].required);
-      expect(fields.comments.errorMessage).toEqual(descriptorFields[2].required);
+      expect(fields.numOfBedrooms.errorMessage).toEqual(descriptors.numOfBedrooms.required as string);
+      expect(fields.moveInRange.errorMessage).toEqual(descriptors.moveInRange.required as string);
+      expect(fields.comments.errorMessage).toEqual(descriptors.comments.required as string);
 
       fields.numOfBedrooms.setValue('STUDIO');
       fields.moveInRange.setValue('NEXT_4_WEEKS');

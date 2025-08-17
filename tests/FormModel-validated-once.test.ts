@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'bun:test';
 import { createModel } from '../src/index';
 
 describe('FormModel.validatedAtLeastOnce', () => {
@@ -10,7 +11,8 @@ describe('FormModel.validatedAtLeastOnce', () => {
         url: {
           required: true,
           validator: async field => {
-            if (!field.value.match(/^http(s*):\/\//)) {
+            const val: string = (field.value ?? '') as string;
+            if (!val.match(/^http(s*):\/\//)) {
               throw new Error('Not a valid URL');
             }
           },
@@ -30,7 +32,8 @@ describe('FormModel.validatedAtLeastOnce', () => {
         url: {
           required: true,
           validator: async field => {
-            if (!field.value.match(/^http(s*):\/\//)) {
+            const val: string = (field.value ?? '') as string;
+            if (!val.match(/^http(s*):\/\//)) {
               throw new Error('Not a valid URL');
             }
           },
@@ -59,7 +62,8 @@ describe('FormModel.validatedAtLeastOnce', () => {
         url: {
           required: true,
           validator: async field => {
-            if (!field.value.match(/^http(s*):\/\//)) {
+            const val: string = (field.value ?? '') as string;
+            if (!val.match(/^http(s*):\/\//)) {
               throw new Error('Not a valid URL');
             }
           },
@@ -90,7 +94,8 @@ describe('FormModel.validatedAtLeastOnce', () => {
         url: {
           required: true,
           validator: async field => {
-            if (!field.value.match(/^http(s*):\/\//)) {
+            const val: string = (field.value ?? '') as string;
+            if (!val.match(/^http(s*):\/\//)) {
               throw new Error('Not a valid URL');
             }
           },
@@ -117,7 +122,8 @@ describe('FormModel.validatedAtLeastOnce', () => {
         url: {
           required: true,
           validator: async field => {
-            if (!field.value.match(/^http(s*):\/\//)) {
+            const val: string = (field.value ?? '') as string;
+            if (!val.match(/^http(s*):\/\//)) {
               throw new Error('Not a valid URL');
             }
           },

@@ -10,7 +10,7 @@
         "@types/bun": "^1.2.20",
         "@types/lodash": "^4.17.20",
         "changelogx": "^5.0.4",
-        "rollup": "^2.10.0",
+        "typescript": "5.9.2",
       },
       "peerDependencies": {
         "mobx": "^6.0.1",
@@ -66,8 +66,6 @@
 
     "fs.realpath": ["fs.realpath@1.0.0", "", {}, "sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw=="],
 
-    "fsevents": ["fsevents@2.3.3", "", { "os": "darwin" }, "sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw=="],
-
     "git-toplevel": ["git-toplevel@1.1.1", "", { "dependencies": { "es6-promise": "^3.0.2", "jq-trim": "^0.1.1" } }, "sha512-ytnF1ZpGVZZcvxbKIan88ixdW5XFcHh8eJn/54oJqXwDaB7n5rKXleaFMB0FooeVx5H2mXKZUpKL0XZ8DrknhQ=="],
 
     "github-url-from-git": ["github-url-from-git@1.5.0", "", {}, "sha512-WWOec4aRI7YAykQ9+BHmzjyNlkfJFG8QLXnDTsLz/kZefq7qkzdfo4p6fkYYMIq1aj+gZcQs/1HQhQh3DPPxlQ=="],
@@ -112,8 +110,6 @@
 
     "read-json-sync": ["read-json-sync@2.0.1", "", {}, "sha512-8ZJRyVJ6jKMzXsuoTTb/LPQusL/bNdNZi1GV5cZ8m9JSvHGIfI7caizhNOPkLVaZWGUrARc88cAftSnRE1liDg=="],
 
-    "rollup": ["rollup@2.79.2", "", { "optionalDependencies": { "fsevents": "~2.3.2" }, "bin": { "rollup": "dist/bin/rollup" } }, "sha512-fS6iqSPZDs3dr/y7Od6y5nha8dW1YnbgtsyotCVvoFGKbERG++CVRFv1meyGDE1SNItQA8BrnCw7ScdAhRJ3XQ=="],
-
     "stringformat": ["stringformat@0.0.5", "", {}, "sha512-yl77JaBIcWA2I7cYABq06d//cn2zVGi1U7vNzeddE5dcQL6eHpjDm4wni4ajF+k+fAThAGJ7oHVOtt5yYwNfoA=="],
 
     "supports-color": ["supports-color@5.5.0", "", { "dependencies": { "has-flag": "^3.0.0" } }, "sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow=="],
@@ -121,6 +117,8 @@
     "twig": ["twig@1.17.1", "", { "dependencies": { "@babel/runtime": "^7.8.4", "locutus": "^2.0.11", "minimatch": "3.0.x", "walk": "2.3.x" }, "bin": { "twigjs": "bin/twigjs" } }, "sha512-atxccyr/BHtb1gPMA7Lvki0OuU17XBqHsNH9lzDHt9Rr1293EVZOosSZabEXz/DPVikIW8ZDqSkEddwyJnQN2w=="],
 
     "type-check": ["type-check@0.3.2", "", { "dependencies": { "prelude-ls": "~1.1.2" } }, "sha512-ZCmOJdvOWDBYJlzAoFkC+Q0+bUyEOS1ltgp1MGU03fqHG+dbi9tBFU2Rd9QKiDZFAYrhPh2JUf7rZRIuHRKtOg=="],
+
+    "typescript": ["typescript@5.9.2", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A=="],
 
     "undici-types": ["undici-types@7.10.0", "", {}, "sha512-t5Fy/nfn+14LuOc2KNYg75vZqClpAiqscVvMygNnlsHBFpSXdJaYtXMcdNLpl/Qvc3P2cB3s6lOV51nqsFq4ag=="],
 

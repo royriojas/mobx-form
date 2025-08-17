@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'bun:test';
 import { createModel } from '../src/index';
 
 describe('FormModel with boolean fields', () => {
@@ -17,6 +18,6 @@ describe('FormModel with boolean fields', () => {
 
     await model.validate();
 
-    expect(model.fields.isFunny.error).toEqual(undefined);
+    expect(model.fields.isFunny.error).toEqual(undefined!);
   });
 });

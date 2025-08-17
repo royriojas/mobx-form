@@ -1,4 +1,5 @@
-import { createModel } from '../src/index';
+import { createModel, FormModel } from '../src/index';
+import { describe, it, expect } from 'bun:test';
 
 describe('FormModel.options.throwIfMissingField', () => {
   describe('if throwIfMissingField is true', () => {
@@ -9,6 +10,7 @@ describe('FormModel.options.throwIfMissingField', () => {
           initialState: {
             name: 'Snoopy',
             lastName: 'Brown',
+            // @ts-expect-error intentionally passing wrong type
             missingField: 'this is an extra field',
           },
           options: {
@@ -27,6 +29,7 @@ describe('FormModel.options.throwIfMissingField', () => {
           initialState: {
             name: 'Snoopy',
             lastName: 'Brown',
+            // @ts-expect-error intentionally passing wrong type
             missingField: 'this is an extra field',
           },
         });
@@ -36,13 +39,14 @@ describe('FormModel.options.throwIfMissingField', () => {
 
   describe('if throwIfMissingField is false', () => {
     it('should not throw if a field is passed that do not match the ones specified in the descriptors', () => {
-      let model;
+      let model: FormModel<{ name: string, lastName: string }>;
       expect(() => {
-        model = createModel({
+        model = createModel<{ name: string, lastName: string }>({
           descriptors: { name: {}, lastName: {} },
           initialState: {
             name: 'Snoopy',
             lastName: 'Brown',
+            // @ts-expect-error intentionally passing wrong type
             missingField: 'this is an extra field',
           },
           options: {
@@ -50,7 +54,10 @@ describe('FormModel.options.throwIfMissingField', () => {
           },
         });
       }).not.toThrow('Field \\"missingField\\" not found');
+      
+      // @ts-expect-error variable is set in the function from above
       expect(model.fields.name.value).toEqual('Snoopy');
+      // @ts-expect-error variable is set in the function from above
       expect(model.fields.lastName.value).toEqual('Brown');
     });
   });

@@ -1,4 +1,6 @@
 import { createModel, FormModel, createModelFromState } from '../src/index';
+import { describe, it, expect, jest } from 'bun:test';
+
 import { deferred, sleep } from '../src/resources/utils';
 
 describe('FormModel', () => {
@@ -410,6 +412,7 @@ describe('FormModel', () => {
           });
 
           expect(() => {
+            // @ts-expect-error intentionally passing wrong type
             model.disableFields();
           }).toThrowErrorMatchingSnapshot();
         });
@@ -428,6 +431,7 @@ describe('FormModel', () => {
           });
 
           expect(() => {
+            // @ts-expect-error intentionally passing wrong type
             model.disableFields(null);
           }).toThrowErrorMatchingSnapshot();
         });
@@ -446,6 +450,7 @@ describe('FormModel', () => {
           });
 
           expect(() => {
+            // @ts-expect-error intentionally passing wrong type
             model.disableFields({});
           }).toThrowErrorMatchingSnapshot();
         });
@@ -464,10 +469,12 @@ describe('FormModel', () => {
           });
 
           expect(() => {
+            // @ts-expect-error intentionally passing wrong type
             model.enableFields();
           }).toThrowErrorMatchingSnapshot();
 
           expect(() => {
+            // @ts-expect-error intentionally passing wrong type
             model.enableFields({});
           }).toThrowErrorMatchingSnapshot();
         });
@@ -487,13 +494,14 @@ describe('FormModel', () => {
             });
 
             expect(() => {
+              // @ts-expect-error intentionally passing wrong type
               model.disableFields(['non existant field']);
             }).toThrowErrorMatchingSnapshot();
           });
         });
 
         it('should be true when the required data is provided unless the validation function fails', async () => {
-          const model = createModel({
+          const model = createModel<{ name: string, lastName: string, email: string }>({
             descriptors: {
               name: {
                 required: 'The name is required',
@@ -502,7 +510,7 @@ describe('FormModel', () => {
               email: {
                 required: true,
                 validator: field => {
-                  if (field.value.indexOf('@') === -1) {
+                  if (field.value?.indexOf('@') === -1) {
                     throw new Error('A valid email is required');
                   }
                 },
@@ -540,7 +548,7 @@ describe('FormModel', () => {
 
   describe('Adding fields after model is created', () => {
     it('field can be validated and serialized as other normal fields', async () => {
-      const model = createModel({
+      const model = createModel<{ name: string, lastName: string, email: string, address: string }>({
         descriptors: {
           name: {
             required: 'The name is required',
@@ -586,13 +594,14 @@ describe('FormModel', () => {
         },
       });
 
+      // @ts-expect-error intentionally passing wrong type
       expect(() => model.addFields()).toThrowErrorMatchingSnapshot();
     });
   });
 
   describe('while validating model.valid', () => {
     it('should be false', async () => {
-      const dfd = deferred();
+      const dfd = deferred<void>();
       const model = createModel({
         descriptors: {
           name: {
@@ -624,7 +633,7 @@ describe('FormModel', () => {
 
     describe('restoreInitialValues', () => {
       it('should restore any data to its original values', async () => {
-        const dfd = deferred();
+        const dfd = deferred<void>();
 
         const model = createModel({
           descriptors: {
@@ -736,7 +745,7 @@ describe('FormModel', () => {
     });
 
     it('a validation function does not need a default error message. One will be provided if ommited', async () => {
-      const model = createModel({
+      const model = createModel<{ name: string }>({
         descriptors: {
           name: {
             validator: async field => {
@@ -756,7 +765,7 @@ describe('FormModel', () => {
     });
 
     it('If validation function rejected without an error message. One will be provided by default', async () => {
-      const model = createModel({
+      const model = createModel<{ name: string }>({
         descriptors: {
           name: {
             validator: field => {
@@ -776,13 +785,13 @@ describe('FormModel', () => {
     });
 
     it('a single field can have multiple validations in an array', async () => {
-      const model = createModel({
+      const model = createModel<{ email: string }>({
         descriptors: {
           email: {
             required: 'Email is required',
             validator: [
               field => {
-                if (field.value.indexOf('@') === -1) {
+                if (field.value?.indexOf('@') === -1) {
                   throw new Error('A valid email is required');
                 }
               },
@@ -824,11 +833,12 @@ describe('FormModel', () => {
       await model.validate();
 
       expect(model.valid).toEqual(true);
+      // @ts-expect-error intentionally passing wrong type
       expect(model.fields.email.errorMessage).toEqual(undefined);
     });
 
     it('The validation function can return an error object to describe the error', async () => {
-      const model = createModel({
+      const model = createModel<{ name: string }>({
         descriptors: {
           name: {
             validator: field => {
@@ -851,13 +861,14 @@ describe('FormModel', () => {
 
     describe('If the validator function is an array', () => {
       it('should throw if elements of the array are not functions', async () => {
-        const model = createModel({
+        const model = createModel<{ email: string }>({
           descriptors: {
             email: {
               validator: [
+                // @ts-expect-error intentionally passing wrong type
                 'some string',
                 field => {
-                  if (field.value.indexOf('@') === -1) {
+                  if (field.value?.indexOf('@') === -1) {
                     throw new Error('A valid email is required');
                   }
                 },
@@ -884,13 +895,13 @@ describe('FormModel', () => {
 
     describe('if an errorMessage is set in the field', () => {
       it('should report the field as not valid and the entire model is not valid', async () => {
-        const model = createModel({
+        const model = createModel<{ email: string }>({
           descriptors: {
             email: {
               autoValidate: false,
               validator: [
                 field => {
-                  if (field.value.indexOf('@') === -1) {
+                  if (field.value?.indexOf('@') === -1) {
                     throw new Error('A valid email is required');
                   }
                 },
@@ -920,17 +931,18 @@ describe('FormModel', () => {
         await model.validate();
 
         expect(model.valid).toEqual(true);
+        // @ts-expect-error intentionally passing wrong type
         expect(model.fields.email.errorMessage).toEqual(undefined);
       });
 
       it('error message can be cleared from the field and make the form to be considered valid again', async () => {
-        const model = createModel({
+        const model = createModel<{ email: string }>({
           descriptors: {
             email: {
               autoValidate: false,
               validator: [
                 field => {
-                  if (field.value.indexOf('@') === -1) {
+                  if (field.value?.indexOf('@') === -1) {
                     throw new Error('A valid email is required');
                   }
                 },
@@ -952,13 +964,14 @@ describe('FormModel', () => {
         model.fields.email.clearValidation();
 
         expect(model.valid).toEqual(true);
+        // @ts-expect-error intentionally passing wrong type
         expect(model.fields.email.errorMessage).toEqual(undefined);
       });
     });
 
     describe('field.hasValue function', () => {
       it('should be used to determine if a field has value, useful in case of arrays', () => {
-        const model = createModel({
+        const model = createModel<{ selectedPhone: string[] }>({
           descriptors: {
             selectedPhone: {
               required: true,
@@ -994,7 +1007,7 @@ describe('FormModel', () => {
     });
 
     it('The validation function can return a rejected promise', async () => {
-      const model = createModel({
+      const model = createModel<{ name: string }>({
         descriptors: {
           name: {
             validator: field => {
@@ -1016,7 +1029,7 @@ describe('FormModel', () => {
     });
 
     it('The validation can be async and return the error from the function', async () => {
-      const model = createModel({
+      const model = createModel<{ name: string }>({
         descriptors: {
           name: {
             validator: async field => {

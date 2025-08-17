@@ -1,4 +1,6 @@
+import { describe, it, expect } from 'bun:test';
 import { createModel } from '../src/index';
+
 describe('FormModel.dirty', () => {
   it('should be false when creating the formModel with no initialState', () => {
     const model = createModel({

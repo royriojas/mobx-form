@@ -70,6 +70,6 @@
     "@types/bun": "^1.2.20",
     "@types/lodash": "^4.17.20",
     "changelogx": "^5.0.4",
-    "rollup": "^2.10.0"
+    "typescript": "5.9.2"
   }
 }
