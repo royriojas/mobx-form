@@ -14,7 +14,7 @@ describe('FormModel.options.throwIfMissingField', () => {
             throwIfMissingField: true,
           },
         });
-      }).toThrowErrorMatchingInlineSnapshot('"Field \\"missingField\\" not found"');
+      }).toThrowErrorMatchingInlineSnapshot('"Field "missingField" not found"');
     });
   });
 
@@ -29,7 +29,7 @@ describe('FormModel.options.throwIfMissingField', () => {
             missingField: 'this is an extra field',
           },
         });
-      }).toThrowErrorMatchingInlineSnapshot('"Field \\"missingField\\" not found"');
+      }).toThrowErrorMatchingInlineSnapshot('"Field "missingField" not found"');
     });
   });
 

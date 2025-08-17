@@ -1,26 +1,26 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
-exports[`FormModel A FormModel can be created using createModel, createModelFromState or using the Constructor directly createModel dataIsReady should throw when calling disableFields with an argument different from an array 1`] = `"fieldKeys should be an array with the names of the fields to disable"`;
+exports[`FormModel A FormModel can be created using createModel, createModelFromState or using the Constructor directly createModel required fields when required fields are missing when required property is set to true (boolean) should have an errorMessage on failed fields 1`] = `"Field: "name" is required"`;
+
+exports[`FormModel A FormModel can be created using createModel, createModelFromState or using the Constructor directly createModel required fields when required fields are missing when required property is set to true (boolean) should have an errorMessage on failed fields 2`] = `"Field: "email" is required"`;
+
+exports[`FormModel A FormModel can be created using createModel, createModelFromState or using the Constructor directly createModel required fields when required fields are missing should contain a summary of missing fields 1`] = `
+[
+  "The name is required",
+  "Field: "email" is required",
+]
+`;
+
+exports[`FormModel A FormModel can be created using createModel, createModelFromState or using the Constructor directly createModel dataIsReady when trying to disable a field that does not exist should throw an error 1`] = `"Field "non existant field" not found"`;
 
 exports[`FormModel A FormModel can be created using createModel, createModelFromState or using the Constructor directly createModel dataIsReady should throw when calling disableFields with no parameters 1`] = `"fieldKeys should be an array with the names of the fields to disable"`;
 
 exports[`FormModel A FormModel can be created using createModel, createModelFromState or using the Constructor directly createModel dataIsReady should throw when calling disableFields with null 1`] = `"fieldKeys should be an array with the names of the fields to disable"`;
 
+exports[`FormModel A FormModel can be created using createModel, createModelFromState or using the Constructor directly createModel dataIsReady should throw when calling disableFields with an argument different from an array 1`] = `"fieldKeys should be an array with the names of the fields to disable"`;
+
 exports[`FormModel A FormModel can be created using createModel, createModelFromState or using the Constructor directly createModel dataIsReady should throw when calling enableFields with an argument different from an array 1`] = `"fieldKeys should be an array with the names of the fields to disable"`;
 
 exports[`FormModel A FormModel can be created using createModel, createModelFromState or using the Constructor directly createModel dataIsReady should throw when calling enableFields with an argument different from an array 2`] = `"fieldKeys should be an array with the names of the fields to disable"`;
-
-exports[`FormModel A FormModel can be created using createModel, createModelFromState or using the Constructor directly createModel dataIsReady when trying to disable a field that does not exist should throw an error 1`] = `"Field \\"non existant field\\" not found"`;
-
-exports[`FormModel A FormModel can be created using createModel, createModelFromState or using the Constructor directly createModel required fields when required fields are missing should contain a summary of missing fields 1`] = `
-Array [
-  "The name is required",
-  "Field: \\"email\\" is required",
-]
-`;
-
-exports[`FormModel A FormModel can be created using createModel, createModelFromState or using the Constructor directly createModel required fields when required fields are missing when required property is set to true (boolean) should have an errorMessage on failed fields 1`] = `"Field: \\"name\\" is required"`;
-
-exports[`FormModel A FormModel can be created using createModel, createModelFromState or using the Constructor directly createModel required fields when required fields are missing when required property is set to true (boolean) should have an errorMessage on failed fields 2`] = `"Field: \\"email\\" is required"`;
 
 exports[`FormModel Adding fields after model is created should throw when calling addFields with no values 1`] = `"fieldDescriptor has to be an Object or an Array"`;

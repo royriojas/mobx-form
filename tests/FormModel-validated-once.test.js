@@ -41,9 +41,9 @@ describe('FormModel.validatedAtLeastOnce', () => {
     await model.validate();
 
     expect(model.summary).toMatchInlineSnapshot(`
-      Array [
-        "Field: \\"appId\\" is required",
-        "Field: \\"url\\" is required",
+      [
+        "Field: "appId" is required",
+        "Field: "url" is required",
       ]
     `);
 
@@ -73,7 +73,7 @@ describe('FormModel.validatedAtLeastOnce', () => {
     await model.validate();
 
     expect(model.summary).toMatchInlineSnapshot(`
-      Array [
+      [
         "Not a valid URL",
       ]
     `);

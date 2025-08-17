@@ -11,7 +11,7 @@ describe('FormModel with boolean fields', () => {
 
     await model.validate();
 
-    expect(model.fields.isFunny.error).toMatchInlineSnapshot('"Field: \\"isFunny\\" is required"');
+    expect(model.fields.isFunny.error).toMatchInlineSnapshot('"Field: "isFunny" is required"');
 
     model.fields.isFunny.setValue(false);
 
