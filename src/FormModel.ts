@@ -750,7 +750,7 @@ export class FormModel<K> {
       seq[key] = valueToSet as K[keyof K];
 
       return seq;
-    }, {} as Partial<K>);
+    }, {} as K);
   }
 
   /**
