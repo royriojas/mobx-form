@@ -1,15 +1,40 @@
 
 # mobx-form - Changelog
-## v13.3.6
+## v14.0.0
+- **Refactoring**
+  - add test info - [f10187c]( https://github.com/royriojas/mobx-form/commit/f10187c ), [Roy Riojas](https://github.com/Roy Riojas), 17/08/2025 17:45:17
+
+    
+  - add eslint - [a0156d9]( https://github.com/royriojas/mobx-form/commit/a0156d9 ), [Roy Riojas](https://github.com/Roy Riojas), 17/08/2025 17:42:54
+
+    
+  - migrate to typescript - [0d89d65]( https://github.com/royriojas/mobx-form/commit/0d89d65 ), [Roy Riojas](https://github.com/Roy Riojas), 17/08/2025 14:46:35
+
+    
+  - migrate to typescript - [5b07ec9]( https://github.com/royriojas/mobx-form/commit/5b07ec9 ), [Roy Riojas](https://github.com/Roy Riojas), 17/08/2025 14:23:17
+
+    
+  - move to typescript - [3594106]( https://github.com/royriojas/mobx-form/commit/3594106 ), [Roy Riojas](https://github.com/Roy Riojas), 17/08/2025 01:03:17
+
+    
+  - move to typescript - [ece109c]( https://github.com/royriojas/mobx-form/commit/ece109c ), [Roy Riojas](https://github.com/Roy Riojas), 17/08/2025 00:42:10
+
+    
+- **Bug Fixes**
+  - move to use bun test - [0e1aa45]( https://github.com/royriojas/mobx-form/commit/0e1aa45 ), [Roy Riojas](https://github.com/Roy Riojas), 16/08/2025 17:48:22
+
+    
+  - removed unneded deps - [15cd96d]( https://github.com/royriojas/mobx-form/commit/15cd96d ), [Roy Riojas](https://github.com/Roy Riojas), 16/08/2025 17:43:08
+
+    
+  - fix wrong initializer in exported types - [de648e7]( https://github.com/royriojas/mobx-form/commit/de648e7 ), [Roy Riojas](https://github.com/Roy Riojas), 01/10/2024 01:29:09
+
+    
 - **Features**
   - fix typings - [85a0035]( https://github.com/royriojas/mobx-form/commit/85a0035 ), [Roy Riojas](https://github.com/Roy Riojas), 12/11/2024 03:14:16
 
     
-## v13.3.5
-- **Bug Fixes**
-  - fix wrong initializer in exported types - [de648e7]( https://github.com/royriojas/mobx-form/commit/de648e7 ), [Roy Riojas](https://github.com/Roy Riojas), 01/10/2024 01:29:09
-
-    
+## v13.3.4
 - **Features**
   - fix types for setRequired - [4ff1bd8]( https://github.com/royriojas/mobx-form/commit/4ff1bd8 ), [Roy Riojas](https://github.com/Roy Riojas), 29/09/2024 03:43:53
 
