@@ -10,7 +10,9 @@
     "dist/"
   ],
   "scripts": {
-    "check": "eslint --cache --cache-location node_modules/.cache/ 'src/**/*.ts' 'tests/**/*.ts'",
+    "lint": "eslint --cache --cache-location node_modules/.cache/ 'src/**/*.ts' 'tests/**/*.ts'",
+    "check": "npm run lint && npm run verify",
+    "verify": "tsc --noEmit --project tsconfig.json",
     "autofix": "npm run check -- --fix",
     "changelog": "changelogx -f markdown -o ./changelog.md",
     "do-changelog": "npm run changelog && git add ./changelog.md && git commit -m 'DOC: Generate changelog' --no-verify",
@@ -22,6 +24,7 @@
     "bump-patch": "npm run pre-v && npm version patch -m 'BLD: Release v%s' && npm run post-v",
     "bump-prerelease": "npm run pre-v && npm version prerelease -m 'BLD: Release v%s' && npm run post-v",
     "prepublishOnly": "npm run build",
+    "test": "bun test",
     "build": "rm -rf ./dist && bun bun.build.ts && npm run dts",
     "dts": "tsc -p tsconfig.json --emitDeclarationOnly --declaration --outDir dist",
     "smoke:test": "bun simple-demo.ts"
