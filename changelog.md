@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v14.2.0
+- **Refactoring**
+  - make serializedData same as T - [302899a]( https://github.com/royriojas/mobx-form/commit/302899a ), [Roy Riojas](https://github.com/Roy Riojas), 18/08/2025 01:15:38
+
+    
 ## v14.1.0
 - **Refactoring**
   - fix test checks - [a972662]( https://github.com/royriojas/mobx-form/commit/a972662 ), [Roy Riojas](https://github.com/Roy Riojas), 17/08/2025 18:03:15
