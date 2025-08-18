@@ -2,21 +2,15 @@
   "name": "mobx-form",
   "version": "13.3.6",
   "description": "A simple form helper for mobx",
-  "main": "dist/mobx-form.cjs.js",
-  "_browser": "dist/mobx-form.umd.js",
-  "browser": {
-    "./dist/index.js": "./dist/mobx-form.umd.js",
-    "./dist/index.esm.js": "./dist/mobx-form.esm.js"
-  },
-  "module": "dist/mobx-form.esm.js",
-  "_legacy_module": "dist/mobx-form.legacy.js",
-  "types": "mobx-form.d.ts",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "dist/",
-    "mobx-form.d.ts"
+    "dist/"
   ],
   "scripts": {
-    "check": "eslint --cache --cache-location node_modules/.cache/ -f friendly 'src/**/*.js' 'tests/**/*.js'",
+    "check": "eslint --cache --cache-location node_modules/.cache/ 'src/**/*.ts' 'tests/**/*.ts'",
     "autofix": "npm run check -- --fix",
     "changelog": "changelogx -f markdown -o ./changelog.md",
     "do-changelog": "npm run changelog && git add ./changelog.md && git commit -m 'DOC: Generate changelog' --no-verify",
@@ -28,10 +22,9 @@
     "bump-patch": "npm run pre-v && npm version patch -m 'BLD: Release v%s' && npm run post-v",
     "bump-prerelease": "npm run pre-v && npm version prerelease -m 'BLD: Release v%s' && npm run post-v",
     "prepublishOnly": "npm run build",
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
-    "test": "jest --config jest.config.js",
-    "smoke:test": "babel-node test.js"
+    "build": "rm -rf ./dist && bun bun.build.ts && npm run dts",
+    "dts": "tsc -p tsconfig.json --emitDeclarationOnly --declaration --outDir dist",
+    "smoke:test": "bun simple-demo.ts"
   },
   "repository": {
     "type": "git",
@@ -39,6 +32,7 @@
   },
   "keywords": [
     "form",
+    "mobx-form",
     "model",
     "mobx"
   ],
@@ -70,6 +64,14 @@
     "@types/bun": "^1.2.20",
     "@types/lodash": "^4.17.20",
     "changelogx": "^5.0.4",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-prettier": "5.2.1",
+    "@eslint/js": "^9.8.0",
+    "eslint": "9.10.0",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.9",
+    "eslint-plugin-tailwindcss": "3.17.4",
+    "typescript-eslint": "^8.0.0"
   }
 }

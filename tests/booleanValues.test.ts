@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'bun:test';
-import { createModel } from '../src/index';
+import { describe, it, expect } from "bun:test";
+import { createModel } from "../src/index";
 
-describe('FormModel with boolean fields', () => {
-  it('it should not complain value is required if value is set to a boolean', async () => {
+describe("FormModel with boolean fields", () => {
+  it("it should not complain value is required if value is set to a boolean", async () => {
     const model = createModel({
       descriptors: { name: {}, lastName: {}, isFunny: { required: true } },
-      initialState: { name: 'Snoopy', lastName: 'Brown' },
+      initialState: { name: "Snoopy", lastName: "Brown" },
     });
 
     expect(model.fields.isFunny.value).toEqual(undefined);

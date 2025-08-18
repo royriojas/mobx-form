@@ -1,22 +1,20 @@
-import { describe, it, expect } from 'bun:test';
-import { createModel } from '../src/index';
+import { describe, it, expect } from "bun:test";
+import { createModel } from "../src/index";
 
-describe('async validators', () => {
-  it('should mark the field as validating while validation is being performed', async () => {
-    let dfd: PromiseWithResolvers<{ error: string } | boolean> = Promise.withResolvers();
+describe("async validators", () => {
+  it("should mark the field as validating while validation is being performed", async () => {
+    const dfd: PromiseWithResolvers<{ error: string } | boolean> = Promise.withResolvers();
 
     const model = createModel({
       descriptors: {
         name: {
           validator: () => {
-
-
             return dfd.promise;
           },
         },
         lastName: {},
       },
-      initialState: { name: 'Snoopy', lastName: 'Brown' },
+      initialState: { name: "Snoopy", lastName: "Brown" },
     });
 
     const p = model.validate();
@@ -30,8 +28,8 @@ describe('async validators', () => {
     expect(model.fields.name.validating).toEqual(false);
   });
 
-  it('should mark the field as validating while validation is being performed even if validation fails', async () => {
-    let dfd: PromiseWithResolvers<{ error: string } | boolean> = Promise.withResolvers();
+  it("should mark the field as validating while validation is being performed even if validation fails", async () => {
+    const dfd: PromiseWithResolvers<{ error: string } | boolean> = Promise.withResolvers();
 
     const model = createModel({
       descriptors: {
@@ -42,24 +40,24 @@ describe('async validators', () => {
         },
         lastName: {},
       },
-      initialState: { name: 'Snoopy', lastName: 'Brown' },
+      initialState: { name: "Snoopy", lastName: "Brown" },
     });
 
     const p = model.validate();
 
     expect(model.fields.name.validating).toEqual(true);
 
-    dfd.reject(new Error('Failed name'));
+    dfd.reject(new Error("Failed name"));
 
     await p;
 
     expect(model.fields.name.validating).toEqual(false);
 
-    expect(model.fields.name.error).toEqual('Failed name');
+    expect(model.fields.name.error).toEqual("Failed name");
   });
 
-  it('should mark the entire form as validating while validation is on the fly', async () => {
-    let dfd: PromiseWithResolvers<{ error: string } | boolean> = Promise.withResolvers();
+  it("should mark the entire form as validating while validation is on the fly", async () => {
+    const dfd: PromiseWithResolvers<{ error: string } | boolean> = Promise.withResolvers();
 
     const model = createModel({
       descriptors: {
@@ -70,7 +68,7 @@ describe('async validators', () => {
         },
         lastName: {},
       },
-      initialState: { name: 'Snoopy', lastName: 'Brown' },
+      initialState: { name: "Snoopy", lastName: "Brown" },
     });
 
     expect(model.validating).toEqual(false);
@@ -79,15 +77,15 @@ describe('async validators', () => {
 
     expect(model.validating).toEqual(true);
 
-    dfd.reject(new Error('Failed name'));
+    dfd.reject(new Error("Failed name"));
 
     await p;
 
     expect(model.validating).toEqual(false);
   });
 
-  it('should mark the entire form as validating while validation is on the fly even for a single field', async () => {
-    let dfd: PromiseWithResolvers<{ error: string } | boolean> = Promise.withResolvers();
+  it("should mark the entire form as validating while validation is on the fly even for a single field", async () => {
+    const dfd: PromiseWithResolvers<{ error: string } | boolean> = Promise.withResolvers();
 
     const model = createModel({
       descriptors: {
@@ -98,7 +96,7 @@ describe('async validators', () => {
         },
         lastName: {},
       },
-      initialState: { name: 'Snoopy', lastName: 'Brown' },
+      initialState: { name: "Snoopy", lastName: "Brown" },
     });
 
     expect(model.validating).toEqual(false);
@@ -107,7 +105,7 @@ describe('async validators', () => {
 
     expect(model.validating).toEqual(true);
 
-    dfd.reject(new Error('Failed name'));
+    dfd.reject(new Error("Failed name"));
 
     await p;
 

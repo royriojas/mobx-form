@@ -1,4 +1,7 @@
-export type PromiseWithResolvers<T, K = Error> = Promise<T> & { resolve: (arg: T) => void; reject: (arg: K) => void };
+export type PromiseWithResolvers<T, K = Error> = Promise<T> & {
+  resolve: (arg: T) => void;
+  reject: (arg: K) => void;
+};
 
 export const deferred = <T, K = Error>() => {
   let resolve: (arg: T) => void;
@@ -9,7 +12,7 @@ export const deferred = <T, K = Error>() => {
     reject = rejector;
   }) as PromiseWithResolvers<T, K>;
 
-  promise.resolve = arg => resolve(arg);
+  promise.resolve = (arg) => resolve(arg);
 
   promise.reject = (arg: K) => reject(arg);
 
@@ -17,6 +20,6 @@ export const deferred = <T, K = Error>() => {
 };
 
 export const sleep = (timeout = 1000) =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     setTimeout(resolve, timeout);
   });

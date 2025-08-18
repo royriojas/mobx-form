@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'bun:test';
-import { createModel } from '../src/index';
+import { describe, it, expect } from "bun:test";
+import { createModel } from "../src/index";
 
-describe('FormModel.validatedAtLeastOnce', () => {
-  it('should be false initially as no validation was executed', () => {
+describe("FormModel.validatedAtLeastOnce", () => {
+  it("should be false initially as no validation was executed", () => {
     const model = createModel({
       descriptors: {
         appId: {
@@ -10,10 +10,10 @@ describe('FormModel.validatedAtLeastOnce', () => {
         },
         url: {
           required: true,
-          validator: async field => {
-            const val: string = (field.value ?? '') as string;
+          validator: async (field) => {
+            const val: string = (field.value ?? "") as string;
             if (!val.match(/^http(s*):\/\//)) {
-              throw new Error('Not a valid URL');
+              throw new Error("Not a valid URL");
             }
           },
         },
@@ -23,7 +23,7 @@ describe('FormModel.validatedAtLeastOnce', () => {
     expect(model.validatedAtLeastOnce).toEqual(false);
   });
 
-  it('should be true once all fields were validated once', async () => {
+  it("should be true once all fields were validated once", async () => {
     const model = createModel({
       descriptors: {
         appId: {
@@ -31,10 +31,10 @@ describe('FormModel.validatedAtLeastOnce', () => {
         },
         url: {
           required: true,
-          validator: async field => {
-            const val: string = (field.value ?? '') as string;
+          validator: async (field) => {
+            const val: string = (field.value ?? "") as string;
             if (!val.match(/^http(s*):\/\//)) {
-              throw new Error('Not a valid URL');
+              throw new Error("Not a valid URL");
             }
           },
         },
@@ -61,18 +61,18 @@ describe('FormModel.validatedAtLeastOnce', () => {
         },
         url: {
           required: true,
-          validator: async field => {
-            const val: string = (field.value ?? '') as string;
+          validator: async (field) => {
+            const val: string = (field.value ?? "") as string;
             if (!val.match(/^http(s*):\/\//)) {
-              throw new Error('Not a valid URL');
+              throw new Error("Not a valid URL");
             }
           },
         },
       },
     });
 
-    model.fields.appId.setValue('testApp');
-    model.fields.url.setValue('testUrl');
+    model.fields.appId.setValue("testApp");
+    model.fields.url.setValue("testUrl");
 
     await model.validate();
 
@@ -85,7 +85,7 @@ describe('FormModel.validatedAtLeastOnce', () => {
     expect(model.validatedAtLeastOnce).toEqual(true);
   });
 
-  it('should be true once all fields were validated when validation passes', async () => {
+  it("should be true once all fields were validated when validation passes", async () => {
     const model = createModel({
       descriptors: {
         appId: {
@@ -93,18 +93,18 @@ describe('FormModel.validatedAtLeastOnce', () => {
         },
         url: {
           required: true,
-          validator: async field => {
-            const val: string = (field.value ?? '') as string;
+          validator: async (field) => {
+            const val: string = (field.value ?? "") as string;
             if (!val.match(/^http(s*):\/\//)) {
-              throw new Error('Not a valid URL');
+              throw new Error("Not a valid URL");
             }
           },
         },
       },
     });
 
-    model.fields.appId.setValue('testApp');
-    model.fields.url.setValue('http://some.url');
+    model.fields.appId.setValue("testApp");
+    model.fields.url.setValue("http://some.url");
 
     await model.validate();
 
@@ -113,7 +113,7 @@ describe('FormModel.validatedAtLeastOnce', () => {
     expect(model.validatedAtLeastOnce).toEqual(true);
   });
 
-  it('should be false once is reset after being validated once', async () => {
+  it("should be false once is reset after being validated once", async () => {
     const model = createModel({
       descriptors: {
         appId: {
@@ -121,18 +121,18 @@ describe('FormModel.validatedAtLeastOnce', () => {
         },
         url: {
           required: true,
-          validator: async field => {
-            const val: string = (field.value ?? '') as string;
+          validator: async (field) => {
+            const val: string = (field.value ?? "") as string;
             if (!val.match(/^http(s*):\/\//)) {
-              throw new Error('Not a valid URL');
+              throw new Error("Not a valid URL");
             }
           },
         },
       },
     });
 
-    model.fields.appId.setValue('testApp');
-    model.fields.url.setValue('http://some.url');
+    model.fields.appId.setValue("testApp");
+    model.fields.url.setValue("http://some.url");
 
     await model.validate();
 

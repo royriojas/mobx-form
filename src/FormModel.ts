@@ -1,13 +1,13 @@
-import { observable, extendObservable, makeAutoObservable } from 'mobx';
-import trim from 'lodash/trim';
-import debounce from 'lodash/debounce';
-import type { DebouncedFunc } from 'lodash';
+import { observable, extendObservable, makeAutoObservable } from "mobx";
+import trim from "lodash/trim";
+import debounce from "lodash/debounce";
+import type { DebouncedFunc } from "lodash";
 
 const toString = Object.prototype.toString;
 
-const isObject = (o: unknown) => o && toString.call(o) === '[object Object]';
+const isObject = (o: unknown) => o && toString.call(o) === "[object Object]";
 const isNullishOrEmpty = (value: unknown): value is null | undefined | string => {
-  return typeof value === 'undefined' || value === null || value === '';
+  return typeof value === "undefined" || value === null || value === "";
 };
 
 export type Descriptors<T> = {
@@ -23,14 +23,18 @@ export type FormModelArgs<T> = {
 export type ResultObj = { error: string };
 export type ErrorLike = { message: string } | Error;
 export type ValidatorResult = boolean | ResultObj | void;
-export type ValidateFn<T, K> = ((field: Field<T, K>, fields: FormModel<K>['fields'], model: FormModel<K>) => Promise<ValidatorResult> | ValidatorResult);
+export type ValidateFn<T, K> = (
+  field: Field<T, K>,
+  fields: FormModel<K>["fields"],
+  model: FormModel<K>,
+) => Promise<ValidatorResult> | ValidatorResult;
 export type ResetInteractedFlagType = {
   resetInteractedFlag?: boolean;
 };
 
 export type ThrowIfMissingFieldType = {
   throwIfMissingField?: boolean;
-}
+};
 
 export interface FieldDescriptor<T, K> {
   waitForBlur?: boolean;
@@ -39,9 +43,9 @@ export interface FieldDescriptor<T, K> {
 
   errorMessage?: string;
 
-  validator?: ValidateFn<T,K> | ValidateFn<T,K>[];
+  validator?: ValidateFn<T, K> | ValidateFn<T, K>[];
 
-  hasValue?: (value: T) => boolean
+  hasValue?: (value: T) => boolean;
 
   value?: T;
 
@@ -53,6 +57,8 @@ export interface FieldDescriptor<T, K> {
 
   clearErrorOnValueChange?: boolean;
 
+  // meta can be anything so we accept `any` here
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   meta?: Record<string, any>;
 }
 
@@ -72,27 +78,29 @@ export type SetValueFnArgs = ResetInteractedFlagType & CommitType;
 
 export class Field<T, K> {
   _name: string;
-  
+
+  // meta can be anything so we accept `any` here
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   meta?: Record<string, any>;
-  
+
   _model: FormModel<K>;
-  
-  _waitForBlur? = false
-  
+
+  _waitForBlur? = false;
+
   _disabled? = false;
 
   _required?: boolean | string = false;
 
   _validatedOnce = false;
-  
+
   _clearErrorOnValueChange? = false;
-  
+
   _hasValueFn?: (value: T) => boolean;
-  
+
   get name() {
     return this._name;
   }
-  
+
   get model() {
     return this._model;
   }
@@ -140,7 +148,7 @@ export class Field<T, K> {
 
     return !isNullishOrEmpty(this.value);
   }
-  
+
   _validationTs: number = 0;
 
   /**
@@ -240,7 +248,7 @@ export class Field<T, K> {
     }
 
     this._value = val;
-  }
+  };
 
   _setValue = (val?: T) => {
     if (this._value !== val && this._clearErrorOnValueChange && !this.valid) {
@@ -252,7 +260,7 @@ export class Field<T, K> {
     if (this._autoValidate) {
       this._debouncedValidation?.();
     }
-  }
+  };
 
   /**
    * setter for the value of the field
@@ -261,8 +269,7 @@ export class Field<T, K> {
     this._setValue(val);
   }
 
-
-  setValue = (value?: T, { resetInteractedFlag, commit }: SetValueFnArgs = {}) => {Set
+  setValue = (value?: T, { resetInteractedFlag, commit }: SetValueFnArgs = {}) => {
     if (resetInteractedFlag) {
       this._setValueOnly(value);
       this.rawError = undefined;
@@ -274,14 +281,14 @@ export class Field<T, K> {
     if (commit) {
       this.commit();
     }
-  }
+  };
 
   /**
    * Restore the initial value of the field
    */
   restoreInitialValue = ({ resetInteractedFlag = true, commit = true }: SetValueFnArgs = {}) => {
     this.setValue(this._initialValue, { resetInteractedFlag, commit });
-  }
+  };
 
   get dirty() {
     return this._initialValue !== this.value;
@@ -315,20 +322,25 @@ export class Field<T, K> {
 
     this.validate();
   };
-  
+
   _validateFn?: ValidateFn<T, K> | Array<ValidateFn<T, K>>;
 
   _doValidate = async (): Promise<ValidatorResult | undefined> => {
     const { _validateFn, model } = this;
 
     if (!_validateFn) return Promise.resolve(true);
-    
-    const invokeFn = async (vfn: ValidateFn<T, K> | undefined, field: Field<T, K>, fields: FormModel<K>['fields'], model: FormModel<K>) => {
+
+    const invokeFn = async (
+      vfn: ValidateFn<T, K> | undefined,
+      field: Field<T, K>,
+      fields: FormModel<K>["fields"],
+      model: FormModel<K>,
+    ) => {
       if (!vfn) return true;
-      if (typeof vfn !== 'function') {
-        throw new Error('Validator must be a function or a function[]');
+      if (typeof vfn !== "function") {
+        throw new Error("Validator must be a function or a function[]");
       }
-      
+
       ret = await vfn(this, model.fields, model);
       if (ret === false || (ret as ResultObj)?.error) {
         return ret;
@@ -345,7 +357,7 @@ export class Field<T, K> {
       ret = await invokeFn(_validateFn, this, model.fields, model);
     }
     return ret;
-  }
+  };
 
   setDisabled(disabled: boolean) {
     if (disabled) {
@@ -413,7 +425,12 @@ export class Field<T, K> {
         // we can indicate that the field is required by passing the error message as the value of
         // the required field. If we pass a boolean or a function then the value of the error message
         // can be set in the requiredMessage field of the validator descriptor
-        this.setError({ message: typeof this._required === 'string' ? this._required : `Field: "${this.name}" is required` });
+        this.setError({
+          message:
+            typeof this._required === "string"
+              ? this._required
+              : `Field: "${this.name}" is required`,
+        });
         return;
       }
       this.resetError();
@@ -431,7 +448,7 @@ export class Field<T, K> {
       this.setValidating(false);
       // if the function returned a boolean we assume it is
       // the flag for the valid state
-      if (typeof res === 'boolean') {
+      if (typeof res === "boolean") {
         this.setErrorMessage(res ? undefined : this.originalErrorMessage);
         return;
       }
@@ -444,14 +461,14 @@ export class Field<T, K> {
       this.resetError();
     } catch (err) {
       const errorArg = err as ErrorLike | ResultObj;
-      
+
       if (validationTs !== this._validationTs) return; // ignore stale validations
-      
+
       this.setValidating(false);
 
       let errorToSet: ErrorLike | undefined = errorArg as ErrorLike;
-      
-      const message = (errorArg as ErrorLike).message; 
+
+      const message = (errorArg as ErrorLike).message;
 
       if (!message) {
         errorToSet = {
@@ -459,7 +476,7 @@ export class Field<T, K> {
           message: message || this.originalErrorMessage,
         };
       }
-      
+
       const error = (errorArg as ResultObj).error;
 
       if (error) {
@@ -471,14 +488,14 @@ export class Field<T, K> {
 
       this.setError(errorToSet!);
     }
-  }
+  };
 
   setRequired = (val: boolean | string) => {
     this._required = val;
   };
 
   setErrorMessage = (msg?: string) => {
-    if (trim(msg) === '') {
+    if (trim(msg) === "") {
       msg = undefined;
     }
 
@@ -487,19 +504,24 @@ export class Field<T, K> {
     } else {
       this.setError({ message: msg });
     }
-  }
+  };
 
   setError = (error: ErrorLike) => {
     this.rawError = error;
-  }
+  };
 
   get error() {
     return this.errorMessage;
   }
-  
-  _debouncedValidation?: DebouncedFunc<Field<T, K>['_validate']>;
 
-  constructor(model: FormModel<K>, value: T, validatorDescriptor: FieldDescriptor<T, K>, fieldName: string) {
+  _debouncedValidation?: DebouncedFunc<Field<T, K>["_validate"]>;
+
+  constructor(
+    model: FormModel<K>,
+    value: T,
+    validatorDescriptor: FieldDescriptor<T, K>,
+    fieldName: string,
+  ) {
     const DEBOUNCE_THRESHOLD = 300;
 
     this._value = value;
@@ -537,14 +559,13 @@ export class Field<T, K> {
     this._disabled = disabled;
 
     this.meta = meta; // store other props passed on the fields
-    
+
     makeAutoObservable(this, {
       _value: observable.ref,
       _initialValue: observable.ref,
     });
   }
 }
-
 
 /**
  * a helper class to generate a dynamic form
@@ -556,7 +577,7 @@ export class Field<T, K> {
 export class FormModel<K> {
   get validatedAtLeastOnce() {
     const keys = this._fieldKeys;
-    return keys.every(key => this.fields[key].validatedAtLeastOnce);
+    return keys.every((key) => this.fields[key].validatedAtLeastOnce);
   }
 
   get dataIsReady() {
@@ -565,12 +586,12 @@ export class FormModel<K> {
 
   get requiredFields(): (keyof K)[] {
     const keys = this._fieldKeys;
-    return keys.filter(key => this.fields[key].required);
+    return keys.filter((key) => this.fields[key].required);
   }
 
   get requiredAreFilled() {
     const keys = this._fieldKeys;
-    return keys.every(key => {
+    return keys.every((key) => {
       const field = this.fields[key];
       if (field.required) {
         return !!field.hasValue;
@@ -593,7 +614,7 @@ export class FormModel<K> {
       return false; // consider the form invalid until the validation process finish
     }
     const keys = this._fieldKeys;
-    return keys.every(key => {
+    return keys.every((key) => {
       const field = this.fields[key];
       return !!field.valid;
     });
@@ -606,7 +627,7 @@ export class FormModel<K> {
    */
   get interacted() {
     const keys = this._fieldKeys;
-    return keys.some(key => {
+    return keys.some((key) => {
       const field = this.fields[key];
       return !!field.interacted;
     });
@@ -616,15 +637,15 @@ export class FormModel<K> {
    * Restore the initial values set at the creation time of the model
    * */
   restoreInitialValues(opts: SetValueFnArgs = {}) {
-    this._eachField(field => field.restoreInitialValue(opts));
+    this._eachField((field) => field.restoreInitialValue(opts));
   }
 
   commit() {
-    this._eachField(field => field.commit());
+    this._eachField((field) => field.commit());
   }
 
   get dirty() {
-    return this._fieldKeys.some(key => {
+    return this._fieldKeys.some((key) => {
       const f = this._getField(key);
       return f.dirty;
     });
@@ -636,9 +657,12 @@ export class FormModel<K> {
    * field and from that point on the values set are considered the new
    * initial values. Validation and interacted flags are also reset if the second argument is true
    * */
-  updateFrom(obj: Partial<K>, { resetInteractedFlag = true, ...opts }: SetValueFnArgs & ThrowIfMissingFieldType = {}) {
+  updateFrom(
+    obj: Partial<K>,
+    { resetInteractedFlag = true, ...opts }: SetValueFnArgs & ThrowIfMissingFieldType = {},
+  ) {
     const keys = Object.keys(obj) as (keyof K)[];
-    keys.forEach(key => this.updateField(key, obj[key], { resetInteractedFlag, ...opts }));
+    keys.forEach((key) => this.updateField(key, obj[key], { resetInteractedFlag, ...opts }));
   }
 
   /**
@@ -661,7 +685,7 @@ export class FormModel<K> {
   get validating() {
     return (
       this._validating ||
-      this._fieldKeys.some(key => {
+      this._fieldKeys.some((key) => {
         const f = this._getField(key);
         return f.validating;
       })
@@ -676,31 +700,35 @@ export class FormModel<K> {
 
     try {
       await Promise.all(
-        this._fieldKeys.map(key => {
+        this._fieldKeys.map((key) => {
           const field = this.fields[key];
           return field.validate({ force: true });
         }),
       );
-      
+
+      this.setValidating(false);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_) {
       this.setValidating(false);
     }
-    catch(err) {
-      this.setValidating(false);
-    }
-  }
+  };
 
   /**
    * Update the value of the field identified by the provided name.
    * Optionally if reset is set to true, interacted and
    * errorMessage are cleared in the Field.
    * */
-  updateField = (name: keyof K, value?: K[keyof K], opts: SetValueFnArgs & ThrowIfMissingFieldType = {}) => {
+  updateField = (
+    name: keyof K,
+    value?: K[keyof K],
+    opts: SetValueFnArgs & ThrowIfMissingFieldType = {},
+  ) => {
     const { throwIfMissingField, ...restOpts } = opts;
 
     const theField = this._getField(name, { throwIfMissingField });
 
     theField?.setValue(value, restOpts);
-  }
+  };
 
   /**
    * return the data as plain Javascript object (mobx magic removed from the fields)
@@ -710,11 +738,11 @@ export class FormModel<K> {
     return keys.reduce((seq, key) => {
       const field = this.fields[key];
       const value = field.value;
-      const valueToSet = typeof value === 'string' ? trim(value) : value;
+      const valueToSet = typeof value === "string" ? trim(value) : value;
       // this is required to make sure forms that use the serializedData object
       // have the values without leading or trailing spaces
       seq[key] = valueToSet as K[keyof K];
-      
+
       return seq;
     }, {} as Partial<K>);
   }
@@ -726,10 +754,16 @@ export class FormModel<K> {
    */
   constructor(args: FormModelArgs<K>) {
     const { descriptors = {} as Descriptors<K>, initialState, options = {} } = args || {};
-  
+
     this.addFields(descriptors);
-    initialState && this.updateFrom(initialState, { throwIfMissingField: options.throwIfMissingField, commit: true });
-    
+
+    if (initialState) {
+      this.updateFrom(initialState, {
+        throwIfMissingField: options.throwIfMissingField,
+        commit: true,
+      });
+    }
+
     makeAutoObservable(this, {
       fields: observable.shallow,
     });
@@ -738,7 +772,7 @@ export class FormModel<K> {
   _getField(name: keyof K, { throwIfMissingField = true }: ThrowIfMissingFieldType = {}) {
     const theName = name as string;
     const theField = this.fields[name];
-    
+
     if (!theField && throwIfMissingField) {
       throw new Error(`Field "${theName}" not found`);
     }
@@ -747,7 +781,7 @@ export class FormModel<K> {
 
   _eachField(cb: (field: Field<K[keyof K], K>) => void) {
     const keys = this._fieldKeys;
-    keys.forEach(key => cb(this.fields[key]));
+    keys.forEach((key) => cb(this.fields[key]));
   }
 
   get _fieldKeys() {
@@ -756,18 +790,25 @@ export class FormModel<K> {
   }
 
   resetInteractedFlag() {
-    this._eachField(field => field.resetInteractedFlag());
+    this._eachField((field) => field.resetInteractedFlag());
   }
 
   disableFields = (fieldKeys: (keyof K)[]) => {
-    if (!Array.isArray(fieldKeys)) throw new TypeError('fieldKeys should be an array with the names of the fields to disable');
-    fieldKeys.forEach(key => {
+    if (!Array.isArray(fieldKeys))
+      throw new TypeError("fieldKeys should be an array with the names of the fields to disable");
+    fieldKeys.forEach((key) => {
       const field = this._getField(key);
       field.setDisabled(true);
     });
-  }
+  };
 
-  _createField({ name, descriptor }: { name: keyof K, descriptor: FieldDescriptor<K[keyof K], K> }) {
+  _createField({
+    name,
+    descriptor,
+  }: {
+    name: keyof K;
+    descriptor: FieldDescriptor<K[keyof K], K>;
+  }) {
     const { value, ...restDescriptor } = descriptor;
     extendObservable(this.fields, {
       [name]: new Field(this, value as K[keyof K], restDescriptor, name as string),
@@ -776,25 +817,26 @@ export class FormModel<K> {
 
   addFields = (fieldsDescriptor: Partial<Descriptors<K>>) => {
     if (fieldsDescriptor == null || !isObject(fieldsDescriptor)) {
-      throw new Error('fieldDescriptor has to be an Object');
+      throw new Error("fieldDescriptor has to be an Object");
     }
 
     const fieldsToAdd = Object.keys(fieldsDescriptor) as (keyof Partial<Descriptors<K>>)[];
-    fieldsToAdd.forEach(key => {
+    fieldsToAdd.forEach((key) => {
       this._createField({ name: key, descriptor: fieldsDescriptor[key]! });
     });
   };
 
   enableFields(fieldKeys: (keyof K)[]) {
-    if (!Array.isArray(fieldKeys)) throw new TypeError('fieldKeys should be an array with the names of the fields to disable');
-    fieldKeys.forEach(key => {
+    if (!Array.isArray(fieldKeys))
+      throw new TypeError("fieldKeys should be an array with the names of the fields to disable");
+    fieldKeys.forEach((key) => {
       const field = this._getField(key);
       field.setDisabled(false);
     });
   }
 
   resetValidatedOnce() {
-    this._fieldKeys.forEach(key => {
+    this._fieldKeys.forEach((key) => {
       this.fields[key].resetValidatedOnce();
     });
   }
@@ -804,14 +846,18 @@ export class FormModel<K> {
  * return an instance of a FormModel refer to the constructor
  *
  */
-export const createModel = <T>(args: FormModelArgs<T> ) => new FormModel(args);
+export const createModel = <T>(args: FormModelArgs<T>) => new FormModel(args);
 
-export const createModelFromState = <T>(initialState: Partial<T> = {}, validators: Descriptors<T> = {} as Descriptors<T>, options?: ThrowIfMissingFieldType) => {
+export const createModelFromState = <T>(
+  initialState: Partial<T> = {},
+  validators: Descriptors<T> = {} as Descriptors<T>,
+  options?: ThrowIfMissingFieldType,
+) => {
   const theValidators = validators || {};
-  
+
   const stateKeys = Object.keys(initialState);
   const validatorsKeys = Object.keys(theValidators);
-  
+
   const descriptors = Array.from(new Set([...stateKeys, ...validatorsKeys])).reduce((seq, key) => {
     const res = theValidators[key as keyof T] || {};
     seq[key as keyof T] = res;
