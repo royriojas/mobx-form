@@ -23,11 +23,17 @@ export type FormModelArgs<T> = {
 export type ResultObj = { error: string };
 export type ErrorLike = { message: string } | Error;
 export type ValidatorResult = boolean | ResultObj | void;
+export type ValidateFnArgs<T, K> = {
+  field: Field<T, K>;
+  fields: FormModel<K>["fields"];
+  model: FormModel<K>;
+  value: Field<T, K>["value"];
+};
+
 export type ValidateFn<T, K> = (
-  field: Field<T, K>,
-  fields: FormModel<K>["fields"],
-  model: FormModel<K>,
+  args: ValidateFnArgs<T, K>,
 ) => Promise<ValidatorResult> | ValidatorResult;
+
 export type ResetInteractedFlagType = {
   resetInteractedFlag?: boolean;
 };
@@ -341,7 +347,7 @@ export class Field<T, K> {
         throw new Error("Validator must be a function or a function[]");
       }
 
-      ret = await vfn(this, model.fields, model);
+      ret = await vfn({ value: this.value, field, fields, model });
       if (ret === false || (ret as ResultObj)?.error) {
         return ret;
       }

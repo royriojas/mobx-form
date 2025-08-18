@@ -230,7 +230,7 @@ describe("form-model", () => {
           // using an async function that throws when it fails, since throws are converted to rejections
           // this just works. If validation passed no need to return anything.
           email: {
-            validator: ({ value = "" }, fields, _model) => {
+            validator: ({ value = "", model: _model }) => {
               if ((_model as CustomModel).validateEmails) {
                 if (!(value.indexOf("@") > 1)) {
                   throw new Error("INVALID_EMAIL");
@@ -272,8 +272,8 @@ describe("form-model", () => {
           errorMessage: "Please do not enter Doe",
         },
         email: {
-          validator: ({ value = "" }, fields, _model) => {
-            if ((_model as CustomModel).validateEmails) {
+          validator: ({ value = "", model }) => {
+            if ((model as CustomModel).validateEmails) {
               if (!(value.indexOf("@") > 1)) {
                 throw new Error("INVALID_EMAIL");
               }

@@ -1,6 +1,6 @@
 {
-  // "files": ["src/index.ts"],
-  "include": ["./src/**/*.ts", "./tests/**/*.ts"],
+  "files": ["src/index.ts"],
+  // "include": ["./src/**/*.ts", "./tests/**/*.ts"],
   "compilerOptions": {
     // Environment setup & latest features
     "lib": ["ESNext"],

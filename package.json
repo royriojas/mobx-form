@@ -26,7 +26,7 @@
     "prepublishOnly": "npm run build",
     "test": "bun test",
     "build": "rm -rf ./dist && bun bun.build.ts && npm run dts",
-    "dts": "tsc -p tsconfig.json --emitDeclarationOnly --declaration --outDir dist",
+    "dts": "tsc -p tsconfig.build.json --emitDeclarationOnly --declaration --outDir dist",
     "smoke:test": "bun simple-demo.ts"
   },
   "repository": {
