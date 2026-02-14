@@ -3,6 +3,7 @@
 
 [![NPM Version](https://img.shields.io/npm/v/mobx-form.svg)](https://www.npmjs.com/package/mobx-form)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/royriojas/mobx-form/actions/workflows/ci.yml/badge.svg)](https://github.com/royriojas/mobx-form/actions/workflows/ci.yml)
 
 > A simple, robust, and extensible form state management helper for [MobX](https://github.com/mobxjs/mobx).
 
@@ -39,6 +40,8 @@ npm install
 # Run Storybook
 npm run storybook
 ```
+
+[**View Live Demo**](https://royriojas.github.io/mobx-form/)
 
 Navigate to `http://localhost:6006` to explore examples like:
 - Simple Login Forms
