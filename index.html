@@ -115,9 +115,18 @@
         
       
         
-          window['TAGS_OPTIONS'] = [
-  "autodocs"
-];
+          window['TAGS_OPTIONS'] = {
+  "dev-only": {
+    "excludeFromDocsStories": true
+  },
+  "docs-only": {
+    "excludeFromSidebar": true
+  },
+  "test-only": {
+    "excludeFromSidebar": true,
+    "excludeFromDocsStories": true
+  }
+};
         
       
         
