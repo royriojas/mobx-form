@@ -11,3 +11,4 @@ coverage/
 .cache/
 phantomjsdriver.log
 lib/storybook-static/
+storybook-static/

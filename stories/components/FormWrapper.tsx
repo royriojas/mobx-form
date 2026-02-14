@@ -18,12 +18,12 @@ export const FormWrapper = observer(({ model, children, title, description, onCo
   };
 
   return (
-    <div style={{ fontFamily: 'system-ui, sans-serif', maxWidth: '600px', margin: '0 auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
+    <div style={{ fontFamily: 'system-ui, sans-serif', maxWidth: '600px', margin: '0 auto', padding: '20px', border: '1px solid var(--mf-border)', borderRadius: '8px', backgroundColor: 'var(--mf-bg)', color: 'var(--mf-text)' }}>
       {title && <h2 style={{ marginTop: 0 }}>{title}</h2>}
-      {description && <p style={{ color: '#666', marginBottom: '20px' }}>{description}</p>}
+      {description && <p style={{ color: 'var(--mf-text-secondary)', marginBottom: '20px' }}>{description}</p>}
 
       {model.summary.length > 0 && (
-        <div style={{ backgroundColor: '#fff0f0', color: '#d00', padding: '10px', borderRadius: '4px', marginBottom: '15px' }}>
+        <div style={{ backgroundColor: 'var(--mf-error-bg)', color: 'var(--mf-error-text)', padding: '10px', borderRadius: '4px', marginBottom: '15px', border: '1px solid var(--mf-error-border)' }}>
           <strong>Errors:</strong>
           <ul style={{ margin: '5px 0 0 20px', padding: 0 }}>
             {model.summary.map((err, i) => (

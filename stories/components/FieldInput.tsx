@@ -14,9 +14,9 @@ export const FieldInput = observer(({ field, label, type = 'text' }: FieldInputP
   
   return (
     <div style={{ marginBottom: '15px' }}>
-      <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+      <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', color: 'var(--mf-text)' }}>
         {label || field.name}
-        {field.required && <span style={{ color: 'red', marginLeft: '4px' }}>*</span>}
+        {field.required && <span style={{ color: 'var(--mf-error-text)', marginLeft: '4px' }}>*</span>}
       </label>
       
       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -33,21 +33,23 @@ export const FieldInput = observer(({ field, label, type = 'text' }: FieldInputP
           style={{
             width: isCheckbox ? 'auto' : '100%',
             padding: '8px',
-            border: `1px solid ${field.error ? 'red' : field.interacted ? '#28a745' : '#ccc'}`,
+            border: `1px solid ${field.error ? 'var(--mf-error-text)' : field.interacted ? 'var(--mf-success)' : 'var(--mf-border)'}`,
             borderRadius: '4px',
-            backgroundColor: field.disabled ? '#f0f0f0' : 'white'
+            backgroundColor: field.disabled ? 'var(--mf-input-bg-disabled)' : 'var(--mf-input-bg)',
+            color: field.disabled ? 'var(--mf-input-text-disabled)' : 'var(--mf-input-text)',
+            accentColor: '#007bff'
           }}
         />
-        {field.validating && <span style={{ marginLeft: '10px', color: '#666' }}>Validating...</span>}
+        {field.validating && <span style={{ marginLeft: '10px', color: 'var(--mf-text-secondary)' }}>Validating...</span>}
       </div>
 
       {field.error && (
-        <div style={{ color: 'red', fontSize: '12px', marginTop: '4px' }}>
+        <div style={{ color: 'var(--mf-error-text)', fontSize: '12px', marginTop: '4px' }}>
           {field.error}
         </div>
       )}
       
-      <div style={{ fontSize: '10px', color: '#999', marginTop: '4px' }}>
+      <div style={{ fontSize: '10px', color: 'var(--mf-text-muted)', marginTop: '4px' }}>
         Dirty: {field.dirty ? 'Yes' : 'No'} | 
         Interacted: {field.interacted ? 'Yes' : 'No'} | 
         Blurred: {field.blurred ? 'Yes' : 'No'}

@@ -12,11 +12,12 @@ export const DebugPanel = observer(({ model }: DebugPanelProps) => {
     <div style={{ 
       marginTop: '20px', 
       padding: '15px', 
-      backgroundColor: '#f8f9fa', 
-      border: '1px solid #ddd', 
+      backgroundColor: 'var(--mf-debug-bg)', 
+      border: '1px solid var(--mf-debug-border)', 
       borderRadius: '8px',
       fontSize: '12px',
-      fontFamily: 'monospace'
+      fontFamily: 'monospace',
+      color: 'var(--mf-text)'
     }}>
       <h3>Debug Info</h3>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
@@ -33,14 +34,14 @@ export const DebugPanel = observer(({ model }: DebugPanelProps) => {
         </div>
         <div>
           <h4>Serialized Data</h4>
-          <pre style={{ overflow: 'auto' }}>
+          <pre style={{ overflow: 'auto', color: 'var(--mf-text-secondary)' }}>
             {JSON.stringify(model.serializedData, null, 2)}
           </pre>
         </div>
       </div>
       
       <h4>Required Fields</h4>
-      <div>{JSON.stringify(model.requiredFields)}</div>
+      <div style={{ color: 'var(--mf-text-secondary)' }}>{JSON.stringify(model.requiredFields)}</div>
     </div>
   );
 });
