@@ -10,4 +10,4 @@ coverage/
 *.py
 .cache/
 phantomjsdriver.log
-lib/
+lib/storybook-static/
