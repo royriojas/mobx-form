@@ -60,7 +60,7 @@
     "projectName": "mobx-form"
   },
   "dependencies": {
-    "lodash": "4.17.21"
+    "lodash": "4.17.23"
   },
   "peerDependencies": {
     "mobx": "^6.0.1"
