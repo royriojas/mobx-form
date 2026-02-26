@@ -1,5 +1,14 @@
 
 # mobx-form - Changelog
+## v14.4.0
+- **Bug Fixes**
+  - upgrade lodash to avoid npm warning - [c3aaf8c]( https://github.com/royriojas/mobx-form/commit/c3aaf8c ), [Roy Riojas](https://github.com/Roy Riojas), 26/02/2026 01:45:48
+
+    
+- **Features**
+  - add ci check for typings - [8edbe15]( https://github.com/royriojas/mobx-form/commit/8edbe15 ), [Roy Riojas](https://github.com/Roy Riojas), 26/02/2026 01:42:40
+
+    
 ## v14.3.0
 - **Features**
   - add proper typescript typings - [5ec86ae]( https://github.com/royriojas/mobx-form/commit/5ec86ae ), [Roy Riojas](https://github.com/Roy Riojas), 26/02/2026 01:35:25
