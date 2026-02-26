@@ -14,7 +14,7 @@ const build = async () => {
     entrypoints: ['./src/index.ts'],
     outdir: './dist',
     naming: {
-      entry: '[dir]/[name].js',
+      entry: '[dir]/[name].mjs',
     },
     external: ["lodash", "mobx"],
     target: "browser",

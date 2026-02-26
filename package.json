@@ -2,18 +2,22 @@
   "name": "mobx-form",
   "version": "14.6.0",
   "description": "A simple form helper for mobx",
-  "type": "module",
   "main": "dist/index.cjs",
-  "module": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/mobx-form.d.ts",
   "files": [
     "dist/"
   ],
   "exports": {
     ".": {
-      "types": "./dist/mobx-form.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/mobx-form.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/mobx-form.d.ts",
+        "default": "./dist/index.cjs"
+      }
     }
   },
   "scripts": {

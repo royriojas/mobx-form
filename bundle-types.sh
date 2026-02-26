@@ -7,9 +7,10 @@ bunx dts-bundle \
 --out mobx-form.d.ts \
 --removeSource
 
-# verify existance of mobx-form.d.ts
+# verify existence of mobx-form.d.ts
 if [ -f "dist/mobx-form.d.ts" ]; then
   echo "mobx-form.d.ts exists"
+  cp dist/mobx-form.d.ts dist/mobx-form.d.mts
 else
   echo "mobx-form.d.ts does not exist"
   exit 1
