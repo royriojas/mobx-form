@@ -22,7 +22,7 @@ jobs:
         bun-version: latest
 
     - name: Install Dependencies
-      run: bun install
+      run: bun install && bash ./clean-types.sh
 
     - name: Lint
       run: bun run lint

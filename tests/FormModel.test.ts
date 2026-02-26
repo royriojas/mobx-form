@@ -848,7 +848,7 @@ describe("FormModel", () => {
       await model.validate();
 
       expect(model.valid).toEqual(true);
-      // @ts-expect-error intentionally passing wrong type
+      
       expect(model.fields.email.errorMessage).toEqual(undefined);
     });
 
@@ -948,7 +948,7 @@ describe("FormModel", () => {
         await model.validate();
 
         expect(model.valid).toEqual(true);
-        // @ts-expect-error intentionally passing wrong type
+        
         expect(model.fields.email.errorMessage).toEqual(undefined);
       });
 
@@ -981,7 +981,7 @@ describe("FormModel", () => {
         model.fields.email.clearValidation();
 
         expect(model.valid).toEqual(true);
-        // @ts-expect-error intentionally passing wrong type
+        
         expect(model.fields.email.errorMessage).toEqual(undefined);
       });
     });
