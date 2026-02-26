@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v14.7.0
+- **Bug Fixes**
+  - fix path to types - [14a9151]( https://github.com/royriojas/mobx-form/commit/14a9151 ), [Roy Riojas](https://github.com/Roy Riojas), 26/02/2026 02:18:14
+
+    
 ## v14.6.0
 - **Bug Fixes**
   - fix path to types - [85a60bb]( https://github.com/royriojas/mobx-form/commit/85a60bb ), [Roy Riojas](https://github.com/Roy Riojas), 26/02/2026 01:56:54
