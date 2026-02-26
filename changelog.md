@@ -1,5 +1,10 @@
 
 # mobx-form - Changelog
+## v14.5.0
+- **Bug Fixes**
+  - upgrade lodash to avoid npm warning - [b06e1f2]( https://github.com/royriojas/mobx-form/commit/b06e1f2 ), [Roy Riojas](https://github.com/Roy Riojas), 26/02/2026 01:49:52
+
+    
 ## v14.4.0
 - **Bug Fixes**
   - upgrade lodash to avoid npm warning - [c3aaf8c]( https://github.com/royriojas/mobx-form/commit/c3aaf8c ), [Roy Riojas](https://github.com/Roy Riojas), 26/02/2026 01:45:48
