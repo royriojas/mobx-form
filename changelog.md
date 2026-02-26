@@ -1,5 +1,34 @@
 
 # mobx-form - Changelog
+## v14.3.0
+- **Features**
+  - add proper typescript typings - [5ec86ae]( https://github.com/royriojas/mobx-form/commit/5ec86ae ), [Roy Riojas](https://github.com/Roy Riojas), 26/02/2026 01:35:25
+
+    
+  - add proper typescript typings - [3445a5c]( https://github.com/royriojas/mobx-form/commit/3445a5c ), [Roy Riojas](https://github.com/Roy Riojas), 26/02/2026 01:34:40
+
+    
+  - add proper typescript typings - [3702890]( https://github.com/royriojas/mobx-form/commit/3702890 ), [Roy Riojas](https://github.com/Roy Riojas), 26/02/2026 01:20:54
+
+    
+  - Add action to deploy the storybook - remove generated files - [5e6e7e2]( https://github.com/royriojas/mobx-form/commit/5e6e7e2 ), [Roy Riojas](https://github.com/Roy Riojas), 14/02/2026 07:39:56
+
+    
+  - Add action to deploy the storybook - remove generated files - [0a13a63]( https://github.com/royriojas/mobx-form/commit/0a13a63 ), [Roy Riojas](https://github.com/Roy Riojas), 14/02/2026 06:51:53
+
+    
+  - Add action to deploy the storybook - remove generated files - [6e23880]( https://github.com/royriojas/mobx-form/commit/6e23880 ), [Roy Riojas](https://github.com/Roy Riojas), 14/02/2026 06:47:33
+
+    
+  - Add action to deploy the storybook - [56e29c5]( https://github.com/royriojas/mobx-form/commit/56e29c5 ), [Roy Riojas](https://github.com/Roy Riojas), 14/02/2026 06:40:57
+
+    
+  - Add tests using action - [c952a12]( https://github.com/royriojas/mobx-form/commit/c952a12 ), [Roy Riojas](https://github.com/Roy Riojas), 14/02/2026 06:27:15
+
+    
+  - add storybook for mobx forms - [9a4e75c]( https://github.com/royriojas/mobx-form/commit/9a4e75c ), [Roy Riojas](https://github.com/Roy Riojas), 14/02/2026 06:02:01
+
+    
 ## v14.2.0
 - **Refactoring**
   - make serializedData same as T - [302899a]( https://github.com/royriojas/mobx-form/commit/302899a ), [Roy Riojas](https://github.com/Roy Riojas), 18/08/2025 01:15:38
@@ -37,11 +66,14 @@
   - removed unneded deps - [15cd96d]( https://github.com/royriojas/mobx-form/commit/15cd96d ), [Roy Riojas](https://github.com/Roy Riojas), 16/08/2025 17:43:08
 
     
-  - fix wrong initializer in exported types - [de648e7]( https://github.com/royriojas/mobx-form/commit/de648e7 ), [Roy Riojas](https://github.com/Roy Riojas), 01/10/2024 01:29:09
-
-    
+## v13.3.6
 - **Features**
   - fix typings - [85a0035]( https://github.com/royriojas/mobx-form/commit/85a0035 ), [Roy Riojas](https://github.com/Roy Riojas), 12/11/2024 03:14:16
+
+    
+## v13.3.5
+- **Bug Fixes**
+  - fix wrong initializer in exported types - [de648e7]( https://github.com/royriojas/mobx-form/commit/de648e7 ), [Roy Riojas](https://github.com/Roy Riojas), 01/10/2024 01:29:09
 
     
 ## v13.3.4
