@@ -24,8 +24,8 @@ jobs:
     - name: Install Dependencies
       run: bun install && bash ./clean-types.sh
 
-    - name: Lint
-      run: bun run lint
+    - name: Lint & Verify
+      run: bun run lint && bun run verify
 
     - name: Run Tests
       run: bun test
