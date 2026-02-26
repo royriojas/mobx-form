@@ -5,10 +5,17 @@
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/mobx-form.d.ts",
   "files": [
     "dist/"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/mobx-form.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "scripts": {
     "lint": "eslint --cache --cache-location node_modules/.cache/ 'src/**/*.ts' 'tests/**/*.ts'",
     "check": "npm run lint && npm run verify",
@@ -25,8 +32,9 @@
     "bump-prerelease": "npm run pre-v && npm version prerelease -m 'BLD: Release v%s' && npm run post-v",
     "prepublishOnly": "npm run build",
     "test": "bun test",
-    "build": "rm -rf ./dist && bun bun.build.ts && npm run dts",
+    "build": "rm -rf ./dist && bun bun.build.ts && npm run dts && npm run bundle-types",
     "dts": "tsc -p tsconfig.build.json --emitDeclarationOnly --declaration --outDir dist",
+    "bundle-types": "bash bundle-types.sh",
     "smoke:test": "bun simple-demo.ts",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
@@ -66,6 +74,7 @@
     "mobx": "^6.0.1"
   },
   "devDependencies": {
+    "dts-bundle": "0.7.3",
     "@eslint/js": "^9.8.0",
     "@storybook/addon-essentials": "^8.6.14",
     "@storybook/addon-interactions": "^8.6.14",
