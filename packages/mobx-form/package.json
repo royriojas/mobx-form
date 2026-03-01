@@ -1,6 +1,6 @@
 {
   "name": "mobx-form",
-  "version": "14.8.1",
+  "version": "14.8.2",
   "description": "A simple form helper for mobx",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",

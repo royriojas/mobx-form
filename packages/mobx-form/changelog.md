@@ -1,6 +1,10 @@
 
 # mobx-form - Changelog
 ## HEAD
+- **Other changes**
+  - fix license text - [cee1a57]( https://github.com/royriojas/mobx-form/commit/cee1a57 ), [Roy Riojas](https://github.com/Roy Riojas), 01/03/2026 03:17:19
+
+    
 - **Bug Fixes**
   - Add missing links from readmes - [b65e04a]( https://github.com/royriojas/mobx-form/commit/b65e04a ), [Roy Riojas](https://github.com/Roy Riojas), 28/02/2026 18:46:46
 
