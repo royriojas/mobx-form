@@ -10,7 +10,7 @@
 
 `mobx-form` simplifies form validation and state management in MobX-powered React applications. It provides a declarative way to define form models with synchronous and asynchronous validation, dirty tracking, and easy data serialization.
 
-[**View Live Demo / Storybook**](https://royriojas.github.io/mobx-form/)
+[**View Documentation**](https://royriojas.github.io/mobx-form/) | [**View Live Demo / Storybook**](https://royriojas.github.io/mobx-form/storybook/)
 
 ## Features
 
