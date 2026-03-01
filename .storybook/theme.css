@@ -37,4 +37,6 @@ html.dark {
   --mf-success: #28a745;
   --mf-debug-bg: #1e1e1e;
   --mf-debug-border: #333333;
+
+  background: #1e1e1e;
 }
