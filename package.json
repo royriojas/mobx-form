@@ -1,7 +1,9 @@
 {
   "name": "mobx-form-monorepo",
   "private": true,
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "build": "turbo build",
     "lint": "turbo lint",
