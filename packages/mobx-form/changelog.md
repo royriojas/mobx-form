@@ -1,5 +1,32 @@
 
 # mobx-form - Changelog
+## HEAD
+- **Bug Fixes**
+  - Add clean step for docusaurus artifacts - [f38feea]( https://github.com/royriojas/mobx-form/commit/f38feea ), [Roy Riojas](https://github.com/Roy Riojas), 28/02/2026 18:41:19
+
+    
+  - fix add docusaurus - [521e3c1]( https://github.com/royriojas/mobx-form/commit/521e3c1 ), [Roy Riojas](https://github.com/Roy Riojas), 28/02/2026 18:38:25
+
+    
+  - fix dependabot warning - [2b6946f]( https://github.com/royriojas/mobx-form/commit/2b6946f ), [Roy Riojas](https://github.com/Roy Riojas), 28/02/2026 17:58:38
+
+    
+  - fix dependabot warning - [52d83c2]( https://github.com/royriojas/mobx-form/commit/52d83c2 ), [Roy Riojas](https://github.com/Roy Riojas), 28/02/2026 17:58:24
+
+    
+- **Features**
+  - upgrade storybook - [6979ea0]( https://github.com/royriojas/mobx-form/commit/6979ea0 ), [Roy Riojas](https://github.com/Roy Riojas), 28/02/2026 18:08:00
+
+    
+  - upgrade storybook - [6736b61]( https://github.com/royriojas/mobx-form/commit/6736b61 ), [Roy Riojas](https://github.com/Roy Riojas), 28/02/2026 18:05:14
+
+    
+  - Move to monorepo setup - [9610878]( https://github.com/royriojas/mobx-form/commit/9610878 ), [Roy Riojas](https://github.com/Roy Riojas), 28/02/2026 17:52:31
+
+    
+  - Fix the theming on dark mode - [690f1e1]( https://github.com/royriojas/mobx-form/commit/690f1e1 ), [Roy Riojas](https://github.com/Roy Riojas), 28/02/2026 17:29:00
+
+    
 ## v14.7.0
 - **Bug Fixes**
   - fix path to types - [14a9151]( https://github.com/royriojas/mobx-form/commit/14a9151 ), [Roy Riojas](https://github.com/Roy Riojas), 26/02/2026 02:18:14
