@@ -1,5 +1,5 @@
-node_modules
 dist
+node_modules
 coverage
 *.log
 .DS_Store
@@ -8,15 +8,4 @@ coverage
 .env
 .envrc
 .npmrc
-*.orig
-
-# Turborepo
-.turbo
-
-# Storybook
 storybook-static/
-
-# IDE
-.idea/
-*.iml
-.cache/

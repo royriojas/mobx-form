@@ -7,11 +7,10 @@ on:
       - main
       - master
     paths:
-      - 'src/**'
-      - 'stories/**'
-      - '.storybook/**'
-      - 'package.json'
-      - 'bun.lockb'
+      - 'packages/mobx-form/src/**'
+      - 'packages/mobx-form/stories/**'
+      - 'packages/mobx-form/.storybook/**'
+      - 'packages/mobx-form/package.json'
 
 permissions:
   contents: write
@@ -32,10 +31,10 @@ jobs:
         run: bun install
 
       - name: Build Storybook
-        run: bun run build-storybook
+        run: cd packages/mobx-form && bun run build-storybook
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: storybook-static
+          folder: packages/mobx-form/storybook-static
           branch: gh-pages
