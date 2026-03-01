@@ -30,4 +30,8 @@ find "$ROOT_DIR" -name "storybook-static" -type d -prune -exec rm -rf {} +
 echo "  Removing ESLint caches..."
 find "$ROOT_DIR" -name ".eslintcache" -type f -delete
 
+# Docusaurus
+echo "  Removing .docusaurus caches..."
+find "$ROOT_DIR" -name ".docusaurus" -type d -prune -exec rm -rf {} +
+
 echo "✅ Clean complete. Run 'bun install' to restore dependencies."
